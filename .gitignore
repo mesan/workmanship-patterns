@@ -3,9 +3,13 @@ target/
 .project
 .classpath
 .settings/
+lib/
 
 # IDEA-ting
 *.iml
 *.ipr
 *.iws
 /.idea
+
+/timesheet.xlsx
+/atlassian-ide-plugin.xml
