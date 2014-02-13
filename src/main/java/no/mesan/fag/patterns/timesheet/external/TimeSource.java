@@ -1,4 +1,6 @@
-package no.mesan.fag.patterns.timesheet;
+package no.mesan.fag.patterns.timesheet.external;
+
+import no.mesan.fag.patterns.timesheet.TimesheetEntry;
 
 import java.util.Iterator;
 import java.util.List;

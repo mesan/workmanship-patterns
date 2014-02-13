@@ -1,6 +1,5 @@
 package no.mesan.fag.patterns.timesheet;
 
-import no.mesan.fag.patterns.timesheet.TimesheetEntry;
 import org.junit.Test;
 
 import java.util.List;
