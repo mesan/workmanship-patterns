@@ -11,4 +11,9 @@ public class DoubleMatrix extends ValueMatrix<Double> {
         super();
     }
 
+    public DoubleMatrix add(final String col, final String row, final Double val) {
+        final Double old = get(col, row);
+        put(col, row, (old == null) ? val : val + old);
+        return this;
+    }
 }
