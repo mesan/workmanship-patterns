@@ -1,4 +1,4 @@
-package no.mesan.fag.patterns.timesheet;
+package no.mesan.fag.patterns.timesheet.data;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,20 +11,22 @@ import java.util.Set;
 /**
  * A sort of sparse, associative, two-dimensional array.
  *
- * T: The value types to keep
+ * C: The column type
+ * R: The row type
+ * V: The value types to keep
  * @author lre
  */
-public class ValueMatrix<T> {
+public class ValueMatrix<C extends Comparable, R extends Comparable, V> {
 
     /** Used to separate row & column in the storage. Inspired by AWK. */
     private static final String ARRAYSEP = "" + (char) 1;
 
     /** Keep track of row keys. */
-    private final Set<String> allRowKeys = new LinkedHashSet<>();
+    private final Set<R> allRowKeys = new LinkedHashSet<>();
     /** Keep track of column keys. */
-    private final Set<String> allColKeys = new LinkedHashSet<>();
+    private final Set<C> allColKeys = new LinkedHashSet<>();
     /** The real values. */
-    private final Map<String, T> values = new HashMap<>();
+    private final Map<String, V> values = new HashMap<>();
 
     /** Default constructor. */
     public ValueMatrix() {
@@ -32,24 +34,24 @@ public class ValueMatrix<T> {
     }
 
     /** Create map key. */
-    private static String key(final String col, final String row) {
-        return col + ARRAYSEP + row;
+    private String key(final C col, final R row) {
+        return col.toString() + ARRAYSEP + row.toString();
     }
 
     /** Create a possibly sorted list from a key set. */
-    private List<String> keyList(final Boolean sorted, final Set<String> orgKeys) {
-        final List<String> keys = new LinkedList<>(orgKeys);
+    private static <T extends Comparable> List<T> keyList(final Boolean sorted, final Set<T> orgKeys) {
+        final List<T> keys = new LinkedList<>(orgKeys);
         if (sorted) Collections.sort(keys);
         return keys;
     }
 
     /** Return list of row keys, possibly sorted. */
-    public List<String> rowKeys(final Boolean sorted) {
+    public List<R> rowKeys(final Boolean sorted) {
         return keyList(sorted, this.allRowKeys);
     }
 
     /** Return list of column keys, possibly sorted. */
-    public List<String> colKeys(final boolean sorted) {
+    public List<C> colKeys(final boolean sorted) {
         return keyList(sorted, this.allColKeys);
     }
 
@@ -64,27 +66,32 @@ public class ValueMatrix<T> {
     }
 
     /** Get the value of a given cell (null if not defined). */
-    public T get(final String col, final String row) {
+    public V get(final C col, final R row) {
         return this.values.get(key(col, row));
     }
 
     /** Add a value, overwriting whatever was there. */
-    public ValueMatrix<T> put(final String col, final String row, final T val) {
+    public ValueMatrix<C, R, V> put(final C col, final R row, final V val) {
         this.allColKeys.add(col);
         this.allRowKeys.add(row);
         this.values.put(key(col, row), val);
         return this;
     }
 
+    /** Get the value of a given cell (null if not defined). */
+    public boolean has(final C col, final R row) {
+        return get(col, row) != null;
+    }
+
     /** Sometimes you need certain rows, regardless of whether they actually exist in data. */
-    public ValueMatrix<T> ensureRow(final String... row) {
-        for (String s : row) this.allRowKeys.add(s);
+    public ValueMatrix<C, R, V> ensureRow(final R... row) {
+        Collections.addAll(this.allRowKeys, row);
         return this;
     }
 
     /** Sometimes you need certain columns, regardless of whether they actually exist in data. */
-    public ValueMatrix<T> ensureCol(final String... col) {
-        for (String s : col) this.allColKeys.add(s);
+    public ValueMatrix<C, R, V> ensureCol(final C... col) {
+        Collections.addAll(this.allColKeys, col);
         return this;
     }
 }

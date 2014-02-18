@@ -1,4 +1,4 @@
-package no.mesan.fag.patterns.timesheet;
+package no.mesan.fag.patterns.timesheet.data;
 
 import org.joda.time.LocalDate;
 
@@ -14,7 +14,7 @@ public class TimesheetEntry {
     private final int activity;
     private final int minutes;
 
-    public TimesheetEntry(final String userID, final LocalDate when, final int activity, final int minutes) {
+    private TimesheetEntry(final String userID, final LocalDate when, final int activity, final int minutes) {
         this.userID = userID;
         this.when = when;
         this.minutes = minutes;

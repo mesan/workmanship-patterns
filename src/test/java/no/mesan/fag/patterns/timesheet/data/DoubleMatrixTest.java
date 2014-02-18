@@ -1,4 +1,4 @@
-package no.mesan.fag.patterns.timesheet;
+package no.mesan.fag.patterns.timesheet.data;
 
 import org.junit.Test;
 

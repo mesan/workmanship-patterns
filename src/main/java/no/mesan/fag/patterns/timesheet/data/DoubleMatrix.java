@@ -1,11 +1,11 @@
-package no.mesan.fag.patterns.timesheet;
+package no.mesan.fag.patterns.timesheet.data;
 
 /**
  * A sort of sparse, associative, two-dimensional array for Doubles.
  *
  * @author lre
  */
-public class DoubleMatrix extends ValueMatrix<Double> {
+public class DoubleMatrix extends ValueMatrix<String, String, Double> {
 
     public DoubleMatrix() {
         super();
