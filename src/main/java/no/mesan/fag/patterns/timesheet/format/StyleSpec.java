@@ -69,7 +69,7 @@ public class StyleSpec {
         }
         style.setAlignment((short) horizontal.align());
         style.setVerticalAlignment((short) vertical.align());
-        for (BorderSpec border : borders) {
+        for (final BorderSpec border : borders) {
             final BorderSpec.BorderLine line = border.line();
             switch (border.edge()) {
                 case TOP:

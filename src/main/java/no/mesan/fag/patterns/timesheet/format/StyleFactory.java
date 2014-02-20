@@ -10,7 +10,12 @@ import java.util.Map;
  * Oppretter stiler for et worksheet.
  */
 public class StyleFactory {
-    /** Create a library of cell styles */
+    /** Tilgjengelige stiler. */
+    public static enum StyleName {
+        H1, TBL_HEAD, TBL_HEAD_LEFT, COL1, COLN, SUMS, SUM1, DATA
+    }
+
+    /** CLag et stilbibliotek. */
     public static Map<StyleName, CellStyle> styleSetup(final Workbook wb){
         final Map<StyleName, CellStyle> styles = new HashMap<>();
         styles.put(StyleName.H1, new StyleSpec(true, false, 15, ColorSpec.STD_H_COLOR, null, null, null, null, null,
@@ -55,4 +60,5 @@ public class StyleFactory {
                                            .createStyle(wb));
         return styles;
     }
+
 }

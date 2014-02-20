@@ -10,7 +10,7 @@ lib/
 *.ipr
 *.iws
 /.idea
-
-/timesheet.xlsx
 /atlassian-ide-plugin.xml
-/Timeliste.xlsx
+
+# Egne ting
+/*.xlsx

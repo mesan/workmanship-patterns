@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 /**
  * Mulige alignments.
  */
-public class AlignmentSpec {
+public interface AlignmentSpec {
     public enum Horizontal {
         GEN(CellStyle.ALIGN_GENERAL),
         LEFT(CellStyle.ALIGN_LEFT),

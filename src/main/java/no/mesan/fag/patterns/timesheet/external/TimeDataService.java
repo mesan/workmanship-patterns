@@ -18,4 +18,12 @@ public interface TimeDataService {
      * @return Liste av matchende timeføringer
      */
     List<TimesheetEntry> forEmployee(String userID);
+
+    /**
+     * Henter alle timene registrert for et gitt år.
+     *
+     * @param year Året vi vil hente for
+     * @return Liste av matchende timeføringer
+     */
+    List<TimesheetEntry> forYear(int year);
 }

@@ -84,13 +84,15 @@ public class ValueMatrix<C extends Comparable, R extends Comparable, V> {
     }
 
     /** Sometimes you need certain rows, regardless of whether they actually exist in data. */
-    public ValueMatrix<C, R, V> ensureRow(final R... row) {
+    @SafeVarargs
+    public final ValueMatrix<C, R, V> ensureRow(final R... row) {
         Collections.addAll(this.allRowKeys, row);
         return this;
     }
 
     /** Sometimes you need certain columns, regardless of whether they actually exist in data. */
-    public ValueMatrix<C, R, V> ensureCol(final C... col) {
+    @SafeVarargs
+    public final ValueMatrix<C, R, V> ensureCol(final C... col) {
         Collections.addAll(this.allColKeys, col);
         return this;
     }

@@ -24,7 +24,7 @@ public class BorderSpec {
     }
 
     public enum BorderEdge {
-        TOP, BOTTOM, LEFT, RIGHT;
+        TOP, BOTTOM, LEFT, RIGHT
     }
 
     public enum BorderLine { // Utterly borderline!

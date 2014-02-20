@@ -1,6 +1,7 @@
 package no.mesan.fag.patterns.timesheet.external;
 
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
+import org.joda.time.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.List;
  */
 public class TimeDataServer implements TimeDataService {
 
-    private final TimeSource source;
+    private final Iterable<TimesheetEntry> source;
 
     /** Default constructor. */
-    public TimeDataServer() {
-        this.source = new TimeSource();
+    public TimeDataServer(final Iterable<TimesheetEntry> src) {
+        this.source = src;
     }
 
     @Override
@@ -22,6 +23,16 @@ public class TimeDataServer implements TimeDataService {
         final LinkedList<TimesheetEntry> list = new LinkedList<>();
         for (final TimesheetEntry entry : source) {
             if (entry.getUserID().equals(userID)) list.add(entry);
+        }
+        return list;
+    }
+
+    @Override
+    public List<TimesheetEntry> forYear(final int year) {
+        final LinkedList<TimesheetEntry> list = new LinkedList<>();
+        for (final TimesheetEntry entry : source) {
+            final LocalDate when = entry.getWhen();
+            if (when.year().get() == year) list.add(entry);
         }
         return list;
     }
