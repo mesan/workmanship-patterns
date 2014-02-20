@@ -15,7 +15,7 @@ public class StyleFactory {
         H1, TBL_HEAD, TBL_HEAD_LEFT, COL1, COLN, SUMS, SUM1, DATA
     }
 
-    /** CLag et stilbibliotek. */
+    /** Lag et stilbibliotek. */
     public static Map<StyleName, CellStyle> styleSetup(final Workbook wb){
         final Map<StyleName, CellStyle> styles = new HashMap<>();
         styles.put(StyleName.H1, new StyleSpec(true, false, 15, ColorSpec.STD_H_COLOR, null, null, null, null, null,
