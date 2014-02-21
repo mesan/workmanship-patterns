@@ -41,7 +41,15 @@ public class Maanedliste extends Sheets {
     public Workbook createMaanedliste()  {
 
         // Hent timedata for perioden
-        final List<TimesheetEntry> fullList = this.source.forYear(this.year);
+        final List<TimesheetEntry> fullList = new LinkedList<>();
+        int got = 0;
+        while (true) {
+            final List<TimesheetEntry> entries = this.source.forYear(this.year, got);
+            if (entries.isEmpty()) break;
+            fullList.addAll(entries);
+            got = fullList.size();
+        }
+
         // Filtrer bort interne timer og andre måneder
         final List<TimesheetEntry> list = new ArrayList<>();
         for (final TimesheetEntry entry : fullList) {
