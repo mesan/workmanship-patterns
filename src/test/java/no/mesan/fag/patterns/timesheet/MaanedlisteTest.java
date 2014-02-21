@@ -26,9 +26,13 @@ public class MaanedlisteTest {
 
     @Test
     public void checkWorkbookStructure()  {
-       assertNotNull(wb);
-       assertEquals(1, wb.getNumberOfSheets());
-       assertNotNull(wb.getSheet(Maanedliste.SHEET_NAME));
+        assertNotNull(wb);
+        assertEquals(1, wb.getNumberOfSheets());
+        final Sheet sheet = wb.getSheet(Maanedliste.SHEET_NAME);
+        assertNotNull(sheet);
+        final int lastRowNum = sheet.getLastRowNum();
+        assertEquals(5, lastRowNum);
+        assertEquals(4, sheet.getRow(lastRowNum).getLastCellNum());
     }
 
     @Test
@@ -37,6 +41,7 @@ public class MaanedlisteTest {
         assertEquals(Maanedliste.SHEET_TITLE, extractCell(sheet, 0, 0).getStringCellValue());
         assertEquals(9.5D, extractCell(sheet, 2, 3).getNumericCellValue(), 0.001D); // Tilfeldig entry
         assertEquals(11.5D, extractCell(sheet, 1, 5).getNumericCellValue(), 0.001D); // Totalsum
+        assertEquals(18, extractCell(sheet, 1, 5).getCellStyle().getFillForegroundColor());
     }
 
     private Cell extractCell(final Sheet sheet, final int cellnum, final int rownum) {
