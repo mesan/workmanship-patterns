@@ -26,9 +26,13 @@ public class TimelisteTest {
 
     @Test
     public void checkWorkbookStructure()  {
-       assertNotNull(wb);
-       assertEquals(1, wb.getNumberOfSheets());
-       assertNotNull(wb.getSheet(Timeliste.SHEET_TITLE));
+        assertNotNull(wb);
+        assertEquals(1, wb.getNumberOfSheets());
+        final Sheet sheet = wb.getSheet(Timeliste.SHEET_TITLE);
+        assertNotNull(sheet);
+        final int lastRowNum = sheet.getLastRowNum();
+        assertEquals(5, lastRowNum);
+        assertEquals(32, sheet.getRow(lastRowNum).getLastCellNum());
     }
 
     @Test
@@ -37,6 +41,7 @@ public class TimelisteTest {
         assertEquals(Timeliste.SHEET_TITLE, extractCell(sheet, 0, 0).getStringCellValue());
         assertEquals(2.0D, extractCell(sheet, 3, 3).getNumericCellValue(), 0.001D); // Tilfeldig entry
         assertEquals(10.5D, extractCell(sheet, 1, 5).getNumericCellValue(), 0.001D); // Totalsum
+        assertEquals(18, extractCell(sheet, 1, 5).getCellStyle().getFillForegroundColor());
     }
 
     private Cell extractCell(final Sheet sheet, final int cellnum, final int rownum) {
