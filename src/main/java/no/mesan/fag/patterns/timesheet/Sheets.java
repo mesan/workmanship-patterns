@@ -3,6 +3,7 @@ package no.mesan.fag.patterns.timesheet;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeSource;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -16,8 +17,9 @@ import java.io.IOException;
 public class Sheets {
 
     public static void main(final String[] args) throws Exception {
+//      ColorSpec.setTheme(ColorSpec.Theme.RED);
         v1();
-//        v2();
+//      v2();
     }
 
     private static void v1() throws IOException {
