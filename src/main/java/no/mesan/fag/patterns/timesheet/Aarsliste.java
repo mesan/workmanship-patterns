@@ -34,10 +34,18 @@ public class Aarsliste extends Sheets {
         this.source = source;
     }
 
-    public Workbook createAarsoversikt()  {
+    public Workbook createAarsoversikt() {
 
         // Hent timedata for perioden
-        final List<TimesheetEntry> fullList = this.source.forYear(this.year);
+        final List<TimesheetEntry> fullList = new LinkedList<>();
+        int got = 0;
+        while (true) {
+            final List<TimesheetEntry> entries = this.source.forYear(this.year, got);
+            if (entries.isEmpty()) break;
+            fullList.addAll(entries);
+            got = fullList.size();
+        }
+
         // Ingen filtrering
         final List<TimesheetEntry> list = new ArrayList<>();
         list.addAll(fullList);
@@ -46,7 +54,7 @@ public class Aarsliste extends Sheets {
         for (int i = 1; i < 12; i++) matrix.ensureCol(String.format("%02d", i));
         for (final TimesheetEntry entry : list) {
             final int what = entry.getActivity();
-            final String month= String.format("%02d", entry.getWhen().getMonthOfYear());
+            final String month = String.format("%02d", entry.getWhen().getMonthOfYear());
             final double hours = minutesToHours(entry);
             matrix.add(month, "" + what, hours);
         }
@@ -85,7 +93,7 @@ public class Aarsliste extends Sheets {
         for (final String header : tableHeadings) {
             final Cell headCell = tableHead.createCell(colnum++);
             headCell.setCellValue(header);
-            headCell.setCellStyle(styles.get((colnum <3) ? StyleFactory.StyleName.TBL_HEAD_LEFT : StyleFactory.StyleName.TBL_HEAD));
+            headCell.setCellStyle(styles.get((colnum < 3) ? StyleFactory.StyleName.TBL_HEAD_LEFT : StyleFactory.StyleName.TBL_HEAD));
         }
 
         // Datalinjer
@@ -117,7 +125,7 @@ public class Aarsliste extends Sheets {
         final Cell cell1 = row.createCell(colnum++);
         cell1.setCellValue("SUM");
         cell1.setCellStyle(styles.get(StyleFactory.StyleName.SUM1));
-        for (int i = 1; i <= 1+matrix.cSize(); i++) {
+        for (int i = 1; i <= 1 + matrix.cSize(); i++) {
             final Cell cell = row.createCell(colnum++);
             final String ref = cellRef(i + 1, 4) + ":" + cellRef(i + 1, rownum - 1);
             cell.setCellFormula("SUM(" + ref + ")");
@@ -135,7 +143,7 @@ public class Aarsliste extends Sheets {
         }
 
         // Formatter alle kolonner
-        for (int i=0; i< 2+matrix.cSize(); i++) {
+        for (int i = 0; i < 2 + matrix.cSize(); i++) {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(i, (int) (1.05 * sheet.getColumnWidth(i)));
         }

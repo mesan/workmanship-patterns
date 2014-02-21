@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Holder spesifikasjoner for en stil.
  */
-public class StyleSpec {
+public class StyleSpec implements Cloneable {
 
     private boolean isBold= false;
     private boolean isItalic= false;
@@ -36,6 +36,7 @@ public class StyleSpec {
      * @param horizontal Horisontal alignment
      * @param vertical Vertikal alignment
      */
+    @Deprecated
     public StyleSpec(final boolean bold, final boolean italic, final int points,
                      final ColorSpec fgColor, final ColorSpec bgColor, final BorderSpec.BorderLine borderTop,
                      final BorderSpec.BorderLine borderBottom, final BorderSpec.BorderLine borderLeft,
@@ -52,6 +53,196 @@ public class StyleSpec {
         if (borderRight!=null) borders.add(new BorderSpec(BorderSpec.BorderEdge.RIGHT, borderRight));
         this.horizontal = horizontal;
         this.vertical = vertical;
+    }
+    private StyleSpec() { /*EMPTY*/ }
+
+    @Override
+    public StyleSpec clone() throws CloneNotSupportedException {
+        final StyleSpec clone = (StyleSpec) super.clone();
+        clone.borders = new ArrayList<>(this.borders);
+        return clone;
+    }
+
+    /**
+     * Returnerer en builder som tar utgangspunkt i et default oppsett (10-punkt, svart skrift, ingen rammer),
+     * du legger bare til tillegg.
+     *
+     * @return Byggern
+     */
+    public static StyleBuilder newStyle() {
+        return new StyleBuilder(new StyleSpec());
+    }
+
+    /**
+     * Returnerer en builder som tar utgangspunkt i en eksisterende stil.
+     *
+     * @return Byggern
+     */
+    public static StyleBuilder newStyleFrom(final StyleSpec spec) {
+        try {
+            return new StyleBuilder(spec.clone());
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Shouldn't happen", e);
+        }
+    }
+
+    public static class StyleBuilder {
+        private final StyleSpec spec;
+
+        public StyleBuilder(final StyleSpec styleSpec) {
+            spec = styleSpec;
+        }
+
+        /** Fet skrift. */
+        public StyleBuilder bold() {
+            spec.isBold= true;
+            return this;
+        }
+
+        /** Ikke-fet skrift (etter kopi). */
+        public StyleBuilder unbold() {
+            spec.isBold= false;
+            return this;
+        }
+
+        /** Kursiv. */
+        public StyleBuilder italic() {
+            spec.isItalic= true;
+            return this;
+        }
+
+        /** Ikke-kursiv (etter kopi). */
+        public StyleBuilder unitalic() {
+            spec.isItalic= false;
+            return this;
+        }
+
+        /** Fontstørrelse (i punkter). */
+        public StyleBuilder size(final int heigthInPoints) {
+            spec.fontHeigthInPoints= heigthInPoints;
+            return this;
+        }
+
+        /** Tekstfarge. */
+        public StyleBuilder fgColor(final ColorSpec color) {
+            spec.fgColor= color;
+            return this;
+        }
+
+        /** Fyllfarge. */
+        public StyleBuilder bgColor(final ColorSpec color) {
+            spec.bgColor= color;
+            return this;
+        }
+
+        /** Standard fylt bakgrunn. */
+        public StyleBuilder shaded() {
+            fgColor(ColorSpec.SHADE_FG_COLOR);
+            return bgColor(ColorSpec.SHADE_BG_COLOR);
+        }
+
+        /** Sett alle rammer til gitt tykkelse. */
+        public StyleBuilder allBorders(final BorderSpec.BorderLine border) {
+            for (BorderSpec.BorderEdge edge : BorderSpec.BorderEdge.values()) {
+                spec.borders.add(new BorderSpec(edge, border));
+            }
+            return this;
+        }
+
+        /** Sett alle rammer til tykkelse tynn. */
+        public StyleBuilder allBorders() {
+            return allBorders(BorderSpec.BorderLine.THIN_STD);
+        }
+
+        /** Sett venstre ramme til gitt tykkelse. */
+        public StyleBuilder leftBorder(final BorderSpec.BorderLine border) {
+            spec.borders.add(new BorderSpec(BorderSpec.BorderEdge.LEFT, border));
+            return this;
+        }
+
+        /** Sett venstre ramme til tykkelse tynn. */
+        public StyleBuilder leftBorder() {
+            return leftBorder(BorderSpec.BorderLine.THIN_STD);
+        }
+
+        /** Sett høyre ramme til gitt tykkelse. */
+        public StyleBuilder rightBorder(final BorderSpec.BorderLine border) {
+            spec.borders.add(new BorderSpec(BorderSpec.BorderEdge.RIGHT, border));
+            return this;
+        }
+
+        /** Sett høyre ramme til tykkelse tynn. */
+        public StyleBuilder rightBorder() {
+            return rightBorder(BorderSpec.BorderLine.THIN_STD);
+        }
+
+        /** Sett øvre ramme til gitt tykkelse. */
+        public StyleBuilder topBorder(final BorderSpec.BorderLine border) {
+            spec.borders.add(new BorderSpec(BorderSpec.BorderEdge.TOP, border));
+            return this;
+        }
+
+        /** Sett øvre ramme til tykkelse tynn. */
+        public StyleBuilder topBorder() {
+            return topBorder(BorderSpec.BorderLine.THIN_STD);
+        }
+
+        /** Sett nedre ramme til gitt tykkelse. */
+        public StyleBuilder bottomBorder(final BorderSpec.BorderLine border) {
+            spec.borders.add(new BorderSpec(BorderSpec.BorderEdge.BOTTOM, border));
+            return this;
+        }
+
+        /** Sett nedre ramme til tykkelse tynn. */
+        public StyleBuilder bottomBorder() {
+            return bottomBorder(BorderSpec.BorderLine.THIN_STD);
+        }
+
+        /** Sett venstrejustering av tekst. */
+        public StyleBuilder leftAlign() {
+            spec.horizontal= AlignmentSpec.Horizontal.LEFT;
+            return this;
+        }
+
+        /** Sett høyrejustering av tekst. */
+        public StyleBuilder rightAlign() {
+            spec.horizontal= AlignmentSpec.Horizontal.RIGHT;
+            return this;
+        }
+
+        /** Sett sentrering av tekst. */
+        public StyleBuilder centerAlign() {
+            spec.horizontal= AlignmentSpec.Horizontal.CENTER;
+            return this;
+        }
+
+        /** Sett "generell" justering av tekst (dataavhengig). */
+        public StyleBuilder genAlign() {
+            spec.horizontal= AlignmentSpec.Horizontal.GEN;
+            return this;
+        }
+
+        /** Sett plassering i toppen av cellen. */
+        public StyleBuilder verticalTop() {
+            spec.vertical= AlignmentSpec.Vertical.TOP;
+            return this;
+        }
+
+        /** Sett plassering i bunnen av cellen. */
+        public StyleBuilder verticalBottom() {
+            spec.vertical= AlignmentSpec.Vertical.BOTTOM;
+            return this;
+        }
+
+        /** Sett vertikal plassering sentrert i cellen. */
+        public StyleBuilder verticalCenter() {
+            spec.vertical= AlignmentSpec.Vertical.CENTER;
+            return this;
+        }
+
+        public StyleSpec build() {
+            return spec;
+        }
     }
 
     /**
@@ -116,4 +307,5 @@ public class StyleSpec {
           .append('}')
           .toString();
     }
+
 }

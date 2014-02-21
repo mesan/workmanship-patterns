@@ -22,36 +22,17 @@ public class StyleFactory {
 
     private static Map<StyleName, StyleSpec> styleSetup(){
         final Map<StyleName, StyleSpec> styles = new HashMap<>();
-        final StyleSpec h1 = new StyleSpec(true, false, 15, ColorSpec.STD_H_COLOR, null, null, null, null, null,
-                                           AlignmentSpec.Horizontal.CENTER, AlignmentSpec.Vertical.CENTER);
-        final StyleSpec tblHead = new StyleSpec(true, false, 12, ColorSpec.STD_H_COLOR, ColorSpec.STD_BG_COLOR,
-                                                BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.THIN_STD,
-                                                BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.THIN_STD,
-                                                AlignmentSpec.Horizontal.RIGHT, AlignmentSpec.Vertical.CENTER);
-        final StyleSpec tblHeadLeft = new StyleSpec(true, true, 12, ColorSpec.STD_H_COLOR, ColorSpec.STD_BG_COLOR,
-                                                    BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.THIN_STD,
-                                                    BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.MEDIUM_STD,
-                                                    AlignmentSpec.Horizontal.LEFT, AlignmentSpec.Vertical.CENTER);
-        final StyleSpec col1 = new StyleSpec(true, false, 10, null, null, BorderSpec.BorderLine.THIN_STD,
-                                             BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.THIN_STD,
-                                             BorderSpec.BorderLine.MEDIUM_STD, AlignmentSpec.Horizontal.LEFT,
-                                             AlignmentSpec.Vertical.BOTTOM);
-        final StyleSpec data = new StyleSpec(false, false, 10, null, null, BorderSpec.BorderLine.THIN_STD,
-                                              BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.THIN_STD,
-                                              BorderSpec.BorderLine.THIN_STD, AlignmentSpec.Horizontal.GEN,
-                                              AlignmentSpec.Vertical.BOTTOM);
-        final StyleSpec colN = new StyleSpec(false, true, 10, null, null, BorderSpec.BorderLine.THIN_STD,
-                                              BorderSpec.BorderLine.THIN_STD, BorderSpec.BorderLine.THIN_STD,
-                                              BorderSpec.BorderLine.MEDIUM_STD, AlignmentSpec.Horizontal.RIGHT,
-                                              AlignmentSpec.Vertical.BOTTOM);
-        final StyleSpec sums = new StyleSpec(false, true, 12, ColorSpec.SHADE_FG_COLOR, ColorSpec.SHADE_BG_COLOR,
-                                             BorderSpec.BorderLine.MEDIUM_STD, BorderSpec.BorderLine.MEDIUM_STD,
-                                             BorderSpec.BorderLine.MEDIUM_STD, BorderSpec.BorderLine.MEDIUM_STD,
-                                             AlignmentSpec.Horizontal.GEN, AlignmentSpec.Vertical.BOTTOM);
-        final StyleSpec sum1 = new StyleSpec(true, false, 12, ColorSpec.SHADE_FG_COLOR, ColorSpec.SHADE_BG_COLOR,
-                                              BorderSpec.BorderLine.MEDIUM_STD, BorderSpec.BorderLine.MEDIUM_STD,
-                                              BorderSpec.BorderLine.MEDIUM_STD, BorderSpec.BorderLine.MEDIUM_STD,
-                                              AlignmentSpec.Horizontal.GEN, AlignmentSpec.Vertical.BOTTOM);
+        final BorderSpec.BorderLine mediumBorder = BorderSpec.BorderLine.MEDIUM_STD;
+        final StyleSpec h1 = StyleSpec.newStyle()
+                                      .bold().size(15).fgColor(ColorSpec.STD_H_COLOR).centerAlign().verticalCenter()
+                                      .build();
+        final StyleSpec tblHead = StyleSpec.newStyleFrom(h1).size(12).allBorders().rightAlign().build();
+        final StyleSpec tblHeadLeft = StyleSpec.newStyleFrom(tblHead).italic().rightBorder(mediumBorder).build();
+        final StyleSpec data = StyleSpec.newStyle().allBorders().build();
+        final StyleSpec col1= StyleSpec.newStyleFrom(data).bold().leftAlign().rightBorder(mediumBorder).build();
+        final StyleSpec colN= StyleSpec.newStyleFrom(data).italic().rightAlign().rightBorder(mediumBorder).build();
+        final StyleSpec sums = StyleSpec.newStyle().italic().size(12).shaded().allBorders(mediumBorder).build();
+        final StyleSpec sum1 = StyleSpec.newStyleFrom(sums).unitalic().bold().build();
         styles.put(StyleName.H1, h1);
         styles.put(StyleName.TBL_HEAD, tblHead);
         styles.put(StyleName.TBL_HEAD_LEFT, tblHeadLeft);
@@ -70,5 +51,4 @@ public class StyleFactory {
         }
         return styles;
     }
-
 }

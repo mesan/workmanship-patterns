@@ -42,7 +42,15 @@ public class Timeliste extends Sheets {
         final String headingTitle = SHEET_TITLE;
 
         // Hent timedata for bruker
-        final List<TimesheetEntry> fullList = this.source.forEmployee(this.forUser);
+        final List<TimesheetEntry> fullList = new LinkedList<>();
+        int got= 0;
+        while(true) {
+            final List<TimesheetEntry> entries = this.source.forEmployee(this.forUser, got);
+            if (entries.isEmpty()) break;
+            fullList.addAll(entries);
+            got= fullList.size();
+        }
+
         // Filtrer for aktuelt tidsrom
         final List<TimesheetEntry> list = new ArrayList<>();
         for (final TimesheetEntry entry : fullList) {

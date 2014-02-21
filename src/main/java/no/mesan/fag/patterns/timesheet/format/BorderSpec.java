@@ -29,7 +29,8 @@ public class BorderSpec {
 
     public enum BorderLine { // Utterly borderline!
         MEDIUM_STD(ColorSpec.DATA_GRID_COLOR, CellStyle.BORDER_MEDIUM),
-        THIN_STD(ColorSpec.DATA_GRID_COLOR, CellStyle.BORDER_THIN);
+        THIN_STD(ColorSpec.DATA_GRID_COLOR, CellStyle.BORDER_THIN),
+        THICK_STD(ColorSpec.DATA_GRID_COLOR, CellStyle.BORDER_THICK);
 
         private final ColorSpec color;
         private final int border;
