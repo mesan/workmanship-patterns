@@ -21,5 +21,5 @@ public interface TimeServiceAdapter {
      * @param year Året vi vil hente for
      * @return Liste av matchende timeføringer
      */
-    Iterable<TimesheetEntry> forYear(int year, int from);
+    Iterable<TimesheetEntry> forYear(int year);
 }
