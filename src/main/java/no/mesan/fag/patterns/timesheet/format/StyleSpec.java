@@ -21,39 +21,6 @@ public class StyleSpec implements Cloneable {
     private AlignmentSpec.Horizontal horizontal= AlignmentSpec.Horizontal.GEN;
     private AlignmentSpec.Vertical vertical= AlignmentSpec.Vertical.BOTTOM;
 
-    /**
-     * Opprett ny spesifikasjon (ikke avhengig av Excel).
-     *
-     * @param bold Bold?
-     * @param italic Italic?
-     * @param points Punktstørrelse
-     * @param fgColor Tekstfarge
-     * @param bgColor Cellefarge (100% fill)
-     * @param borderTop Linjetykkelse (eller null for ingen borderTop)
-     * @param borderBottom Linjetykkelse (eller null for ingen borderBottom)
-     * @param borderLeft Linjetykkelse (eller null for ingen borderLeft)
-     * @param borderRight Linjetykkelse (eller null for ingen borderRight)
-     * @param horizontal Horisontal alignment
-     * @param vertical Vertikal alignment
-     */
-    @Deprecated
-    public StyleSpec(final boolean bold, final boolean italic, final int points,
-                     final ColorSpec fgColor, final ColorSpec bgColor, final BorderSpec.BorderLine borderTop,
-                     final BorderSpec.BorderLine borderBottom, final BorderSpec.BorderLine borderLeft,
-                     final BorderSpec.BorderLine borderRight, final AlignmentSpec.Horizontal horizontal,
-                     final AlignmentSpec.Vertical vertical) {
-        this.isBold = bold;
-        this.isItalic = italic;
-        this.fontHeigthInPoints = points;
-        this.fgColor = fgColor;
-        this.bgColor = bgColor;
-        if (borderTop!=null) borders.add(new BorderSpec(BorderSpec.BorderEdge.TOP, borderTop));
-        if (borderBottom!=null) borders.add(new BorderSpec(BorderSpec.BorderEdge.BOTTOM, borderBottom));
-        if (borderLeft!=null) borders.add(new BorderSpec(BorderSpec.BorderEdge.LEFT, borderLeft));
-        if (borderRight!=null) borders.add(new BorderSpec(BorderSpec.BorderEdge.RIGHT, borderRight));
-        this.horizontal = horizontal;
-        this.vertical = vertical;
-    }
     private StyleSpec() { /*EMPTY*/ }
 
     @Override
@@ -143,7 +110,7 @@ public class StyleSpec implements Cloneable {
 
         /** Sett alle rammer til gitt tykkelse. */
         public StyleBuilder allBorders(final BorderSpec.BorderLine border) {
-            for (BorderSpec.BorderEdge edge : BorderSpec.BorderEdge.values()) {
+            for (final BorderSpec.BorderEdge edge : BorderSpec.BorderEdge.values()) {
                 spec.borders.add(new BorderSpec(edge, border));
             }
             return this;

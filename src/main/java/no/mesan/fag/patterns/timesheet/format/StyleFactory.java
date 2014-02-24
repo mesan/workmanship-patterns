@@ -46,7 +46,7 @@ public class StyleFactory {
 
     private static Map<StyleName, CellStyle> createWbStyles(final Workbook wb, final Map<StyleName, StyleSpec> map){
         final Map<StyleName, CellStyle> styles = new HashMap<>();
-        for (Map.Entry<StyleName, StyleSpec> entry : map.entrySet()) {
+        for (final Map.Entry<StyleName, StyleSpec> entry : map.entrySet()) {
             styles.put(entry.getKey(), entry.getValue().createStyle(wb));
         }
         return styles;

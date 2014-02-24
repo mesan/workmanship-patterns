@@ -13,7 +13,7 @@ public enum ColorSpec {
     SHADE_FG_COLOR(4),
     DATA_GRID_COLOR(5);
 
-    public enum Theme { RED, GREEN, BLUE };
+    public enum Theme { RED, GREEN, BLUE }
 
     private final static int[] BLUE_THEME= new int[] {
         IndexedColors.BLACK.getIndex(),
@@ -41,7 +41,7 @@ public enum ColorSpec {
     };
 
     private static int[] themeColors= BLUE_THEME;
-    private int color;
+    private final int color;
 
     private ColorSpec(final int color) {
         this.color= color;
