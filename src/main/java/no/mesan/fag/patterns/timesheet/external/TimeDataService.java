@@ -5,7 +5,7 @@ import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import java.util.List;
 
 /**
- * Gnensesnittet til den eksterne tjenesten.
+ * Grensesnittet til den eksterne tjenesten.
  */
 public interface TimeDataService {
 
