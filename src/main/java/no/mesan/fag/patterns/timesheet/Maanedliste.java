@@ -3,6 +3,7 @@ package no.mesan.fag.patterns.timesheet;
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
+import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -40,21 +41,13 @@ public class Maanedliste extends Sheets {
 
     public Workbook createMaanedliste()  {
 
-        // Hent timedata for perioden
-        final List<TimesheetEntry> fullList = new LinkedList<>();
-        int got = 0;
-        while (true) {
-            final List<TimesheetEntry> entries = this.source.forYear(this.year, got);
-            if (entries.isEmpty()) break;
-            fullList.addAll(entries);
-            got = fullList.size();
-        }
-
-        // Filtrer bort interne timer og andre måneder
+        // Hent timedata for perioden og filtrer bort interne timer og andre måneder
         final List<TimesheetEntry> list = new ArrayList<>();
-        for (final TimesheetEntry entry : fullList) {
+        final Iterable<TimesheetEntry> entries = new TimeIteratorService(source).forYear(this.year);
+        for(final TimesheetEntry entry: entries) {
             if (entry.getActivity()< INTERN_START && entry.getWhen().monthOfYear().get() == this.month) list.add(entry);
         }
+
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();
         for (final TimesheetEntry entry : list) {

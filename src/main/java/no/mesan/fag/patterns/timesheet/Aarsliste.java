@@ -3,6 +3,7 @@ package no.mesan.fag.patterns.timesheet;
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
+import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -36,19 +37,13 @@ public class Aarsliste extends Sheets {
 
     public Workbook createAarsoversikt() {
 
-        // Hent timedata for perioden
-        final List<TimesheetEntry> fullList = new LinkedList<>();
-        int got = 0;
-        while (true) {
-            final List<TimesheetEntry> entries = this.source.forYear(this.year, got);
-            if (entries.isEmpty()) break;
-            fullList.addAll(entries);
-            got = fullList.size();
+        // Hent timedata for året, ingen filtrering
+        final List<TimesheetEntry> list = new ArrayList<>();
+        final Iterable<TimesheetEntry> entries = new TimeIteratorService(source).forYear(this.year);
+        for (final TimesheetEntry entry: entries) {
+            list.add(entry);
         }
 
-        // Ingen filtrering
-        final List<TimesheetEntry> list = new ArrayList<>();
-        list.addAll(fullList);
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();
         for (int i = 1; i < 12; i++) matrix.ensureCol(String.format("%02d", i));

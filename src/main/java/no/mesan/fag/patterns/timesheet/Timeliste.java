@@ -3,6 +3,7 @@ package no.mesan.fag.patterns.timesheet;
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
+import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -39,24 +40,15 @@ public class Timeliste extends Sheets {
     }
 
     public Workbook createTimeliste()  {
-        final String headingTitle = SHEET_TITLE;
 
-        // Hent timedata for bruker
-        final List<TimesheetEntry> fullList = new LinkedList<>();
-        int got= 0;
-        while(true) {
-            final List<TimesheetEntry> entries = this.source.forEmployee(this.forUser, got);
-            if (entries.isEmpty()) break;
-            fullList.addAll(entries);
-            got= fullList.size();
-        }
-
-        // Filtrer for aktuelt tidsrom
+        // Hent timedata for bruker og filtrer for aktuelt tidsrom
         final List<TimesheetEntry> list = new ArrayList<>();
-        for (final TimesheetEntry entry : fullList) {
+        final Iterable<TimesheetEntry> entries = new TimeIteratorService(source).forEmployee(this.forUser);
+        for(final TimesheetEntry entry: entries) {
             final LocalDate when = entry.getWhen();
             if (when.year().get() == this.year && when.monthOfYear().get() == this.month) list.add(entry);
         }
+
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();
         final int maxDays= new LocalDate(this.year, this.month, 1).dayOfMonth().getMaximumValue();
@@ -84,7 +76,7 @@ public class Timeliste extends Sheets {
         int colnum = 0;
         final Row heading1 = createRow(sheet, rownum++, 45);
         Cell heading1cell = heading1.createCell(colnum++);
-        heading1cell.setCellValue(headingTitle);
+        heading1cell.setCellValue(SHEET_TITLE);
         heading1cell.setCellStyle(styles.get(StyleFactory.StyleName.H1));
         heading1cell = heading1.createCell(colnum++);
         heading1cell.setCellValue(this.forUser);
