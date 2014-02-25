@@ -6,6 +6,7 @@ import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.external.TimeSource;
+import no.mesan.fag.patterns.timesheet.facade.SheetCell;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -253,7 +254,7 @@ public abstract class Sheets {
             cell1.setCellStyle(styles.get(StyleFactory.StyleName.COL1));
             // Sum
             final Cell cellSum = row.createCell(colnum++);
-            final String ref = cellRef(3, rownum) + ":" + cellRef(matrix.cSize() + 2, rownum);
+            final String ref = SheetCell.cellRef(3, rownum) + ":" + SheetCell.cellRef(matrix.cSize() + 2, rownum);
             cellSum.setCellFormula("SUM(" + ref + ")");
             cellSum.setCellStyle(styles.get(StyleFactory.StyleName.COLN));
             // Data
@@ -284,7 +285,7 @@ public abstract class Sheets {
         cell1.setCellStyle(styles.get(StyleFactory.StyleName.SUM1));
         for (int i = 1; i <= 1+matrix.cSize(); i++) {
             final Cell cell = row.createCell(colnum++);
-            final String ref = cellRef(i + 1, 4) + ":" + cellRef(i + 1, rownum+1);
+            final String ref = SheetCell.cellRef(i + 1, 4) + ":" + SheetCell.cellRef(i + 1, rownum + 1);
             cell.setCellFormula("SUM(" + ref + ")");
             cell.setCellStyle(styles.get(StyleFactory.StyleName.SUMS));
         }
@@ -311,23 +312,6 @@ public abstract class Sheets {
             sheet.autoSizeColumn(i);
             sheet.setColumnWidth(i, (int) (1.05*sheet.getColumnWidth(i)));
         }
-    }
-
-    /**
-     * Lag en cellereferanse (type A2B5) for en gitt kolonne+rad.
-     * @param col Kolonne
-     * @param row Rad
-     * @return Celleref
-     */
-    String cellRef(final int col, final int row) {
-        final int col0= col-1;
-        final int ii= col0/26;
-        final int i= col0%26;
-        final StringBuilder b= new StringBuilder();
-        if (ii>0) b.append((char) ('A'+ii-1));
-        return b.append((char) ('A'+i))
-                .append(row)
-                .toString();
     }
 
     /**
