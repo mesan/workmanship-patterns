@@ -32,7 +32,7 @@ public class Timeliste extends Sheets {
     }
 
     public Workbook createTimeliste()  {
-        return generateReport(source, SHEET_TITLE, "Aktivitet");
+        return generateReport(source, SHEET_TITLE, "Aktivitet", true);
     }
 
     @Override

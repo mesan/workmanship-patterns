@@ -30,7 +30,7 @@ public class Maanedliste extends Sheets {
     }
 
     public Workbook createMaanedliste()  {
-        return generateReport(source, SHEET_NAME, "Bruker -- Aktivitet");
+        return generateReport(source, SHEET_NAME, "Bruker -- Aktivitet", true);
     }
 
     @Override

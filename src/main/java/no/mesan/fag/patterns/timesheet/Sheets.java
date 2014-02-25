@@ -47,6 +47,9 @@ public abstract class Sheets {
         final Aarsliste aarsListe = new Aarsliste(2014, source);
         final Workbook wb3 = aarsListe.createAarsoversikt();
         aarsListe.writeToFile("Årsoversikt", wb3);
+        final Ukeliste ukeListe = new Ukeliste(2014, 1, 15, source);
+        final Workbook wb4 = ukeListe.createUkeliste();
+        ukeListe.writeToFile("Ukeoversikt", wb4);
     }
 /*
     private static void v2() throws IOException {
@@ -87,9 +90,11 @@ public abstract class Sheets {
      * @param dataService Tjeneste for å hente data
      * @param title Navn på arbeidsboken
      * @param headTitle Øverste venstre overskrift i tabellen
+     * @param sortedCols Om kolonneoverskriftene skal være sortert
      * @return Resultat
      */
-    protected final Workbook generateReport(final TimeDataService dataService, final String title, final String headTitle)  {
+    protected final Workbook generateReport(final TimeDataService dataService, final String title,
+                                            final String headTitle, final boolean sortedCols)  {
         final List<TimesheetEntry> list = dataRetrieve(dataService); // Hent timedata og filtrer
         final DoubleMatrix matrix = dataGroup(list); // Grupper data
 
@@ -98,8 +103,8 @@ public abstract class Sheets {
         final Map<StyleFactory.StyleName, CellStyle> styles = StyleFactory.styleSetup(workbook); // Lag nødvendige stiler
 
         createHeading(sheet, styles); // Hovedoverskrift
-        createTableHead(sheet, matrix, styles, headTitle); // Tabelloverskrift
-        createDataGrid(sheet, matrix, styles); // Datalinjer
+        createTableHead(sheet, matrix, styles, headTitle, sortedCols); // Tabelloverskrift
+        createDataGrid(sheet, matrix, styles, sortedCols); // Datalinjer
         createSums(sheet, matrix, styles);  // Sumlinje
         finish(sheet, matrix.cSize());// Rekalkuler & reformatter
 
@@ -219,15 +224,17 @@ public abstract class Sheets {
      * @param matrix Dataene
      * @param styles Stilene
      * @param headTitle Teksten i øverste venstre hjørne
+     * @param sortedCols Om kolonnene skal sorteres
      */
     protected void createTableHead(final Sheet sheet, final DoubleMatrix matrix,
-                                   final Map<StyleFactory.StyleName, CellStyle> styles, final String headTitle) {
+                                   final Map<StyleFactory.StyleName, CellStyle> styles, final String headTitle,
+                                   final boolean sortedCols) {
         int colnum= 0;
         final Row tableHead = makeRow(sheet, 2, 40);
         final List<String> tableHeadings = new LinkedList<>();
         tableHeadings.add(headTitle);
         tableHeadings.add("Sum");
-        tableHeadings.addAll(matrix.colKeys(true));
+        tableHeadings.addAll(matrix.colKeys(sortedCols));
         for (final String header : tableHeadings) {
             final Cell headCell = tableHead.createCell(colnum++);
             headCell.setCellValue(header);
@@ -241,9 +248,11 @@ public abstract class Sheets {
      * @param sheet Arket
      * @param matrix Dataene
      * @param styles Stilene
+     * @param sortedCols Om kolonnene skal sorteres
      */
     protected void createDataGrid(final Sheet sheet, final DoubleMatrix matrix,
-                                  final Map<StyleFactory.StyleName, CellStyle> styles) {
+                                  final Map<StyleFactory.StyleName, CellStyle> styles,
+                                  final boolean sortedCols) {
         int rownum= 3; // Hopp over rad
         for (final String rKey : matrix.rowKeys(true)) {
             int colnum = 0;
@@ -259,7 +268,7 @@ public abstract class Sheets {
             cellSum.setCellStyle(styles.get(StyleFactory.StyleName.COLN));
             // Data
             final CellStyle dataStyle = styles.get(StyleFactory.StyleName.DATA);
-            for (final String c : matrix.colKeys(true)) {
+            for (final String c : matrix.colKeys(sortedCols)) {
                 final Double v = matrix.get(c, rKey);
                 final Cell cellx = row.createCell(colnum);
                 cellx.setCellStyle(dataStyle);
