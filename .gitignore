@@ -11,6 +11,6 @@ lib/
 *.iws
 /.idea
 
-/timesheet.xlsx
+/*.xlsx
 /atlassian-ide-plugin.xml
 /Timeliste.xlsx
