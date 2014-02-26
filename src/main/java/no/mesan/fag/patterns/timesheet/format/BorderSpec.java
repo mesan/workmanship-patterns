@@ -2,30 +2,24 @@ package no.mesan.fag.patterns.timesheet.format;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 
-/**
- * Holder ulike kantlinjer.
- */
+/** Holder ulike kantlinjer. */
 public class BorderSpec {
+    private final BorderEdge edge;
+    private final BorderLine line;
 
     public BorderEdge edge() {
         return edge;
     }
-
     public BorderLine line() {
         return line;
     }
-
-    private final BorderEdge edge;
-    private final BorderLine line;
 
     public BorderSpec(final BorderEdge edge, final BorderLine line) {
         this.edge = edge;
         this.line = line;
     }
 
-    public enum BorderEdge {
-        TOP, BOTTOM, LEFT, RIGHT
-    }
+    public enum BorderEdge { TOP, BOTTOM, LEFT, RIGHT }
 
     public enum BorderLine { // Utterly borderline!
         MEDIUM_STD(ColorSpec.DATA_GRID_COLOR, CellStyle.BORDER_MEDIUM),
@@ -43,7 +37,6 @@ public class BorderSpec {
         ColorSpec color() {
             return this.color;
         }
-
         int border() {
             return this.border;
         }

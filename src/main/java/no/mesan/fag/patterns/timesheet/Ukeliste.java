@@ -13,13 +13,10 @@ import org.joda.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Timeliste for alle brukere for en enkelt uke.
- */
+/** Timeliste for alle brukere for en enkelt uke. */
 public class Ukeliste extends Sheets {
     public static final String SHEET_TITLE = "Ukeliste";
-
-    private static final String[] DAYS = new String[] { "Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"};
+    private static final String[] DAYS = { "Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"};
 
     private final TimeDataService source;
 
@@ -36,13 +33,11 @@ public class Ukeliste extends Sheets {
         this.source = source;
     }
 
-    public Workbook createUkeliste()  {
-        return generateReport(source, SHEET_TITLE, "Aktivitet/bruker -- dag", false);
-    }
+    public Workbook createUkeliste()  { return generateReport(source, SHEET_TITLE, "Aktivitet/bruker -- dag", false); }
 
     @Override
     protected Iterable<TimesheetEntry> entryIterator(final TimeIteratorService service) {
-        return service.forYear(this.year);
+        return service.forYear(year);
     }
 
     @Override

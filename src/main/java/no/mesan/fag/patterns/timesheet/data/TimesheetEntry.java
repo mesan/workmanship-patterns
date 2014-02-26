@@ -5,9 +5,7 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 1 entry i timelisten.
- */
+/** 1 entry i timelisten. */
 public class TimesheetEntry {
     private final String userID;
     private final LocalDate when;
@@ -37,21 +35,10 @@ public class TimesheetEntry {
         return res;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public LocalDate getWhen() {
-        return when;
-    }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public int getActivity() {
-        return activity;
-    }
+    public String getUserID() { return userID; }
+    public LocalDate getWhen() { return when; }
+    public int getMinutes() { return minutes; }
+    public int getActivity() { return activity; }
 
     @Override
     public String toString() {

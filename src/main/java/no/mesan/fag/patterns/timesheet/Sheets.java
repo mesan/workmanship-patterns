@@ -6,37 +6,28 @@ import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.external.TimeSource;
-import no.mesan.fag.patterns.timesheet.facade.SheetCell;
+import no.mesan.fag.patterns.timesheet.facade.DoubleCell;
+import no.mesan.fag.patterns.timesheet.facade.EmptyCell;
+import no.mesan.fag.patterns.timesheet.facade.FormulaCell;
+import no.mesan.fag.patterns.timesheet.facade.PoiAdapter;
+import no.mesan.fag.patterns.timesheet.facade.SpreadSheet;
+import no.mesan.fag.patterns.timesheet.facade.StringCell;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.PrintSetup;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
+import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Superklasse for timelister.
- */
+/** Superklasse for timelister. */
 public abstract class Sheets {
 
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
-        v1();
-//      v2();
-    }
-
-    private static void v1() throws IOException {
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
         final Workbook wb1 = timeliste.createTimeliste();
@@ -51,20 +42,6 @@ public abstract class Sheets {
         final Workbook wb4 = ukeListe.createUkeliste();
         ukeListe.writeToFile("Ukeoversikt", wb4);
     }
-/*
-    private static void v2() throws IOException {
-        final TimeDataServer source = new TimeDataServer(new SmallTimeSource());
-        final Timeliste timeliste = new Timeliste("A", 2014, 1, source);
-        final Workbook wb1 = timeliste.createTimeliste();
-        timeliste.writeToFile("Timeliste2", wb1);
-        final Maanedliste mndListe = new Maanedliste(2014, 1, source);
-        final Workbook wb2 = mndListe.createMaanedliste();
-        mndListe.writeToFile("Månedsoppgjør2", wb2);
-        final Aarsliste aarsListe = new Aarsliste(2014, source);
-        final Workbook wb3 = aarsListe.createAarsoversikt();
-        aarsListe.writeToFile("Årsoversikt2", wb3);
-    }
-*/
 
     /**
      * Dette er hovedrutinen for å lage rapporter.
@@ -98,17 +75,14 @@ public abstract class Sheets {
         final List<TimesheetEntry> list = dataRetrieve(dataService); // Hent timedata og filtrer
         final DoubleMatrix matrix = dataGroup(list); // Grupper data
 
-        final Sheet sheet = createWorkbook(title); // Lag en arbeidsbok med 1 side
-        final Workbook workbook= sheet.getWorkbook();
-        final Map<StyleFactory.StyleName, CellStyle> styles = StyleFactory.styleSetup(workbook); // Lag nødvendige stiler
+        final SpreadSheet sheet = new SpreadSheet(title);
+        final Map<StyleName, StyleSpec> styles = StyleFactory.styleSetup(); // Lag nødvendige stiler
 
-        createHeading(sheet, styles); // Hovedoverskrift
-        createTableHead(sheet, matrix, styles, headTitle, sortedCols); // Tabelloverskrift
-        createDataGrid(sheet, matrix, styles, sortedCols); // Datalinjer
-        createSums(sheet, matrix, styles);  // Sumlinje
-        finish(sheet, matrix.cSize());// Rekalkuler & reformatter
-
-        return workbook;
+        createHeading(sheet); // Hovedoverskrift
+        createTableHead(sheet, matrix, headTitle, sortedCols); // Tabelloverskrift
+        createDataGrid(sheet, matrix, sortedCols); // Datalinjer
+        createSums(sheet, matrix);  // Sumlinje
+        return finish(title, sheet, styles); // Konverter til Workbook
     }
 
     /**
@@ -138,9 +112,7 @@ public abstract class Sheets {
      * @param entry Et entry
      * @return true hvis denne skal være med i resultat
      */
-    protected boolean acceptData(final TimesheetEntry entry) {
-        return true;
-    }
+    protected boolean acceptData(final TimesheetEntry entry) { return true; }
 
     /**
      * Grupper og summer data i kolonner og rader.
@@ -182,64 +154,43 @@ public abstract class Sheets {
     }
 
     /**
-     * Opprett selve arbeidsboken med 1 ark.
-     * @param title Navn på arket
-     * @return Arket (denne gir oss tilgang til boken ved behov)
-     */
-    protected Sheet createWorkbook(final String title) {
-        final Workbook workbook = new XSSFWorkbook();
-        final Sheet sheet = workbook.createSheet(title);
-        final PrintSetup printSetup = sheet.getPrintSetup();
-        printSetup.setLandscape(true);
-        sheet.setFitToPage(true);
-        sheet.setHorizontallyCenter(true);
-        return sheet;
-    }
-
-    /**
      * Lag overskriftslinjen øverst i arket.
      * @param sheet Arket
-     * @param styles Gir tilgang til nødvendige stiler
      */
-    protected void createHeading(final Sheet sheet, final Map<StyleFactory.StyleName, CellStyle> styles) {
+    protected void createHeading(final SpreadSheet sheet) {
+        final int rownum= 0;
         int colnum= 0;
-        final Row row = makeRow(sheet, 0, 45);
-        final CellStyle style = styles.get(StyleFactory.StyleName.H1);
+        sheet.setRowHeight(rownum, 45);
         for (final String text : headingTexts()) {
-            final Cell cell = row.createCell(colnum++);
-            cell.setCellValue(text);
-            cell.setCellStyle(style);
+            sheet.setCell(colnum++, rownum, new StringCell(text, StyleName.H1));
         }
     }
 
     /**
-     * Returner en liste over tekstene i toppoverskriftenm.
+     * Returner en liste over tekstene i toppoverskriften.
      * @return Som nevnt...
      */
     protected abstract List<String> headingTexts();
 
     /**
-     * lag tabelloverskriftene
+     * Lag tabelloverskriftene.
      * @param sheet Arket
      * @param matrix Dataene
-     * @param styles Stilene
      * @param headTitle Teksten i øverste venstre hjørne
      * @param sortedCols Om kolonnene skal sorteres
      */
-    protected void createTableHead(final Sheet sheet, final DoubleMatrix matrix,
-                                   final Map<StyleFactory.StyleName, CellStyle> styles, final String headTitle,
-                                   final boolean sortedCols) {
+    protected void createTableHead(final SpreadSheet sheet, final DoubleMatrix matrix,
+                                   final String headTitle, final boolean sortedCols) {
+        final int rownum= 2;
         int colnum= 0;
-        final Row tableHead = makeRow(sheet, 2, 40);
+        sheet.setRowHeight(rownum, 40);
         final List<String> tableHeadings = new LinkedList<>();
         tableHeadings.add(headTitle);
         tableHeadings.add("Sum");
         tableHeadings.addAll(matrix.colKeys(sortedCols));
         for (final String header : tableHeadings) {
-            final Cell headCell = tableHead.createCell(colnum++);
-            headCell.setCellValue(header);
-            headCell.setCellStyle(styles.get((colnum <3) ? StyleFactory.StyleName.TBL_HEAD_LEFT
-                                                         : StyleFactory.StyleName.TBL_HEAD));
+            sheet.setCell(colnum++, rownum,
+                          new StringCell(header, (colnum < 3) ? StyleName.TBL_HEAD_LEFT : StyleName.TBL_HEAD));
         }
     }
 
@@ -247,33 +198,22 @@ public abstract class Sheets {
      * Skriv inn alle data (uten sum eller overskrifter)
      * @param sheet Arket
      * @param matrix Dataene
-     * @param styles Stilene
      * @param sortedCols Om kolonnene skal sorteres
      */
-    protected void createDataGrid(final Sheet sheet, final DoubleMatrix matrix,
-                                  final Map<StyleFactory.StyleName, CellStyle> styles,
-                                  final boolean sortedCols) {
-        int rownum= 3; // Hopp over rad
+    protected void createDataGrid(final SpreadSheet sheet, final DoubleMatrix matrix, final boolean sortedCols) {
+        int rownum = 1;
+        sheet.getData().ensureRow(rownum++);  // Hopp over rad
         for (final String rKey : matrix.rowKeys(true)) {
+            rownum++;
             int colnum = 0;
-            final Row row = makeRow(sheet, rownum++, -1);
-            // Index
-            final Cell cell1 = row.createCell(colnum++);
-            cell1.setCellValue(rKey);
-            cell1.setCellStyle(styles.get(StyleFactory.StyleName.COL1));
-            // Sum
-            final Cell cellSum = row.createCell(colnum++);
-            final String ref = SheetCell.cellRef(3, rownum) + ":" + SheetCell.cellRef(matrix.cSize() + 2, rownum);
-            cellSum.setCellFormula("SUM(" + ref + ")");
-            cellSum.setCellStyle(styles.get(StyleFactory.StyleName.COLN));
-            // Data
-            final CellStyle dataStyle = styles.get(StyleFactory.StyleName.DATA);
-            for (final String c : matrix.colKeys(sortedCols)) {
+            sheet.setCell(colnum++, rownum, new StringCell(rKey, StyleName.COL1)); // Index
+            sheet.setCell(colnum, rownum,
+                          FormulaCell.formulaSUM(colnum + 2, rownum + 1, 2 + matrix.cSize(), rownum + 1,
+                                                 StyleName.COLN)); // Sum
+            for (final String c : matrix.colKeys(sortedCols)) { // Data
                 final Double v = matrix.get(c, rKey);
-                final Cell cellx = row.createCell(colnum);
-                cellx.setCellStyle(dataStyle);
-                if (v != null) cellx.setCellValue(v);
-                colnum++;
+                sheet.setCell(++colnum, rownum, (v == null) ? new EmptyCell(StyleName.DATA)
+                                                            : new DoubleCell(v, StyleName.DATA));
             }
         }
     }
@@ -282,45 +222,25 @@ public abstract class Sheets {
      * Sett inn sumlinjen.
      * @param sheet Arket
      * @param matrix Dataene
-     * @param styles Stilene
      */
-    protected void createSums(final Sheet sheet, final DoubleMatrix matrix,
-                              final Map<StyleFactory.StyleName, CellStyle> styles) {
-        int colnum = 0;
-        final int rownum= sheet.getLastRowNum();
-        final Row row = makeRow(sheet, rownum+1, -1);
-        final Cell cell1 = row.createCell(colnum++);
-        cell1.setCellValue("SUM");
-        cell1.setCellStyle(styles.get(StyleFactory.StyleName.SUM1));
+    protected void createSums(final SpreadSheet sheet, final DoubleMatrix matrix) {
+        final int rownum= sheet.lastRowNum();
+        sheet.setCell(0, rownum, new StringCell("SUM", StyleName.SUM1));
         for (int i = 1; i <= 1+matrix.cSize(); i++) {
-            final Cell cell = row.createCell(colnum++);
-            final String ref = SheetCell.cellRef(i + 1, 4) + ":" + SheetCell.cellRef(i + 1, rownum + 1);
-            cell.setCellFormula("SUM(" + ref + ")");
-            cell.setCellStyle(styles.get(StyleFactory.StyleName.SUMS));
+            sheet.setCell(i, rownum, FormulaCell.formulaSUM(i+1, 4, i+1, rownum, StyleName.SUMS));
         }
     }
 
     /**
-     * Rekalkuler formler, juster bredder.
-     * @param sheet Arket
-     * @param dataCols Antall datakolonner (uten ledetekst/sum)
+     * Lag arbeidsbok!
+     * @param title Navn på arket
+     * @param values Innholdet i boka
+     * @param styles Stilene som skal inn
      */
-    protected void finish(final Sheet sheet, final int dataCols) {
-        final Workbook workbook= sheet.getWorkbook();
-        final FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-        for (final Row r : sheet) {
-            for (final Cell c : r) {
-                if (c.getCellType() == Cell.CELL_TYPE_FORMULA) {
-                    evaluator.evaluateFormulaCell(c);
-                }
-            }
-        }
-
-        // Formatter alle kolonner
-        for (int i=0; i< 2+dataCols; i++) {
-            sheet.autoSizeColumn(i);
-            sheet.setColumnWidth(i, (int) (1.05*sheet.getColumnWidth(i)));
-        }
+    protected Workbook finish(final String title, final SpreadSheet values, final Map<StyleName, StyleSpec> styles) {
+        final PoiAdapter adapter = new PoiAdapter(title, styles);
+        adapter.addData(values);
+        return adapter.create();
     }
 
     /**
@@ -330,24 +250,7 @@ public abstract class Sheets {
      * @throws IOException Verden er ikke perfekt
      */
     protected void writeToFile(final String bookName, final Workbook workbook) throws IOException {
-        final String fileName = bookName + ".xlsx";
-        final FileOutputStream out = new FileOutputStream(fileName);
-        workbook.write(out);
-        out.close();
-    }
-
-    /**
-     * Lag en ny rad.
-     * @param sheet Arket
-     * @param rownum Radnummer
-     * @param height Ønsket høyde (<=0 for å bruke default)
-     * @return Den nye raden
-     */
-    protected Row makeRow(final Sheet sheet, final int rownum, final int height) {
-        final Row row;
-        row= sheet.createRow(rownum);
-        if (height>0) row.setHeightInPoints(height);
-        return row;
+        PoiAdapter.writeToFile(bookName, workbook);
     }
 
     /**
@@ -355,5 +258,7 @@ public abstract class Sheets {
      * @param entry Original
      * @return Timer
      */
-    protected double minutesToHours(final TimesheetEntry entry) {return (entry.getMinutes() / 30) / 2.0;}
+    protected double minutesToHours(final TimesheetEntry entry) {
+        return (entry.getMinutes() / 30) / 2.0;
+    }
 }

@@ -35,19 +35,26 @@ public class Maanedliste extends Sheets {
 
     @Override
     protected Iterable<TimesheetEntry> entryIterator(final TimeIteratorService service) {
-        return service.forYear(this.year);
+        return service.forYear(year);
     }
 
     @Override
     protected boolean acceptData(final TimesheetEntry entry) {
-        return entry.getActivity()< INTERN_START && entry.getWhen().monthOfYear().get() == this.month;
+        return entry.getActivity()< INTERN_START && entry.getWhen().monthOfYear().get() == month;
     }
 
     @Override
     protected List<String> headingTexts() {
-        return Arrays.asList(SHEET_TITLE, String.format("%04d/%02d", this.year, this.month));
+        return Arrays.asList(SHEET_TITLE, String.format("%04d/%02d", year, month));
     }
 
-    @Override protected String getRowRef(final TimesheetEntry entry) { return entry.getUserID(); }
-    @Override protected String getColRef(final TimesheetEntry entry) { return ""+ entry.getActivity(); }
+    @Override
+    protected String getRowRef(final TimesheetEntry entry) {
+        return entry.getUserID();
+    }
+
+    @Override
+    protected String getColRef(final TimesheetEntry entry) {
+        return ""+ entry.getActivity();
+    }
 }

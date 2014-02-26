@@ -7,9 +7,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Holder spesifikasjoner for en stil.
- */
+/** Holder spesifikasjoner for en stil. */
 public class StyleSpec implements Cloneable {
 
     private boolean isBold= false;
@@ -36,9 +34,7 @@ public class StyleSpec implements Cloneable {
      *
      * @return Byggern
      */
-    public static StyleBuilder newStyle() {
-        return new StyleBuilder(new StyleSpec());
-    }
+    public static StyleBuilder newStyle() { return new StyleBuilder(new StyleSpec()); }
 
     /**
      * Returnerer en builder som tar utgangspunkt i en eksisterende stil.
@@ -274,5 +270,4 @@ public class StyleSpec implements Cloneable {
           .append('}')
           .toString();
     }
-
 }

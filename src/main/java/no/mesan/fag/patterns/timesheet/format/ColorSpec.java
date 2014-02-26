@@ -2,9 +2,7 @@ package no.mesan.fag.patterns.timesheet.format;
 
 import org.apache.poi.ss.usermodel.IndexedColors;
 
-/**
- * Holder sett av farger.
- */
+/** Holder sett av farger. */
 public enum ColorSpec {
     STD_FG_COLOR(0),
     STD_BG_COLOR(1),
@@ -15,7 +13,7 @@ public enum ColorSpec {
 
     public enum Theme { RED, GREEN, BLUE }
 
-    private final static int[] BLUE_THEME= new int[] {
+    private static final int[] BLUE_THEME= {
         IndexedColors.BLACK.getIndex(),
         IndexedColors.WHITE.getIndex(),
         IndexedColors.DARK_BLUE.getIndex(),
@@ -23,7 +21,7 @@ public enum ColorSpec {
         IndexedColors.WHITE.getIndex(),
         IndexedColors.BLACK.getIndex()
     };
-    private final static int[] RED_THEME= new int[] {
+    private static final int[] RED_THEME= {
         IndexedColors.BLACK.getIndex(),
         IndexedColors.WHITE.getIndex(),
         IndexedColors.DARK_RED.getIndex(),
@@ -31,7 +29,7 @@ public enum ColorSpec {
         IndexedColors.WHITE.getIndex(),
         IndexedColors.BLACK.getIndex()
     };
-    private final static int[] GREEN_THEME= new int[] {
+    private static final int[] GREEN_THEME= {
         IndexedColors.BLACK.getIndex(),
         IndexedColors.WHITE.getIndex(),
         IndexedColors.DARK_GREEN.getIndex(),
@@ -46,7 +44,6 @@ public enum ColorSpec {
     private ColorSpec(final int color) {
         this.color= color;
     }
-
     public int color() {
         return themeColors[color];
     }
