@@ -5,7 +5,7 @@ import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Holder data om et regneark uten å blande inn POI før til slutt. */
+/** Holder data om et regneark uten å blande inn POI. */
 public class SpreadSheet {
 
     /** Navnet på (det eneste) arket. */
