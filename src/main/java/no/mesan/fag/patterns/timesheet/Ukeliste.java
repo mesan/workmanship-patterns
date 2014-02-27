@@ -33,7 +33,9 @@ public class Ukeliste extends Sheets {
         this.source = source;
     }
 
-    public Workbook createUkeliste()  { return generateReport(source, SHEET_TITLE, "Aktivitet/bruker -- dag", false); }
+    public Workbook createUkeliste()  {
+        return generateReport(source, SHEET_TITLE, "Aktivitet/bruker -- dag", false);
+    }
 
     @Override
     protected Iterable<TimesheetEntry> entryIterator(final TimeIteratorService service) {

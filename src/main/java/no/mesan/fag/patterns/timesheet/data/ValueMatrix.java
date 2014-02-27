@@ -30,7 +30,9 @@ public class ValueMatrix<C extends Comparable<? super C>, R extends Comparable<?
     private final Map<String, V> values = new HashMap<>();
 
     /** Default constructor. */
-    public ValueMatrix() { super(); }
+    public ValueMatrix() {
+        super();
+    }
 
     /** Create map key. */
     private String key(final C col, final R row) {
@@ -55,13 +57,19 @@ public class ValueMatrix<C extends Comparable<? super C>, R extends Comparable<?
     }
 
     /** Get the number of rows. */
-    public int rSize() { return this.allRowKeys.size(); }
+    public int rSize() {
+        return this.allRowKeys.size();
+    }
 
     /** Get the number of columns. */
-    public int cSize() { return this.allColKeys.size(); }
+    public int cSize() {
+        return this.allColKeys.size();
+    }
 
     /** Get the value of a given cell (null if not defined). */
-    public V get(final C col, final R row) { return this.values.get(key(col, row)); }
+    public V get(final C col, final R row) {
+        return this.values.get(key(col, row));
+    }
 
     /** Add a value, overwriting whatever was there. */
     public ValueMatrix<C, R, V> put(final C col, final R row, final V val) {

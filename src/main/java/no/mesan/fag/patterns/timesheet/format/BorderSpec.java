@@ -10,6 +10,7 @@ public class BorderSpec {
     public BorderEdge edge() {
         return edge;
     }
+
     public BorderLine line() {
         return line;
     }
@@ -37,6 +38,7 @@ public class BorderSpec {
         ColorSpec color() {
             return this.color;
         }
+
         int border() {
             return this.border;
         }

@@ -35,10 +35,21 @@ public class TimesheetEntry {
         return res;
     }
 
-    public String getUserID() { return userID; }
-    public LocalDate getWhen() { return when; }
-    public int getMinutes() { return minutes; }
-    public int getActivity() { return activity; }
+    public String getUserID() {
+        return userID;
+    }
+
+    public LocalDate getWhen() {
+        return when;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public int getActivity() {
+        return activity;
+    }
 
     @Override
     public String toString() {

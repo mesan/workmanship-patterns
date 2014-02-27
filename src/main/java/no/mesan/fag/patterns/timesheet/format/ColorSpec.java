@@ -44,6 +44,7 @@ public enum ColorSpec {
     private ColorSpec(final int color) {
         this.color= color;
     }
+
     public int color() {
         return themeColors[color];
     }

@@ -112,7 +112,9 @@ public abstract class Sheets {
      * @param entry Et entry
      * @return true hvis denne skal være med i resultat
      */
-    protected boolean acceptData(final TimesheetEntry entry) { return true; }
+    protected boolean acceptData(final TimesheetEntry entry) {
+        return true;
+    }
 
     /**
      * Grupper og summer data i kolonner og rader.
