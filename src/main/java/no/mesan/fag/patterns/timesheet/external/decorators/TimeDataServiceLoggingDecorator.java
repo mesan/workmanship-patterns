@@ -1,15 +1,12 @@
 package no.mesan.fag.patterns.timesheet.external.decorators;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 
+import java.util.List;
+import java.util.logging.Logger;
 
-/**
- * Dekoratør for den eksterne tjenesten som legger på litt fancy logging.
- */
+/** Dekoratør for den eksterne tjenesten som legger på litt fancy logging. */
 public class TimeDataServiceLoggingDecorator extends TimeDataServiceDecorator {
 
     private static final Logger LOG = Logger.getLogger("TimeDataServiceLoggingDecorator");
@@ -27,7 +24,6 @@ public class TimeDataServiceLoggingDecorator extends TimeDataServiceDecorator {
         final long timeSpent = System.currentTimeMillis() - start;
 
         LOG.info(String.format("Found %d entries, in %dms", timesheetEntries.size(), timeSpent));
-
         return timesheetEntries;
     }
 
@@ -42,7 +38,6 @@ public class TimeDataServiceLoggingDecorator extends TimeDataServiceDecorator {
         final long timeSpent = System.currentTimeMillis() - start;
 
         LOG.info(String.format("Found %d entries, in %dms", timesheetEntries.size(), timeSpent));
-
         return timesheetEntries;
     }
 }

@@ -47,7 +47,6 @@ public abstract class SheetCell {
     /**
      * Håndterer visitors (f.eks. for å fylle inn verdi.
      * @param visitor Fremmedkaren
-     * @return Cellen
      */
     protected abstract void visit(CellVisitor visitor);
 
