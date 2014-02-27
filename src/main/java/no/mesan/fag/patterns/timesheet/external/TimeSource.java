@@ -5,9 +5,7 @@ import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Kilde til timedata.
- */
+/** Kilde til timedata. */
 public class TimeSource implements Iterable<TimesheetEntry> {
 
     private static final List<TimesheetEntry> ENTRIES= TimesheetEntry.create(
@@ -318,6 +316,7 @@ public class TimeSource implements Iterable<TimesheetEntry> {
             "jorgenj","2014-01-06","1325","690"	,	"oysteins","2014-04-03","1961","210"	,
             "oysteins","2014-04-22","1023","270"	,	"jorgenj","2014-03-27","1940","690"
             );
+
     @Override
     public Iterator<TimesheetEntry> iterator() {
         return ENTRIES.iterator();

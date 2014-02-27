@@ -25,18 +25,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Superklasse for timelister.
- */
+/** Superklasse for timelister. */
 public abstract class Sheets {
 
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
-        v1();
-//      v2();
-    }
-
-    private static void v1() throws IOException {
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
         final Workbook wb1 = timeliste.createTimeliste();
@@ -51,20 +44,6 @@ public abstract class Sheets {
         final Workbook wb4 = ukeListe.createUkeliste();
         ukeListe.writeToFile("Ukeoversikt", wb4);
     }
-/*
-    private static void v2() throws IOException {
-        final TimeDataServer source = new TimeDataServer(new SmallTimeSource());
-        final Timeliste timeliste = new Timeliste("A", 2014, 1, source);
-        final Workbook wb1 = timeliste.createTimeliste();
-        timeliste.writeToFile("Timeliste2", wb1);
-        final Maanedliste mndListe = new Maanedliste(2014, 1, source);
-        final Workbook wb2 = mndListe.createMaanedliste();
-        mndListe.writeToFile("Månedsoppgjør2", wb2);
-        final Aarsliste aarsListe = new Aarsliste(2014, source);
-        final Workbook wb3 = aarsListe.createAarsoversikt();
-        aarsListe.writeToFile("Årsoversikt2", wb3);
-    }
-*/
 
     /**
      * Dette er hovedrutinen for å lage rapporter.
@@ -213,13 +192,13 @@ public abstract class Sheets {
     }
 
     /**
-     * Returner en liste over tekstene i toppoverskriftenm.
+     * Returner en liste over tekstene i toppoverskriften.
      * @return Som nevnt...
      */
     protected abstract List<String> headingTexts();
 
     /**
-     * lag tabelloverskriftene
+     * Lag tabelloverskriftene.
      * @param sheet Arket
      * @param matrix Dataene
      * @param styles Stilene
@@ -355,5 +334,7 @@ public abstract class Sheets {
      * @param entry Original
      * @return Timer
      */
-    protected double minutesToHours(final TimesheetEntry entry) {return (entry.getMinutes() / 30) / 2.0;}
+    protected double minutesToHours(final TimesheetEntry entry) {
+        return (entry.getMinutes() / 30) / 2.0;
+    }
 }

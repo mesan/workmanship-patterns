@@ -1,17 +1,19 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
-import no.mesan.fag.patterns.timesheet.format.StyleFactory;
+import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 
-/**
- * En celle med verdiinnhold (ikkke formel).
- */
-public class ValueCell<T> extends SheetCell {
+/** En celle med verdiinnhold (ikke formel). */
+abstract class ValueCell<T> extends SheetCell {
 
-    /** Verdien som skal inn. */
+    /** Verdien. */
     private final T value;
 
-    public ValueCell(final T value, final StyleFactory.StyleName style) {
+    ValueCell(final T value, final StyleName style) {
         super(style);
-        this.value = value;
+        this.value= value;
+    }
+
+    T getValue() {
+        return value;
     }
 }

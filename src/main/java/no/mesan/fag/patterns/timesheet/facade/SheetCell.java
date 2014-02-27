@@ -1,15 +1,13 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
-import no.mesan.fag.patterns.timesheet.format.StyleFactory;
+import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 
-/**
- * Rotklasse for "ting som skal i celler".
- */
+/** Rotklasse for "ting som skal i celler". */
 public abstract class SheetCell {
     /** Stilen som skal brukes. */
-    private final StyleFactory.StyleName style;
+    private final StyleName style;
 
-    protected SheetCell(final StyleFactory.StyleName style) {
+    protected SheetCell(final StyleName style) {
         this.style = style;
     }
 

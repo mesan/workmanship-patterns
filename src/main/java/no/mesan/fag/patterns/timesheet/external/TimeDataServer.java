@@ -1,14 +1,13 @@
 package no.mesan.fag.patterns.timesheet.external;
 
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
+
 import org.joda.time.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Implementasjon av TimeDataService.
- */
+/** * Dette er liksom selve den eksterne serveren. Tilgi meg, hadde ikke råd til en stormaskin til hver. */
 public class TimeDataServer implements TimeDataService {
 
     private final Iterable<TimesheetEntry> source;
@@ -20,7 +19,7 @@ public class TimeDataServer implements TimeDataService {
 
     @Override
     public List<TimesheetEntry> forEmployee(final String userID, final int from) {
-        final LinkedList<TimesheetEntry> list = new LinkedList<>();
+        final List<TimesheetEntry> list = new LinkedList<>();
         int skip= from;
         for (final TimesheetEntry entry : source) {
             if (entry.getUserID().equals(userID)) {
@@ -33,7 +32,7 @@ public class TimeDataServer implements TimeDataService {
 
     @Override
     public List<TimesheetEntry> forYear(final int year, final int from) {
-        final LinkedList<TimesheetEntry> list = new LinkedList<>();
+        final List<TimesheetEntry> list = new LinkedList<>();
         int skip= from;
         for (final TimesheetEntry entry : source) {
             final LocalDate when = entry.getWhen();

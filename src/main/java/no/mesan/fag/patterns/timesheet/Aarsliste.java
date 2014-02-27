@@ -10,9 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Timer per prosjekt per måned over et år.
- */
+/** Timer per prosjekt per måned over et år. */
 public class Aarsliste extends Sheets {
     public static final String SHEET_TITLE = "Årsoversikt";
 
@@ -31,19 +29,23 @@ public class Aarsliste extends Sheets {
 
     @Override
     protected Iterable<TimesheetEntry> entryIterator(final TimeIteratorService service) {
-        return service.forYear(this.year);
+        return service.forYear(year);
     }
+
     @Override
     protected void dataExtraHeadings(final DoubleMatrix matrix) {
         for (int i = 1; i < 12; i++) matrix.ensureCol(String.format("%02d", i));
     }
+
     @Override
     protected List<String> headingTexts() {
-        return Arrays.asList(SHEET_TITLE, String.format("%04d", this.year));
+        return Arrays.asList(SHEET_TITLE, String.format("%04d", year));
     }
+
     @Override protected String getRowRef(final TimesheetEntry entry) {
         return ""+ entry.getActivity();
     }
+
     @Override protected String getColRef(final TimesheetEntry entry) {
         return String.format("%02d", entry.getWhen().getMonthOfYear());
     }
