@@ -2,9 +2,7 @@ package no.mesan.fag.patterns.timesheet.format;
 
 import org.apache.poi.ss.usermodel.IndexedColors;
 
-/**
- * Holder sett av farger.
- */
+/** Holder sett av farger. */
 public enum ColorSpec {
     STD_FG_COLOR(IndexedColors.BLACK),
     STD_BG_COLOR(IndexedColors.WHITE),

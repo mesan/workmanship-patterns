@@ -6,10 +6,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Oppretter stiler for et worksheet.
- */
-public class StyleFactory {
+/** Oppretter stiler for et worksheet. */
+public final class StyleFactory {
+
     /** Tilgjengelige stiler. */
     public static enum StyleName {
         H1, TBL_HEAD, TBL_HEAD_LEFT, COL1, COLN, SUMS, SUM1, DATA
@@ -65,7 +64,7 @@ public class StyleFactory {
 
     private static Map<StyleName, CellStyle> createWbStyles(final Workbook wb, final Map<StyleName, StyleSpec> map){
         final Map<StyleName, CellStyle> styles = new HashMap<>();
-        for (Map.Entry<StyleName, StyleSpec> entry : map.entrySet()) {
+        for (final Map.Entry<StyleName, StyleSpec> entry : map.entrySet()) {
             styles.put(entry.getKey(), entry.getValue().createStyle(wb));
         }
         return styles;

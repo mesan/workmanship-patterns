@@ -4,9 +4,7 @@ import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
 import java.util.List;
 
-/**
- * Gnensesnittet til den eksterne tjenesten.
- */
+/** Grensesnittet til den eksterne tjenesten. */
 public interface TimeDataService {
 
     /** Antall som hentes av gangen. */
@@ -28,7 +26,6 @@ public interface TimeDataService {
      *
      * @param from 0 første gang, deretter antall hentet tidligere
      * @param year Året vi vil hente for
-     * @return Liste av matchende timeføringer
      * @return Liste av matchende timeføringer; dersom den returnerer færre en BATCH_SIZE forekomster er alle hentet
      */
     List<TimesheetEntry> forYear(int year, int from);

@@ -3,6 +3,7 @@ package no.mesan.fag.patterns.timesheet;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeSource;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -10,17 +11,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * Superklasse for timelister.
- */
+/** Superklasse for timelister. */
 public class Sheets {
 
     public static void main(final String[] args) throws Exception {
-        v1();
-//        v2();
-    }
-
-    private static void v1() throws IOException {
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
         final Workbook wb1 = timeliste.createTimeliste();
@@ -32,20 +26,6 @@ public class Sheets {
         final Workbook wb3 = aarsListe.createAarsoversikt();
         aarsListe.writeToFile("Årsoversikt", wb3);
     }
-/*
-    private static void v2() throws IOException {
-        final TimeDataServer source = new TimeDataServer(new SmallTimeSource());
-        final Timeliste timeliste = new Timeliste("A", 2014, 1, source);
-        final Workbook wb1 = timeliste.createTimeliste();
-        timeliste.writeToFile("Timeliste2", wb1);
-        final Maanedliste mndListe = new Maanedliste(2014, 1, source);
-        final Workbook wb2 = mndListe.createMaanedliste();
-        mndListe.writeToFile("Månedsoppgjør2", wb2);
-        final Aarsliste aarsListe = new Aarsliste(2014, source);
-        final Workbook wb3 = aarsListe.createAarsoversikt();
-        aarsListe.writeToFile("Årsoversikt2", wb3);
-    }
-*/
 
     /**
      * Lag en cellereferanse (type A2B5) for en gitt kolonne+rad.

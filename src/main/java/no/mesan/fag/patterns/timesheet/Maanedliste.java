@@ -55,6 +55,7 @@ public class Maanedliste extends Sheets {
         for (final TimesheetEntry entry : fullList) {
             if (entry.getActivity()< INTERN_START && entry.getWhen().monthOfYear().get() == this.month) list.add(entry);
         }
+
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();
         for (final TimesheetEntry entry : list) {

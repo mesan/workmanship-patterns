@@ -7,9 +7,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Holder spesifikasjoner for en stil.
- */
+/**Holder spesifikasjoner for en stil. */
 public class StyleSpec {
 
     private boolean isBold= false;
