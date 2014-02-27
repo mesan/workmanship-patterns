@@ -125,9 +125,9 @@ public abstract class Sheets {
         final DoubleMatrix matrix = new DoubleMatrix();
         dataExtraHeadings(matrix);
         for (final TimesheetEntry entry : list) {
+            final String colRef = getColRef(entry);
             final String what = getRowRef(entry);
             final double hours = minutesToHours(entry);
-            final String colRef = getColRef(entry);
             matrix.add(colRef, what, hours);
         }
         return matrix;
