@@ -257,6 +257,8 @@ public abstract class Sheets {
 
     /**
      * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
+     * TODO: Dette er da her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
+     *       Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
      * @param entry Original
      * @return Timer
      */
