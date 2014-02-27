@@ -22,7 +22,6 @@ public class MaanedlisteTest {
     public void setUp() throws Exception {
         final Maanedliste maanedliste = new Maanedliste(2014, 1, new TimeDataServer(new SmallTimeSource()));
         wb = maanedliste.createMaanedliste();
-        maanedliste.writeToFile("xxx", wb);
     }
 
     @Test

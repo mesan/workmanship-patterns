@@ -4,5 +4,5 @@ import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 
 /** En celle uten innhold. */
 public class EmptyCell extends SheetCell {
-    public EmptyCell(StyleName style) { super(style); }
+    public EmptyCell(final StyleName style) { super(style); }
 }
