@@ -19,9 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Timeliste for en enkelt bruker for en måned.
- */
+/** Timeliste for en enkelt bruker for en måned. */
 public class Timeliste extends Sheets {
     public static final String SHEET_TITLE = "Timeliste";
 
@@ -57,6 +55,7 @@ public class Timeliste extends Sheets {
             final LocalDate when = entry.getWhen();
             if (when.year().get() == this.year && when.monthOfYear().get() == this.month) list.add(entry);
         }
+
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();
         final int maxDays= new LocalDate(this.year, this.month, 1).dayOfMonth().getMaximumValue();

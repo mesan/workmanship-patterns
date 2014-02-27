@@ -65,13 +65,13 @@ public class TimeIteratorServiceTest {
         assertEquals(2*TimeDataServer.BATCH_SIZE+1, getForYear(2014, dataList).size());
     }
 
-    private void makeEntries(final List<TimesheetEntry> dataList, final int size) {
+    private static void makeEntries(final List<TimesheetEntry> dataList, final int size) {
         for (int i = 0; i < size; i++) {
             dataList.addAll(TimesheetEntry.create("lre", "2014-02-24", String.format("%04d", 100 + i), "100"));
         }
     }
 
-    private List<TimesheetEntry> getForEmployee(final String userID, final List<TimesheetEntry> dataList) {
+    private static List<TimesheetEntry> getForEmployee(final String userID, final List<TimesheetEntry> dataList) {
         final TimeIteratorService service = new TimeIteratorService(new TimeDataServer(dataList));
         final List<TimesheetEntry> res= new ArrayList<>();
         for (final TimesheetEntry t : service.forEmployee(userID)) {
@@ -80,7 +80,7 @@ public class TimeIteratorServiceTest {
         return res;
     }
 
-    private List<TimesheetEntry> getForYear(final int year, final List<TimesheetEntry> dataList) {
+    private static List<TimesheetEntry> getForYear(final int year, final List<TimesheetEntry> dataList) {
         final TimeIteratorService service = new TimeIteratorService(new TimeDataServer(dataList));
         final List<TimesheetEntry> res= new ArrayList<>();
         for (final TimesheetEntry t : service.forYear(year)) {
