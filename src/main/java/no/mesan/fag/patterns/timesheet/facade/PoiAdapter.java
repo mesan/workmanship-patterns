@@ -97,20 +97,54 @@ public class PoiAdapter {
         }
     }
 
-    private void createRow(final ValueMatrix<Integer, Integer, SheetCell> data, final int rowNum,
-                           final Integer height) {
-        final Row row = sheet.createRow(rowNum);
-        if (height!=null) row.setHeightInPoints(height);
-        for (final int colNum : data.colKeys(true)) {
-            createCell(data.get(colNum, rowNum), colNum, row);
+    /** Visitor for å skrive ut celler. */
+    private class PoiVisitor implements CellVisitor {
+        private final Row row;
+        private int colNum;
+
+        PoiVisitor(final Row row) {
+            this.row = row;
+        }
+
+        void setColNum(final int colNum) {
+            this.colNum = colNum;
+        }
+
+        private Cell makeCell(final SheetCell cell) {
+            final Cell poiCell = row.createCell(colNum);
+            if (cell.hasStyle()) poiCell.setCellStyle(styles.get(cell.getStyle()));
+            return poiCell;
+        }
+
+        @Override
+        public void acceptDouble(final DoubleCell cell) {
+            makeCell(cell).setCellValue(cell.getValue());
+        }
+
+        @Override
+        public void acceptString(final StringCell cell) {
+             makeCell(cell).setCellValue(cell.getValue());
+        }
+
+        @Override
+        public void acceptFormula(final FormulaCell cell) {
+            makeCell(cell).setCellFormula(cell.getFormula());
+        }
+
+        @Override
+        public void acceptEmpty(final EmptyCell cell) {
+            makeCell(cell);
         }
     }
 
-    private void createCell(final SheetCell sheetCell, final int colNum,  final Row row) {
-        if (sheetCell==null) return;
-        final Cell cell = sheetCell.fillCell(row.createCell(colNum));
-        if (sheetCell.hasStyle()) {
-            cell.setCellStyle(styles.get(sheetCell.getStyle()));
+    private void createRow(final ValueMatrix<Integer, Integer, SheetCell> data, final int rowNum, final Integer height) {
+        final Row row = sheet.createRow(rowNum);
+        if (height!=null) row.setHeightInPoints(height);
+        final PoiVisitor visitor = new PoiVisitor(row);
+        for (final int colNum : data.colKeys(true)) {
+            visitor.setColNum(colNum);
+            final SheetCell cell = data.get(colNum, rowNum);
+            if (cell!=null) cell.visit(visitor);
         }
     }
 

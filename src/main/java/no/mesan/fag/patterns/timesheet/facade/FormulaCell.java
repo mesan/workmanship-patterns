@@ -2,8 +2,6 @@ package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 
-import org.apache.poi.ss.usermodel.Cell;
-
 /** Celle som inneholder en formel. */
 public class FormulaCell extends SheetCell {
 
@@ -22,8 +20,11 @@ public class FormulaCell extends SheetCell {
     }
 
     @Override
-    protected Cell fillCell(final Cell cell) {
-        cell.setCellFormula(formula);
-        return cell;
+    protected void visit(final CellVisitor visitor) {
+        visitor.acceptFormula(this);
+    }
+
+    String getFormula() {
+        return formula;
     }
 }
