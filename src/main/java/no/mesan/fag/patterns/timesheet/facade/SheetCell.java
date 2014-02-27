@@ -2,8 +2,6 @@ package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 
-import org.apache.poi.ss.usermodel.Cell;
-
 /** Rotklasse for "ting som skal i celler". */
 public abstract class SheetCell {
     /** Stilen som skal brukes. */
@@ -47,11 +45,11 @@ public abstract class SheetCell {
     }
 
     /**
-     * Sett inn verdien i cellen.
-     * @param cell Cellen
+     * Håndterer visitors (f.eks. for å fylle inn verdi.
+     * @param visitor Fremmedkaren
      * @return Cellen
      */
-    protected abstract Cell fillCell(final Cell cell);
+    protected abstract void visit(CellVisitor visitor);
 
     /** Lever stilen. */
     protected StyleName getStyle() {
