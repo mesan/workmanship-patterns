@@ -2,9 +2,7 @@ package no.mesan.fag.patterns.timesheet.external;
 
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
-/**
- * Adapter til den eksterne tjenesten.
- */
+/** Adapter til den eksterne tjenesten. */
 public interface TimeServiceAdapter {
 
     /**

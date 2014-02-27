@@ -10,13 +10,14 @@ import java.util.Set;
 
 /**
  * A sort of sparse, associative, two-dimensional array.
+ * Note: not thread-safe, several methods need some sort of synchronization to achieve that.
  *
  * C: The column type
  * R: The row type
  * V: The value types to keep
  * @author lre
  */
-public class ValueMatrix<C extends Comparable, R extends Comparable, V> {
+public class ValueMatrix<C extends Comparable<? super C>, R extends Comparable<? super R>, V> {
 
     /** Used to separate row & column in the storage. Inspired by AWK. */
     private static final String ARRAYSEP = "" + (char) 1;
@@ -39,7 +40,7 @@ public class ValueMatrix<C extends Comparable, R extends Comparable, V> {
     }
 
     /** Create a possibly sorted list from a key set. */
-    private static <T extends Comparable> List<T> keyList(final Boolean sorted, final Set<T> orgKeys) {
+    private static <T extends Comparable<? super T>> List<T> keyList(final Boolean sorted, final Set<T> orgKeys) {
         final List<T> keys = new LinkedList<>(orgKeys);
         if (sorted) Collections.sort(keys);
         return keys;
@@ -95,5 +96,15 @@ public class ValueMatrix<C extends Comparable, R extends Comparable, V> {
     public final ValueMatrix<C, R, V> ensureCol(final C... col) {
         Collections.addAll(this.allColKeys, col);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("ValueMatrix{")
+            .append(" cols=").append(cSize())
+            .append(" rows=").append(rSize())
+            .append(" values=").append(values.size())
+            .append('}')
+            .toString();
     }
 }

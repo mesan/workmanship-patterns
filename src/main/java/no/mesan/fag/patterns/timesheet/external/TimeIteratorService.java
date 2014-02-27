@@ -7,18 +7,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-/**
- * Adapter TimeDataService til en TimeServiceAdapter.
- */
+/** Adapter TimeDataService til en TimeServiceAdapter. */
 public class TimeIteratorService implements TimeServiceAdapter {
-
     private final TimeDataService original;
 
     public TimeIteratorService(final TimeDataService original) {
         this.original = original;
     }
 
-    private abstract class EntryIterator implements Iterator<TimesheetEntry> {
+    private abstract static class EntryIterator implements Iterator<TimesheetEntry> {
         /** Implementer denne for å hente data. */
         protected abstract List<TimesheetEntry> getNextFrom(final int from);
 

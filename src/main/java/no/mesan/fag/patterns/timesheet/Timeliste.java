@@ -20,9 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Timeliste for en enkelt bruker for en måned.
- */
+/** Timeliste for en enkelt bruker for en måned. */
 public class Timeliste extends Sheets {
     public static final String SHEET_TITLE = "Timeliste";
 

@@ -19,10 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Hvem har fakturert på hvilke prosjekter i en gitt måned.
- * Aktiviteter >= 8000 ekskludeeres.
- */
+/** Timer per prosjekt per måned over et år. */
 public class Aarsliste extends Sheets {
     public static final String SHEET_TITLE = "Årsoversikt";
 

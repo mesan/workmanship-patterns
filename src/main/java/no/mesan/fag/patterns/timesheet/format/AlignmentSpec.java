@@ -2,9 +2,7 @@ package no.mesan.fag.patterns.timesheet.format;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 
-/**
- * Mulige alignments.
- */
+/** Mulige alignments. */
 public interface AlignmentSpec {
     public enum Horizontal {
         GEN(CellStyle.ALIGN_GENERAL),
@@ -13,8 +11,7 @@ public interface AlignmentSpec {
         CENTER(CellStyle.ALIGN_CENTER);
 
         private final int align;
-
-        private Horizontal(final short align) {
+        private Horizontal(final int align) {
             this.align = align;
         }
 
@@ -29,8 +26,7 @@ public interface AlignmentSpec {
         TOP(CellStyle.VERTICAL_TOP);
 
         private final int align;
-
-        private Vertical(final short align) {
+        private Vertical(final int align) {
             this.align = align;
         }
 
