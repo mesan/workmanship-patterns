@@ -6,6 +6,8 @@ import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.external.TimeSource;
+import no.mesan.fag.patterns.timesheet.external.decorators.TimeDataServiceCachingDecorator;
+import no.mesan.fag.patterns.timesheet.external.decorators.TimeDataServiceLoggingDecorator;
 import no.mesan.fag.patterns.timesheet.facade.DoubleCell;
 import no.mesan.fag.patterns.timesheet.facade.EmptyCell;
 import no.mesan.fag.patterns.timesheet.facade.FormulaCell;
@@ -38,7 +40,9 @@ public abstract class Sheets {
         final Aarsliste aarsListe = new Aarsliste(2014, source);
         final Workbook wb3 = aarsListe.createAarsoversikt();
         aarsListe.writeToFile("Årsoversikt", wb3);
-        final Ukeliste ukeListe = new Ukeliste(2014, 1, 15, source);
+        final Ukeliste ukeListe =
+                new Ukeliste(2014, 1, 15,
+                             new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)));
         final Workbook wb4 = ukeListe.createUkeliste();
         ukeListe.writeToFile("Ukeoversikt", wb4);
     }
@@ -257,6 +261,8 @@ public abstract class Sheets {
 
     /**
      * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
+     * TODO: Dette er da her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
+     *       Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
      * @param entry Original
      * @return Timer
      */
