@@ -1,6 +1,5 @@
 package no.mesan.fag.patterns.timesheet.data;
 
-import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
 import org.junit.Test;
 
 import java.util.LinkedList;
