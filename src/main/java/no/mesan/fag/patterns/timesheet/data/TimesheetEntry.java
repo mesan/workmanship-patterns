@@ -35,6 +35,15 @@ public class TimesheetEntry {
         return res;
     }
 
+    /**
+     * Lag 1 eller flere forekomster fra strenger.  Ikke for den svake av hjertet.
+     * @param entries n*(userID,when,activity,minutes)
+     * @return Innslag
+     */
+    public static List<TimesheetEntry> create(final List<String> entries) {
+        return create(entries.toArray(new String[entries.size()]));
+    }
+
     public String getUserID() {
         return userID;
     }
