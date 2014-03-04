@@ -11,9 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Test av Maanedliste.
- */
+/** Test av Maanedliste. */
 public class MaanedlisteTest {
 
     private Workbook wb;
