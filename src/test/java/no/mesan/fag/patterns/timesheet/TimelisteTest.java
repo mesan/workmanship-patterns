@@ -11,9 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Test av timeliste.
- */
+/** Test av timeliste. */
 public class TimelisteTest {
 
     private Workbook wb;
@@ -44,7 +42,7 @@ public class TimelisteTest {
         assertEquals(18, extractCell(sheet, 1, 5).getCellStyle().getFillForegroundColor());
     }
 
-    private Cell extractCell(final Sheet sheet, final int cellnum, final int rownum) {
+    private static Cell extractCell(final Sheet sheet, final int cellnum, final int rownum) {
         return sheet.getRow(rownum).getCell(cellnum);
     }
 }

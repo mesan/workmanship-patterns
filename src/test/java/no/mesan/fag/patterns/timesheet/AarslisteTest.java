@@ -44,7 +44,7 @@ public class AarslisteTest {
         assertEquals(18, extractCell(sheet, 1, 5).getCellStyle().getFillForegroundColor());
     }
 
-    private Cell extractCell(final Sheet sheet, final int cellnum, final int rownum) {
+    private static Cell extractCell(final Sheet sheet, final int cellnum, final int rownum) {
         return sheet.getRow(rownum).getCell(cellnum);
     }
 }

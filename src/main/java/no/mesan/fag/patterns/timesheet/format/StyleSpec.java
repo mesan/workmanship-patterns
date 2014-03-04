@@ -15,7 +15,7 @@ public class StyleSpec {
     private int fontHeigthInPoints= 10;
     private ColorSpec fgColor= ColorSpec.STD_FG_COLOR;
     private ColorSpec bgColor= ColorSpec.STD_BG_COLOR;
-    private List<BorderSpec> borders= new ArrayList<>();
+    private final List<BorderSpec> borders= new ArrayList<>();
     private AlignmentSpec.Horizontal horizontal= AlignmentSpec.Horizontal.GEN;
     private AlignmentSpec.Vertical vertical= AlignmentSpec.Vertical.BOTTOM;
 
