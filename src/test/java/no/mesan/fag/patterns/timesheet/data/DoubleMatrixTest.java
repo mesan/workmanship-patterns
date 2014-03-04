@@ -4,9 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test DoubleMatrix.
- */
+/** Test DoubleMatrix. */
 public class DoubleMatrixTest extends ValueMatrixTest {
 
     @Override protected DoubleMatrix create() { return new DoubleMatrix();}
