@@ -7,9 +7,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * Test ValueMatrix.
- */
+/** Test ValueMatrix. */
 public class ValueMatrixTest {
 
     ValueMatrix<String, String, Double> create() { return new ValueMatrix<>();}
@@ -17,21 +15,21 @@ public class ValueMatrixTest {
     @Test
     public void emptyMatrixHasNoKeys()  {
         final ValueMatrix<String, String, Double> m = create();
-        assertEquals(m.rowKeys(false).size(), 0);
-        assertEquals(m.colKeys(false).size(),  0);
-        assertEquals(m.rSize(), 0);
-        assertEquals(m.cSize(), 0);
+        assertEquals(0, m.rowKeys(false).size());
+        assertEquals(0, m.colKeys(false).size());
+        assertEquals(0, m.rSize());
+        assertEquals(0, m.cSize());
         assertNull(m.get("A", "1"));
     }
 
     @Test
     public void oneInMatrixFoundByRightKey()  {
         final ValueMatrix<String, String, Double> m = create().put("A", "1", 4.0D);
-        assertEquals(m.rowKeys(false).size(), 1);
-        assertEquals(m.colKeys(false).size(), 1);
-        assertEquals(m.rSize(), 1);
-        assertEquals(m.cSize(), 1);
-        assertEquals(m.get("A", "1"), 4.0D, 0.0001D);
+        assertEquals(1, m.rowKeys(false).size());
+        assertEquals(1, m.colKeys(false).size());
+        assertEquals(1, m.rSize());
+        assertEquals(1, m.cSize());
+        assertEquals(4.0D, m.get("A", "1"), 0.0001D);
         assertNull(m.get("A", "2"));
     }
 
@@ -42,9 +40,9 @@ public class ValueMatrixTest {
         m.put("A", "1", -10.0D);
         assertTrue(m.colKeys(false).contains("A"));
         assertTrue(m.rowKeys(false).contains("1"));
-        assertEquals(m.rSize(), 2);
-        assertEquals(m.cSize(), 1);
-        assertEquals(m.get("A", "1"), -10.0D, 0.0001D);
+        assertEquals(2, m.rSize());
+        assertEquals(1, m.cSize());
+        assertEquals(-10.0D, m.get("A", "1"), 0.0001D);
     }
 
     @Test
@@ -52,7 +50,7 @@ public class ValueMatrixTest {
         final ValueMatrix<String, String, Double> m = create().put("A", "1", 4.0D);
         m.ensureRow("1");
         assertTrue(m.rowKeys(false).contains("1"));
-        assertEquals(m.rSize(), 1);
+        assertEquals(1, m.rSize());
     }
 
     @Test
@@ -60,7 +58,7 @@ public class ValueMatrixTest {
         final ValueMatrix<String, String, Double> m = create().put("A", "1", 4.0D);
         m.ensureCol("A");
         assertTrue(m.colKeys(false).contains("A"));
-        assertEquals(m.cSize(), 1);
+        assertEquals(1, m.cSize());
     }
 
     @Test
@@ -68,9 +66,9 @@ public class ValueMatrixTest {
         final ValueMatrix<String, String, Double> m = create56();
         for (int r=1; r<=5; r++) assertTrue(m.rowKeys(false).contains("R"+2*r));
         for (int c=1; c<=5; c++) assertTrue(m.colKeys(false).contains("C" + c));
-        assertEquals(m.rSize(), 5);
-        assertEquals(m.cSize(), 6);
-        assertEquals(m.get("C3", "R4"), 24.0D, 0.0001D);
+        assertEquals(5, m.rSize());
+        assertEquals(6, m.cSize());
+        assertEquals(24.0D, m.get("C3", "R4"), 0.0001D);
         assertNull(m.get("C1", "R5"));
     }
 
