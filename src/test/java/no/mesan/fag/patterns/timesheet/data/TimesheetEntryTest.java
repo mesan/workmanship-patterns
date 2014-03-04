@@ -6,9 +6,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test TimesheetEntry.
- */
+/** Test TimesheetEntry. */
 public class TimesheetEntryTest {
 
     @Test
