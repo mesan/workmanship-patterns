@@ -1,10 +1,11 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
-import org.apache.poi.ss.usermodel.{Row, Cell, PrintSetup, Workbook}
+import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import no.mesan.fag.patterns.scala.timesheet.format._
+
+import org.apache.poi.ss.usermodel.{Row, Cell, PrintSetup, Workbook}
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 /**
  * Hvem har fakturert på hvilke prosjekter i en gitt måned.
@@ -16,15 +17,7 @@ class Maanedliste(year: Int, month: Int, source: TimeDataService) extends Sheets
     val headingTitle= Maanedliste.SheetTitle
 
     // Hent timedata for perioden
-    var fullList=  List[TimesheetEntry]()
-    var got: Int = 0
-    def getAbunch:Boolean = {
-      val entries= source.forYear(year, got)
-      if (entries.isEmpty) return false
-      fullList ++= entries
-      true
-    }
-    while (getAbunch) got = fullList.size
+    val fullList=  new TimeIteratorService(source).forYear(year).toList
 
     // Filtrer bort interne timer og andre måneder
     var list = Vector[TimesheetEntry]()
