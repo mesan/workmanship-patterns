@@ -2,6 +2,8 @@ package no.mesan.fag.patterns.timesheet;
 
 import no.mesan.fag.patterns.timesheet.external.SmallTimeSource;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,7 +20,8 @@ public class AarslisteTest {
 
     @Before
     public void setUp() throws Exception {
-        final Aarsliste timeliste = new Aarsliste(2014, new TimeDataServer(new SmallTimeSource()));
+        final Aarsliste timeliste = new Aarsliste(2014, new TimeDataServer(new SmallTimeSource()),
+                                                  new TimeRepresentationHalfHours());
         wb = timeliste.createAarsoversikt();
     }
 

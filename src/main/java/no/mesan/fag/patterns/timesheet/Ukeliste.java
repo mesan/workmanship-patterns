@@ -4,6 +4,7 @@ import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -24,8 +25,10 @@ public class Ukeliste extends Sheets {
     private final LocalDate fromDate;
     private final LocalDate toDate;
 
-    public Ukeliste(final int year, final int month, final int day, final TimeDataService source) {
-        super();
+    public Ukeliste(final int year, final int month, final int day,
+                    final TimeDataService source,
+                    final TimeRepresentationStrategy timeRepresentationStrategy) {
+        super(timeRepresentationStrategy);
         this.year = year;
         final LocalDate date = new LocalDate(year, month, day);
         this.fromDate = date.withDayOfWeek(DateTimeConstants.MONDAY);
