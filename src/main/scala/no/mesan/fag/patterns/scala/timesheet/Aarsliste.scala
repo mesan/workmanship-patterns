@@ -1,8 +1,8 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
+import no.mesan.fag.patterns.scala.timesheet.data.DoubleMatrix
+import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
 import no.mesan.fag.patterns.scala.timesheet.format._
-import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.apache.poi.ss.usermodel.{Row, Cell, PrintSetup, Workbook}
@@ -12,18 +12,10 @@ class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
 
   def createAarsoversikt: Workbook = {
     // Hent timedata for året
-    var fullList=  List[TimesheetEntry]()
-    var got: Int = 0
-    def getAbunch:Boolean = {
-      val entries= source.forYear(year, got)
-      if (entries.isEmpty) return false
-      fullList ++= entries
-      true
-    }
-    while (getAbunch) got = fullList.size
+    val fullList=  new TimeIteratorService(source).forYear(year).toList
 
     // Ingen filtrering
-    var list = fullList
+    val list = fullList
 
     // Grupper data
     val matrix= new DoubleMatrix
