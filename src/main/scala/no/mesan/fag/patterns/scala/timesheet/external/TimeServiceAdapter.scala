@@ -4,6 +4,7 @@ import no.mesan.fag.patterns.scala.timesheet.data.TimesheetEntry
 
 /** Adapter til den eksterne tjenesten. */
 trait TimeServiceAdapter {
+
   /**
    * Henter alle timene registrert for en gitt bruker.
    *
