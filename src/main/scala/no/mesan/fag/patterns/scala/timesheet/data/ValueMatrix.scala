@@ -1,5 +1,7 @@
 package no.mesan.fag.patterns.scala.timesheet.data
 
+import scala.collection.mutable.{LinkedHashSet => MutableSet}
+
 /**
  * A sort of sparse, associative, two-dimensional array.
  * Note: not thread-safe, several methods need some sort of synchronization to achieve that.
@@ -13,9 +15,9 @@ class ValueMatrix[C <% Comparable[C], R <% Comparable[R], V] {
   /** Used to separate row & column in the storage. Inspired by AWK. */
   private val ARRAYSEP = 1.toChar.toString
   /** Keep track of row keys. */
-  private var allRowKeys: Set[R] = Set()
+  private val allRowKeys = MutableSet[R]()
   /** Keep track of column keys. */
-  private var allColKeys: Set[C] = Set()
+  private val allColKeys = MutableSet[C]()
   /** The real values. */
   private var values: Map[String, V] = Map()
 
@@ -23,9 +25,10 @@ class ValueMatrix[C <% Comparable[C], R <% Comparable[R], V] {
   private def key(col: C, row: R)=  col + ARRAYSEP + row
 
   /** Create a possibly sorted list from a key set. */
-  private def keyList[T <% Comparable[T]](sorted: Boolean, orgKeys: Set[T]): List[T] =
+  private def keyList[T <% Comparable[T]](sorted: Boolean, orgKeys: MutableSet[T]): List[T] =
     if (sorted) orgKeys.toList.sorted
     else orgKeys.toList
+
   /** Return list of row keys, possibly sorted. */
   def rowKeys(sorted: Boolean=false): List[R] =  keyList(sorted, allRowKeys)
   /** Return list of column keys, possibly sorted. */
