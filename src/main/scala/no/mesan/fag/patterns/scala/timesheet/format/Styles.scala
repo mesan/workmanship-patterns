@@ -3,12 +3,25 @@ package no.mesan.fag.patterns.scala.timesheet.format
 import org.apache.poi.ss.usermodel.{Font, Workbook, CellStyle}
 
 /** Holder spesifikasjoner for en stil. */
-class Styles (val bold: Boolean, var italic: Boolean, var points: Int,
-              val fgColor: Option[ColorSpec], val bgColor: Option[ColorSpec],
-              val borderTop: Option[BorderLine],  val borderBottom: Option[BorderLine],
-              val borderLeft: Option[BorderLine], val borderRight: Option[BorderLine],
-              val horizontal: Horizontal, val vertical: Vertical) {
+case class Styles (bold: Boolean =false, italic: Boolean =false, points: Int =10,
+                   fgColor: Option[ColorSpec] =Some(ColorFg), bgColor: Option[ColorSpec] =None,
+                   borderTop: Option[BorderLine] =None,  borderBottom: Option[BorderLine] =None,
+                   borderLeft: Option[BorderLine] =None, borderRight: Option[BorderLine] =None,
+                   horizontal: Horizontal= HorizontalGen, vertical: Vertical =VerticalBottom) {
 
+  /**
+   * Lag en kopi med alle kantlinjer satt til angitt verdi.
+   * @param border Felles kantlinje
+   * @return ny stil
+   */
+  def allBorders(border: Option[BorderLine]): Styles =
+    this.copy(borderTop=border, borderBottom=border, borderLeft=border, borderRight=border)
+
+  /**
+   * Lag en kopi med "invers farge".
+   * @return ny stil
+   */
+  def shaded(): Styles = this.copy(fgColor=Some(ColorShadeFg), bgColor=Some(ColorShadeBg))
 
   /** Oversett spesifkasjon til Excel-stil. */
   def createStyle(wb: Workbook): CellStyle = {
