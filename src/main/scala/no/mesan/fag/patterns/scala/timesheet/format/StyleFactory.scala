@@ -19,24 +19,22 @@ object StyleFactory {
   /** Lag et stilbibliotek. */
   def styleSetup(wb: Workbook): Map[StyleName, CellStyle] =  createWbStyles(wb, styleSetup)
 
-  private val styleSetup: Map[StyleName, Styles] = Map(
-    H1 -> new Styles(true, false, 15, Some(ColorHighlight), None, None, None, None, None,
-      HorizontalCenter, VerticalMiddle),
-    TableHead -> new Styles(true, false, 12, Some(ColorHighlight), Some(ColorBg), Some(BorderThin),
-      Some(BorderThin), Some(BorderThin), Some(BorderThin), HorizontalRight, VerticalMiddle),
-    TableHeadLeft -> new Styles(true, true, 12, Some(ColorHighlight), Some(ColorBg), Some(BorderThin),
-      Some(BorderThin), Some(BorderThin), Some(BorderMedium), HorizontalLeft, VerticalMiddle),
-    Col1 -> new Styles(true, false, 10, None, None, Some(BorderThin), Some(BorderThin),
-      Some(BorderThin), Some(BorderMedium), HorizontalLeft, VerticalBottom),
-    Data -> new Styles(false, false, 10, None, None, Some(BorderThin), Some(BorderThin),
-      Some(BorderThin), Some(BorderThin), HorizontalGen, VerticalBottom),
-    ColN -> new Styles(false, true, 10, None, None, Some(BorderThin), Some(BorderThin), Some(BorderThin),
-      Some(BorderMedium), HorizontalRight, VerticalBottom),
-    Sums -> new Styles(false, true, 12, Some(ColorShadeFg), Some(ColorShadeBg), Some(BorderMedium),
-      Some(BorderMedium), Some(BorderMedium), Some(BorderMedium), HorizontalGen, VerticalBottom),
-    Sum1 -> new Styles(true, false, 12, Some(ColorShadeFg), Some(ColorShadeBg), Some(BorderMedium),
-      Some(BorderMedium), Some(BorderMedium), Some(BorderMedium), HorizontalGen, VerticalBottom)
-  )
+  private val styleSetup: Map[StyleName, Styles] = {
+    val h1= Styles(bold=true, points=15, fgColor=Some(ColorHighlight), horizontal=HorizontalCenter, vertical=VerticalMiddle)
+    val tblHead= h1.copy(points=12, bgColor=Some(ColorBg), horizontal=HorizontalRight).allBorders(Some(BorderThin))
+    val data = Styles().allBorders(Some(BorderThin))
+    val shaded = Styles(points = 12).allBorders(Some(BorderMedium)).shaded()
+    Map(
+      H1 -> h1,
+      TableHead -> tblHead,
+      TableHeadLeft -> tblHead.copy(italic=true, borderRight=Some(BorderMedium), horizontal=HorizontalLeft),
+      Data -> data,
+      Col1 -> data.copy(bold=true, borderRight=Some(BorderMedium), horizontal=HorizontalLeft),
+      ColN -> data.copy(italic=true, borderRight=Some(BorderMedium), horizontal=HorizontalRight),
+      Sums -> shaded.copy(italic=true),
+      Sum1 -> shaded.copy(bold=true)
+    )
+  }
 
   private def createWbStyles(wb: Workbook, map: Map[StyleName, Styles]): Map[StyleName, CellStyle] =
     map.map { case (name, spec) => name -> spec.createStyle(wb) }
