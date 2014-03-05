@@ -30,13 +30,39 @@ case object BorderThick extends BorderLine(ColorDataGrid, CellStyle.BORDER_THICK
 
 sealed case class BorderSpec(borderLine:BorderLine, borderEdge:BorderEdge)
 
+// Themes
+abstract class ThemeIndex
+private case object Fg extends ThemeIndex
+private case object Bg extends ThemeIndex
+private case object High extends ThemeIndex
+private case object ShadeB extends ThemeIndex
+private case object ShadeF extends ThemeIndex
+private case object Grid extends ThemeIndex
+
+sealed abstract class Theme(var colors: Map[ThemeIndex, IndexedColors])
+case object RedTheme extends Theme(Map(
+  Fg->IndexedColors.BLACK, Bg->IndexedColors.WHITE, High->IndexedColors.DARK_RED,
+  ShadeB->IndexedColors.DARK_RED, ShadeF->IndexedColors.WHITE,
+  Grid->IndexedColors.BLACK))
+case object BlueTheme extends Theme(Map(
+  Fg->IndexedColors.BLACK, Bg->IndexedColors.WHITE, High->IndexedColors.DARK_BLUE,
+  ShadeB->IndexedColors.DARK_BLUE, ShadeF->IndexedColors.WHITE,
+  Grid->IndexedColors.BLACK))
+case object GreenTheme extends Theme(Map(
+  Fg->IndexedColors.BLACK, Bg->IndexedColors.WHITE, High->IndexedColors.DARK_GREEN,
+  ShadeB->IndexedColors.DARK_GREEN, ShadeF->IndexedColors.WHITE,
+  Grid->IndexedColors.BLACK))
+
 //////// Colors
-sealed abstract class ColorSpec(val colorConst:IndexedColors) {
-  def color: Short = colorConst.getIndex
+sealed abstract class ColorSpec(colorConst:ThemeIndex) {
+  def color: Short = ColorSpec.theme.colors.getOrElse(colorConst, IndexedColors.BLACK).getIndex
 }
-case object ColorFg extends ColorSpec(IndexedColors.BLACK)
-case object ColorBg extends ColorSpec(IndexedColors.WHITE)
-case object ColorHighlight extends ColorSpec(IndexedColors.DARK_BLUE)
-case object ColorShadeBg extends ColorSpec(IndexedColors.DARK_BLUE)
-case object ColorShadeFg extends ColorSpec(IndexedColors.WHITE)
-case object ColorDataGrid extends ColorSpec(IndexedColors.BLACK)
+case object ColorSpec {
+  var theme: Theme= BlueTheme
+}
+case object ColorFg extends ColorSpec(Fg)
+case object ColorBg extends ColorSpec(Bg)
+case object ColorHighlight extends ColorSpec(High)
+case object ColorShadeBg extends ColorSpec(ShadeB)
+case object ColorShadeFg extends ColorSpec(ShadeF)
+case object ColorDataGrid extends ColorSpec(Grid)
