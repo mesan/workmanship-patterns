@@ -20,8 +20,8 @@ public class AarslisteTest {
 
     @Before
     public void setUp() throws Exception {
-        final Aarsliste timeliste = new Aarsliste(2014, new TimeDataServer(new SmallTimeSource()),
-                                                  new TimeRepresentationHalfHours());
+        final Aarsliste timeliste = new Aarsliste(2014, new TimeDataServer(new SmallTimeSource()));
+        timeliste.setTimeRepresentationStrategy(new TimeRepresentationHalfHours());
         wb = timeliste.createAarsoversikt();
     }
 

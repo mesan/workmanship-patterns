@@ -17,7 +17,9 @@ import no.mesan.fag.patterns.timesheet.facade.StringCell;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationDays;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHours;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationMinutes;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
 
@@ -32,31 +34,34 @@ import java.util.Map;
 /** Superklasse for timelister. */
 public abstract class Sheets {
 
-    private final TimeRepresentationStrategy timeRepresentationStrategy;
-
-    public Sheets(final TimeRepresentationStrategy timeRepresentationStrategy) {
-        this.timeRepresentationStrategy = timeRepresentationStrategy;
-    }
+    private TimeRepresentationStrategy timeRepresentationStrategy= new TimeRepresentationHalfHours();
 
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final TimeRepresentationHalfHours representationStrategy = new TimeRepresentationHalfHours();
-        final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source, representationStrategy);
+        final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
+        timeliste.setTimeRepresentationStrategy(new TimeRepresentationMinutes());
         final Workbook wb1 = timeliste.createTimeliste();
         timeliste.writeToFile("Timeliste", wb1);
-        final Maanedliste mndListe = new Maanedliste(2014, 2, source, representationStrategy);
+        final Maanedliste mndListe = new Maanedliste(2014, 2, source);
+        mndListe.setTimeRepresentationStrategy(new TimeRepresentationHalfHours());
         final Workbook wb2 = mndListe.createMaanedliste();
         mndListe.writeToFile("Månedsoppgjør", wb2);
-        final Aarsliste aarsListe = new Aarsliste(2014, source, representationStrategy);
+        final Aarsliste aarsListe = new Aarsliste(2014, source);
+        aarsListe.setTimeRepresentationStrategy(new TimeRepresentationHours());
         final Workbook wb3 = aarsListe.createAarsoversikt();
         aarsListe.writeToFile("Årsoversikt", wb3);
         final Ukeliste ukeListe =
                 new Ukeliste(2014, 1, 15,
-                             new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)),
-                             new TimeRepresentationMinutes());
+                             new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)));
+        ukeListe.setTimeRepresentationStrategy(new TimeRepresentationDays());
         final Workbook wb4 = ukeListe.createUkeliste();
         ukeListe.writeToFile("Ukeoversikt", wb4);
+    }
+
+    public void setTimeRepresentationStrategy(final TimeRepresentationStrategy timeRepresentationStrategy) {
+        this.timeRepresentationStrategy = timeRepresentationStrategy;
     }
 
     /**

@@ -20,8 +20,8 @@ public class TimelisteTest {
 
     @Before
     public void setUp() throws Exception {
-        final Timeliste timeliste = new Timeliste("A", 2014, 1, new TimeDataServer(new SmallTimeSource()),
-                                                  new TimeRepresentationHalfHours());
+        final Timeliste timeliste = new Timeliste("A", 2014, 1, new TimeDataServer(new SmallTimeSource()));
+        timeliste.setTimeRepresentationStrategy(new TimeRepresentationHalfHours());
         wb = timeliste.createTimeliste();
     }
 
