@@ -4,6 +4,7 @@ import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -17,8 +18,10 @@ public class Aarsliste extends Sheets {
     private final int year;
     private final TimeDataService source;
 
-    public Aarsliste(final int year, final TimeDataService source) {
-        super();
+    public Aarsliste(final int year,
+                     final TimeDataService source,
+                     final TimeRepresentationStrategy timeRepresentationStrategy) {
+        super(timeRepresentationStrategy);
         this.year = year;
         this.source = source;
     }

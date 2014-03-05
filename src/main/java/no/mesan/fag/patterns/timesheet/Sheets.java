@@ -17,6 +17,10 @@ import no.mesan.fag.patterns.timesheet.facade.StringCell;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationMinutes;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
+
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
@@ -28,21 +32,29 @@ import java.util.Map;
 /** Superklasse for timelister. */
 public abstract class Sheets {
 
+    private final TimeRepresentationStrategy timeRepresentationStrategy;
+
+    public Sheets(final TimeRepresentationStrategy timeRepresentationStrategy) {
+        this.timeRepresentationStrategy = timeRepresentationStrategy;
+    }
+
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
         final TimeDataServer source = new TimeDataServer(new TimeSource());
-        final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
+        final TimeRepresentationHalfHours representationStrategy = new TimeRepresentationHalfHours();
+        final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source, representationStrategy);
         final Workbook wb1 = timeliste.createTimeliste();
         timeliste.writeToFile("Timeliste", wb1);
-        final Maanedliste mndListe = new Maanedliste(2014, 2, source);
+        final Maanedliste mndListe = new Maanedliste(2014, 2, source, representationStrategy);
         final Workbook wb2 = mndListe.createMaanedliste();
         mndListe.writeToFile("Månedsoppgjør", wb2);
-        final Aarsliste aarsListe = new Aarsliste(2014, source);
+        final Aarsliste aarsListe = new Aarsliste(2014, source, representationStrategy);
         final Workbook wb3 = aarsListe.createAarsoversikt();
         aarsListe.writeToFile("Årsoversikt", wb3);
         final Ukeliste ukeListe =
                 new Ukeliste(2014, 1, 15,
-                             new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)));
+                             new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)),
+                             new TimeRepresentationMinutes());
         final Workbook wb4 = ukeListe.createUkeliste();
         ukeListe.writeToFile("Ukeoversikt", wb4);
     }
@@ -131,8 +143,8 @@ public abstract class Sheets {
         for (final TimesheetEntry entry : list) {
             final String colRef = getColRef(entry);
             final String what = getRowRef(entry);
-            final double hours = minutesToHours(entry);
-            matrix.add(colRef, what, hours);
+            final double timeLogged = minutesToCorrectRepresentation(entry);
+            matrix.add(colRef, what, timeLogged);
         }
         return matrix;
     }
@@ -260,13 +272,11 @@ public abstract class Sheets {
     }
 
     /**
-     * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
-     * TODO: Dette er da her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
-     *       Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
+     * Konverter minutter til korrekt visningsverdi via den strategien klassen er instansiert med.
      * @param entry Original
      * @return Timer
      */
-    protected double minutesToHours(final TimesheetEntry entry) {
-        return (entry.getMinutes() / 30) / 2.0;
+    protected double minutesToCorrectRepresentation(final TimesheetEntry entry) {
+        return timeRepresentationStrategy.convert(entry.getMinutes());
     }
 }

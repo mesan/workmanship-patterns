@@ -4,6 +4,7 @@ import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -21,8 +22,10 @@ public class Timeliste extends Sheets {
     private final int month;
     private final TimeDataService source;
 
-    public Timeliste(final String user, final int year, final int month, final TimeDataService source) {
-        super();
+    public Timeliste(final String user, final int year, final int month,
+                     final TimeDataService source,
+                     final TimeRepresentationStrategy timeRepresentationStrategy) {
+        super(timeRepresentationStrategy);
         this.forUser = user;
         this.year = year;
         this.month = month;
