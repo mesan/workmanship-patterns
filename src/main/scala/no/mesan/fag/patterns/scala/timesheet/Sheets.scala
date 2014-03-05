@@ -2,7 +2,7 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external.{TimeDataServer, TimeSource}
 import no.mesan.fag.patterns.scala.timesheet.data.TimesheetEntry
-import no.mesan.fag.patterns.scala.timesheet.format.{RedTheme, ColorSpec, StyleName}
+import no.mesan.fag.patterns.scala.timesheet.format.StyleName
 
 import java.io.FileOutputStream
 import org.apache.poi.ss.usermodel._
@@ -48,7 +48,7 @@ abstract class Sheets {
 }
 
 object Sheets extends App {
-  ColorSpec.theme= RedTheme
+  // ColorSpec.theme= RedTheme
   val source = new TimeDataServer(TimeSource)
   val timeliste = new Timeliste("larsr", 2014, 2, source)
   val wb1 = timeliste.createTimeliste
