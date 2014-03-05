@@ -3,10 +3,16 @@ package no.mesan.fag.patterns.scala.timesheet
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
+import no.mesan.fag.patterns.scala.timesheet.data.TimesheetEntry
+import no.mesan.fag.patterns.scala.timesheet.external.TimeIteratorService
 
 @RunWith(classOf[JUnitRunner])
 class SheetSpec extends FlatSpec {
-  class TestSheet extends Sheets
+  class TestSheet extends Sheets{
+    def retrieve(service: TimeIteratorService): Iterable[TimesheetEntry] = Nil
+    def colRow(entry: TimesheetEntry): (String, String) = ("","")
+    def headingTexts(): List[String] = Nil
+  }
   val tst= new TestSheet
 
   "Cellref(1,x)" should "be row A" in {
