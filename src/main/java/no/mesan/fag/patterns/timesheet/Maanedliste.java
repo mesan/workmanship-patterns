@@ -3,8 +3,6 @@ package no.mesan.fag.patterns.timesheet;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
-import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
-
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.Arrays;
@@ -23,10 +21,7 @@ public class Maanedliste extends Sheets {
     private final int month;
     private final TimeDataService source;
 
-    public Maanedliste(final int year, final int month,
-                       final TimeDataService source,
-                       final TimeRepresentationStrategy timeRepresentationStrategy) {
-        super(timeRepresentationStrategy);
+    public Maanedliste(final int year, final int month, final TimeDataService source) {
         this.year = year;
         this.month = month;
         this.source = source;

@@ -20,8 +20,8 @@ public class MaanedlisteTest {
 
     @Before
     public void setUp() throws Exception {
-        final Maanedliste maanedliste = new Maanedliste(2014, 1, new TimeDataServer(new SmallTimeSource()),
-                                                        new TimeRepresentationHalfHours());
+        final Maanedliste maanedliste = new Maanedliste(2014, 1, new TimeDataServer(new SmallTimeSource()));
+        maanedliste.setTimeRepresentationStrategy(new TimeRepresentationHalfHours());
         wb = maanedliste.createMaanedliste();
         maanedliste.writeToFile("xxx", wb);
     }
