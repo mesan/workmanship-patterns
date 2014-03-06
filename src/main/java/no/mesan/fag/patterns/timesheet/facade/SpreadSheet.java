@@ -9,6 +9,7 @@ import java.util.Map;
 public class SpreadSheet {
 
     /** Navnet på (det eneste) arket. */
+    @SuppressWarnings("all")
     private final String name;
 
     /** Noen rader skal ha tilpasset høyde. */
