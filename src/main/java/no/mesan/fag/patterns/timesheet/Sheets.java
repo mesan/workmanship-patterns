@@ -39,7 +39,6 @@ public abstract class Sheets {
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
         final TimeDataServer source = new TimeDataServer(new TimeSource());
-        final TimeRepresentationHalfHours representationStrategy = new TimeRepresentationHalfHours();
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
         timeliste.setTimeRepresentationStrategy(new TimeRepresentationMinutes());
         final Workbook wb1 = timeliste.createTimeliste();
