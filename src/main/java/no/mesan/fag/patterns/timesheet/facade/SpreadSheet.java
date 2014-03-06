@@ -2,9 +2,6 @@ package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /** Holder data om et regneark uten å blande inn POI før til slutt. */
 public class SpreadSheet {
 
