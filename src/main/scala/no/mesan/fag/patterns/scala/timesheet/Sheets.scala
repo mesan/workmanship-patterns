@@ -2,9 +2,11 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
+import no.mesan.fag.patterns.scala.timesheet.facade.SheetCell
 import no.mesan.fag.patterns.scala.timesheet.format._
 
 import java.io.FileOutputStream
+
 import org.apache.poi.ss.usermodel._
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
@@ -100,7 +102,7 @@ abstract class Sheets {
       rownum +=1
       colnum= makeCell(row, colnum, Col1, styles) { cell:Cell => cell.setCellValue(rKey)}
       // Sum
-      val ref = cellRef(colnum+2, rownum) + ":" + cellRef(matrix.cSize + 2, rownum)
+      val ref = SheetCell.rangeRef(colnum+2, rownum, matrix.cSize + 2, rownum)
       colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
       // Data
       for (c <- matrix.colKeys(sorted=true))
@@ -114,7 +116,7 @@ abstract class Sheets {
     val row = createRow(sheet,rownum)
     colnum= makeCell(row, colnum, Sum1, styles) { cell:Cell => cell.setCellValue("SUM")}
     for (i <- 1 to matrix.cSize+1) {
-      val ref = cellRef(i + 1, 4) + ":" + cellRef(i + 1, rownum)
+      val ref = SheetCell.rangeRef(i + 1, 4, i + 1, rownum)
       colnum= makeCell(row, colnum, Sums, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
     }
   }
@@ -130,20 +132,6 @@ abstract class Sheets {
       sheet.autoSizeColumn(i)
       sheet.setColumnWidth(i, (1.05 * sheet.getColumnWidth(i)).asInstanceOf[Int])
     }
-  }
-
-  /**
-   * Lag en cellereferanse (type A2B5) for en gitt kolonne+rad.
-   * @param col Kolonne
-   * @param row Rad
-   * @return Celleref
-   */
-  private[timesheet] def cellRef(col: Int, row: Int): String = {
-    val col0 = col - 1
-    val ii = col0 / 26
-    val i = col0 % 26
-    val pfx: String = if (ii > 0) s"${('A' + ii - 1).asInstanceOf[Char]}" else ""
-    s"${pfx}${('A'+i).asInstanceOf[Char]}$row"
   }
 
   private[timesheet] def makeCell(row: Row, colnum:Int, style: StyleName, styles: Map[StyleName, CellStyle])
