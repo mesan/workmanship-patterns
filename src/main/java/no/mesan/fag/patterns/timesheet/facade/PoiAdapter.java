@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /** Adapter vår fasade til POI Workbook. */
 public class PoiAdapter {
     private final Workbook workbook = new XSSFWorkbook();
