@@ -63,14 +63,33 @@ class PoiAdapter(title: String, map: Map[StyleName, Styles]) {
   private def createRow(data: ValueMatrix[Int, Int, SheetCell], rowNum: Int, height: Option[Int]) {
     val row = sheet.createRow(rowNum)
     height map(row.setHeightInPoints(_))
-    for (colNum <- data.colKeys(sorted=true)) createCell(data.get(colNum, rowNum), colNum, row)
+    val visitor = new PoiVisitor(row, styles)
+    for (colNum <- data.colKeys(sorted=true);
+         cell<-data.get(colNum, rowNum))
+      visitor.visit(cell)
+  }
+}
+
+class PoiVisitor(row: Row, styles: Map[StyleName, CellStyle]) {
+  var colnum= 0
+
+  private def makeCell(cell: SheetCell): Cell = {
+    val poiCell = row.createCell(colnum)
+    colnum+=1
+    for (styleName<- cell.style;
+         style<-styles.get(styleName)) poiCell.setCellStyle(style)
+    poiCell
   }
 
-  private def createCell(sheetCell: Option[SheetCell], colNum: Int, row: Row)  {
-    for { sCell <- sheetCell
-          cell = sCell.fillCell(row.createCell(colNum))
-          name <- sCell.style
-          style <- styles.get(name) } cell.setCellStyle(style)
+  def visit(cell: SheetCell) {
+    val poiCell= makeCell(cell)
+    cell match {
+      case DoubleCell(d:Double, _) => poiCell.setCellValue(d)
+      case StringCell(s:String, _) => poiCell.setCellValue(s)
+      case FormulaCell(f: String, _) => poiCell.setCellFormula(f)
+      case EmptyCell(_) =>
+      case _ => throw new IllegalArgumentException(cell.toString)
+    }
   }
 }
 
