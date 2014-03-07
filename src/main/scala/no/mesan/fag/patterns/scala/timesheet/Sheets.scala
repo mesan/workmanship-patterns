@@ -2,13 +2,10 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
-import no.mesan.fag.patterns.scala.timesheet.facade.SheetCell
+import no.mesan.fag.patterns.scala.timesheet.facade._
 import no.mesan.fag.patterns.scala.timesheet.format._
 
-import java.io.FileOutputStream
-
 import org.apache.poi.ss.usermodel._
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 /** Superklasse for timelister. */
 abstract class Sheets {
@@ -42,15 +39,13 @@ abstract class Sheets {
                                      sortedCols: Boolean = true) (filter: TimesheetEntry=>Boolean) : Workbook = {
     val list = dataRetrieve(dataService, filter)
     val matrix = dataGroup(list)
-    val sheet = createWorkbook(title)
-    val workbook = sheet.getWorkbook
-    val styles = StyleFactory.styleSetup(workbook)
-    createHeading(sheet, styles)
-    createTableHead(sheet, matrix, styles, headTitle, sortedCols)
-    createDataGrid(sheet, matrix, styles, sortedCols)
-    createSums(sheet, matrix, styles)
-    finish(sheet, matrix.cSize)
-    workbook
+    val sheet = new SpreadSheet(title)
+    val styles = StyleFactory.styleSetup
+    createHeading(sheet)
+    createTableHead(sheet, matrix, headTitle, sortedCols)
+    createDataGrid(sheet, matrix, sortedCols)
+    createSums(sheet, matrix)
+    finish(title, sheet, styles)
   }
 
   protected def dataRetrieve(service: TimeDataService, filterFun: TimesheetEntry=>Boolean): List[TimesheetEntry]=
@@ -69,97 +64,69 @@ abstract class Sheets {
   protected def dataExtraHeadings(matrix: DoubleMatrix): Unit = Unit
   def colRow(entry: TimesheetEntry): (String, String)
 
-  protected def createWorkbook(title: String): Sheet = {
-    val sheet= (new XSSFWorkbook).createSheet(title)
-    sheet.getPrintSetup.setLandscape(true)
-    sheet.setFitToPage(true)
-    sheet.setHorizontallyCenter(true)
-    sheet
+  protected def createHeading(sheet: SpreadSheet) {
+    var colnum= -1
+    val rownum= 0
+    sheet.setRowHeight(rownum, 45)
+    for (s<-headingTexts) { colnum+=1; sheet.setCell(colnum, rownum, new StringCell(s, H1)) }
+  }
+  def headingTexts: List[String]
+
+  protected def createTableHead(sheet: SpreadSheet, matrix: DoubleMatrix,  title: String, sortedCols: Boolean) {
+    val rownum= 2
+    sheet.setRowHeight(rownum, 40)
+    var colnum = -1
+    for (header <- Vector(title, "Sum") ++ matrix.colKeys(sortedCols)){
+      colnum+=1
+      sheet.setCell(colnum, rownum, new StringCell(header, if (colnum < 2) TableHeadLeft else TableHead))
+    }
   }
 
-  protected def createHeading(sheet: Sheet, styles: Map[StyleName, CellStyle]) {
-    var colnum= 0
-    val heading1 = createRow(sheet, 0, 45)
-    for (s<-headingTexts()) colnum= makeCell(heading1, colnum, H1, styles) { cell:Cell => cell.setCellValue(s)}
-  }
-  def headingTexts(): List[String]
-
-  protected def createTableHead(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle],
-                                title: String, sortedCols: Boolean) {
-    val tableHead = createRow(sheet, 2, 40)
+  protected def createDataGrid(sheet: SpreadSheet, matrix: DoubleMatrix,  sortedCols: Boolean) {
+    sheet.data.ensureRow(2) // Hopp over rad
+    var rownum= 2
     var colnum = 0
-    for (header <- Vector(title, "Sum") ++ matrix.colKeys(sortedCols))
-      colnum= makeCell(tableHead, colnum, if (colnum < 2) TableHeadLeft else TableHead, styles) {
-        cell=> cell.setCellValue(header)
+    def createDataCols(rKey: String) {
+      for (c <- matrix.colKeys(sortedCols)) {
+        colnum += 1
+        matrix.get(c, rKey) match {
+          case Some(value) => sheet.setCell(colnum, rownum, new DoubleCell(value, Data))
+          case None => sheet.setCell(colnum, rownum, new EmptyCell(Data))
+        }
       }
-  }
-
-  protected def createDataGrid(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle], sortedCols: Boolean) {
-    var rownum= 3
-    for (rKey <- matrix.rowKeys(sortedCols)) {
-      var colnum= 0
-      val row= createRow(sheet, rownum)
+    }
+    def createSumCols(rKey: String) = {
+      sheet.setCell(colnum, rownum, new StringCell(rKey, Col1))
+      colnum += 1
+      sheet.setCell(colnum, rownum, SheetCell.formulaSUM(colnum + 2, rownum + 1, 2 + matrix.cSize, rownum + 1, ColN))
+    }
+    for (rKey <- matrix.rowKeys(sorted=true)) {
       rownum +=1
-      colnum= makeCell(row, colnum, Col1, styles) { cell:Cell => cell.setCellValue(rKey)}
-      // Sum
-      val ref = SheetCell.rangeRef(colnum+2, rownum, matrix.cSize + 2, rownum)
-      colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
-      // Data
-      for (c <- matrix.colKeys(sorted=true))
-        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) map cell.setCellValue }
+      colnum= 0
+      createSumCols(rKey)
+      createDataCols(rKey)
     }
   }
 
-  protected def createSums(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle]) {
-    var colnum = 0
-    val rownum = sheet.getLastRowNum+1
-    val row = createRow(sheet,rownum)
-    colnum= makeCell(row, colnum, Sum1, styles) { cell:Cell => cell.setCellValue("SUM")}
-    for (i <- 1 to matrix.cSize+1) {
-      val ref = SheetCell.rangeRef(i + 1, 4, i + 1, rownum)
-      colnum= makeCell(row, colnum, Sums, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
-    }
+  protected def createSums(sheet: SpreadSheet, matrix: DoubleMatrix) {
+    val rownum = sheet.lastRowNum+1
+    sheet.setCell(0, rownum, new StringCell("SUM", Sum1))
+    for (i <- 1 to matrix.cSize+1)
+     sheet.setCell(i, rownum, SheetCell.formulaSUM(i + 1, 4, i + 1, rownum, Sums))
   }
 
-  protected def finish(sheet: Sheet, cols: Int) {
-    import scala.collection.JavaConversions._
-    // Rekalkuler
-    val evaluator= sheet.getWorkbook.getCreationHelper.createFormulaEvaluator
-    for (r: Row <- sheet.rowIterator();
-         c: Cell <- r)
-      if (c.getCellType == Cell.CELL_TYPE_FORMULA) evaluator.evaluateFormulaCell(c)
-    for (i <- 0 to cols) {
-      sheet.autoSizeColumn(i)
-      sheet.setColumnWidth(i, (1.05 * sheet.getColumnWidth(i)).asInstanceOf[Int])
-    }
+  protected def finish(title:String, sheet: SpreadSheet, styles: Map[StyleName, Styles]): Workbook = {
+    val adapter = new PoiAdapter(title, styles)
+    adapter.addData(sheet)
+    adapter.create
   }
 
-  private[timesheet] def makeCell(row: Row, colnum:Int, style: StyleName, styles: Map[StyleName, CellStyle])
-                                 (f: Cell=>Unit): Int = {
-    val cell = row.createCell(colnum)
-    f(cell)
-    styles.get(style) map cell.setCellStyle
-    colnum+1
-  }
-
-  private[timesheet] def writeToFile(bookName: String, workbook: Workbook) {
-    val fileName = bookName + ".xlsx"
-    val out = new FileOutputStream(fileName)
-    workbook.write(out)
-    out.close
-  }
-
-  private[timesheet] def createRow(sheet: Sheet, rownum: Int, height: Int = 0): Row = {
-    val row= sheet.createRow(rownum)
-    if (height > 0) row.setHeightInPoints(height)
-    row
-  }
+  private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
 
   private[timesheet] def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
 }
 
 object Sheets extends App {
-  // ColorSpec.theme= RedTheme
   val source = new TimeDataServer(TimeSource)
   val timeliste = new Timeliste("larsr", 2014, 2, source)
   val wb1 = timeliste.createTimeliste
@@ -171,6 +138,7 @@ object Sheets extends App {
   val wb3 = aarsListe.createAarsoversikt
   aarsListe.writeToFile("Årsoversikt-scala", wb3)
   val ukeListe = new Ukeliste(2014, 1, 15, source)
+  ColorSpec.theme= RedTheme
   val wb4 = ukeListe.createUkeliste
   ukeListe.writeToFile("Ukeoversikt-scala", wb4)
 }
