@@ -96,7 +96,7 @@ abstract class Sheets {
 
   protected def createDataGrid(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle], sortedCols: Boolean) {
     var rownum= 3
-    for (rKey <- matrix.rowKeys(sortedCols)) {
+    for (rKey <- matrix.rowKeys(sorted=true)) {
       var colnum= 0
       val row= createRow(sheet, rownum)
       rownum +=1
@@ -105,7 +105,7 @@ abstract class Sheets {
       val ref = SheetCell.rangeRef(colnum+2, rownum, matrix.cSize + 2, rownum)
       colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
       // Data
-      for (c <- matrix.colKeys(sorted=true))
+      for (c <- matrix.colKeys(sortedCols))
         colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) map cell.setCellValue }
     }
   }
