@@ -10,6 +10,7 @@ public class StringCell extends ValueCell<String> {
         super(value, style);
     }
 
+    @Override
     protected Cell fillCell(final Cell cell) {
         cell.setCellValue(getValue());
         return cell;

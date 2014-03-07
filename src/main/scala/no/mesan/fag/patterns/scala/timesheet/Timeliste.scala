@@ -3,9 +3,8 @@ package no.mesan.fag.patterns.scala.timesheet
 import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
 import no.mesan.fag.patterns.scala.timesheet.data.{TimesheetEntry, DoubleMatrix}
 
-import org.apache.poi.ss.usermodel._
-
 import org.joda.time.LocalDate
+import org.apache.poi.ss.usermodel.Workbook
 
 /** Timeliste for en enkelt bruker for en måned. */
 class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) extends Sheets {
@@ -24,7 +23,7 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
   override def colRow(entry: TimesheetEntry): (String, String) =
     (dayRef(entry.when.getDayOfMonth), entry.activity.toString)
 
-  override def headingTexts() = List(Timeliste.SheetTitle, user, s"$year", s"/ $month")
+  override def headingTexts = List(Timeliste.SheetTitle, user, s"$year", s"/ $month")
 
   private def dayRef(i: Int): String = f"$i%02d.$month%02d"
 }
