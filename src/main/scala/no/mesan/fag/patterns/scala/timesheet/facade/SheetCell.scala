@@ -1,41 +1,25 @@
 package no.mesan.fag.patterns.scala.timesheet.facade
 
 import no.mesan.fag.patterns.scala.timesheet.format.StyleName
-import org.apache.poi.ss.usermodel.Cell
 
 /** Rotklasse for "ting som skal i celler". */
-abstract sealed class SheetCell(val style: Option[StyleName]) {
+abstract sealed class SheetCell(val style: Option[StyleName])
 
-  /**
-    * Sett inn verdien i cellen.
-    * @param cell Cellen
-    * @return Cellen
-     */
-    def fillCell(cell: Cell): Cell
-  }
 
 /** En tom celle. */
-class EmptyCell(style: StyleName) extends SheetCell(Some(style)){
-  override def fillCell(cell: Cell): Cell = cell // Ingen insert
-}
+case class EmptyCell(_style: StyleName) extends SheetCell(Some(_style))
 
 /** En celle med verdiinnhold (ikke formel). */
 private[facade] abstract class ValueCell[T](val value: T, style: Option[StyleName]) extends SheetCell(style)
 
 /** En celle med tekstinnhold. */
-class StringCell(value: String, style: StyleName) extends ValueCell[String](value, Some(style)) {
-  override def fillCell(cell: Cell): Cell = { cell.setCellValue(value) ; cell }
-}
+case class StringCell(s: String, _style: StyleName) extends ValueCell[String](s, Some(_style))
 
 /** En celle med En celle med tallinnhold. */
-class DoubleCell(value: Double, style: StyleName) extends ValueCell[Double](value, Some(style)) {
-  override def fillCell(cell: Cell): Cell = { cell.setCellValue(value) ; cell }
-}
+case class DoubleCell(d: Double, _style: StyleName) extends ValueCell[Double](d, Some(_style))
 
 /** Celle som inneholder en formel. */
-class FormulaCell(val formula: String, style: StyleName) extends SheetCell(Some(style)) {
-  override def fillCell(cell: Cell): Cell = { cell.setCellFormula(formula) ; cell }
-}
+case class FormulaCell(formula: String, _style: StyleName) extends SheetCell(Some(_style))
 
 object SheetCell {
   /**
