@@ -26,7 +26,7 @@ class Ukeliste(year: Int, month: Int, day: Int, source: TimeDataService) extends
   override def colRow(entry: TimesheetEntry): (String, String)=
     (Days(entry.when.getDayOfWeek-1), s"${entry.activity} / ${entry.userID}")
 
-  override def headingTexts() = List(Ukeliste.SheetTitle, fromDate.toString("yyyyMMdd"),"-",toDate.toString("yyyyMMdd"))
+  override def headingTexts = List(Ukeliste.SheetTitle, fromDate.toString("yyyyMMdd"),"-",toDate.toString("yyyyMMdd"))
 }
 
 object Ukeliste {
