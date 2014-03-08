@@ -7,6 +7,7 @@ import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+
 import org.junit.Before;
 import org.junit.Test;
 

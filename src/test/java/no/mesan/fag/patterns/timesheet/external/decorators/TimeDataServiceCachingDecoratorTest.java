@@ -1,9 +1,5 @@
 package no.mesan.fag.patterns.timesheet.external.decorators;
 
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 
@@ -11,9 +7,11 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tester for {@link TimeDataServiceCachingDecorator}.
- */
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+
+/** Tester for {@link TimeDataServiceCachingDecorator}. */
 public class TimeDataServiceCachingDecoratorTest {
 
     private TimeDataServiceCachingDecorator cachingDecorator;

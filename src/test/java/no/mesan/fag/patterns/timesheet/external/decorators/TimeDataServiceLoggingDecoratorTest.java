@@ -1,9 +1,5 @@
 package no.mesan.fag.patterns.timesheet.external.decorators;
 
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 
@@ -12,12 +8,16 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-/**
- * Tester for {@link TimeDataServiceLoggingDecorator}.
- */
+import java.util.List;
+import java.util.logging.Logger;
+
+import static org.mockito.Mockito.*;
+
+/** Tester for {@link TimeDataServiceLoggingDecorator}. */
 public class TimeDataServiceLoggingDecoratorTest {
 
     private TimeDataServiceLoggingDecorator loggingDecorator;
+    private Logger loggerMock;
 
     @Before
     public void setUp() {
@@ -41,17 +41,19 @@ public class TimeDataServiceLoggingDecoratorTest {
         when(timeDataServiceMock.forEmployee(anyString(), anyInt())).thenReturn(timesheetEntries);
 
         loggingDecorator = new TimeDataServiceLoggingDecorator(timeDataServiceMock);
+        loggerMock= mock(Logger.class);
+        loggingDecorator.setLogger(loggerMock);
     }
 
     @Test
     public void forEmployeeShouldLog() {
-        // kikk i konsollet og se på output
         loggingDecorator.forEmployee("osk", 0);
+        verify(loggerMock, times(2)).info(anyString());
     }
 
     @Test
     public void forYearShouldLog() {
-        // kikk i konsollet og se på output
         loggingDecorator.forYear(2014, 0);
+        verify(loggerMock, times(2)).info(anyString());
     }
 }

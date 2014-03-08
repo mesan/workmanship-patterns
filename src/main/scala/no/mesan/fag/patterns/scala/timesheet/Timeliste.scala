@@ -23,7 +23,7 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
   override def colRow(entry: TimesheetEntry): (String, String) =
     (dayRef(entry.when.getDayOfMonth), entry.activity.toString)
 
-  override def headingTexts = List(Timeliste.SheetTitle, user, s"$year", s"/ $month")
+  override def headingTexts: List[String] = List(Timeliste.SheetTitle, user, s"$year", s"/ $month")
 
   private def dayRef(i: Int): String = f"$i%02d.$month%02d"
 }
