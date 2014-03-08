@@ -28,7 +28,7 @@ class SpreadSheet(val name:String) {
      * @param rowNum Rad
      * @param cell Celle
      */
-    def setCell(colNum: Int, rowNum: Int, cell: SheetCell) = { data.put(colNum, rowNum, cell) }
+    def setCell(colNum: Int, rowNum: Int, cell: SheetCell) { data.put(colNum, rowNum, cell) }
 
     /**
      * Hent høyde på rad.

@@ -1,5 +1,7 @@
 package no.mesan.fag.patterns.scala.timesheet
 
+import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServiceLoggingDecorator,
+                                                                  TimeDataServiceCachingDecorator}
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.facade._
@@ -123,7 +125,14 @@ abstract class Sheets {
 
   private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
 
-  private[timesheet] def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
+  /**
+   * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
+   * TODO: Det er her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
+   * Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
+   * @param entry Original
+   * @return Timer
+   */
+  protected def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
 }
 
 object Sheets extends App {
@@ -137,8 +146,9 @@ object Sheets extends App {
   val aarsListe= new Aarsliste(2014, source)
   val wb3 = aarsListe.createAarsoversikt
   aarsListe.writeToFile("Årsoversikt-scala", wb3)
-  val ukeListe = new Ukeliste(2014, 1, 15, source)
   ColorSpec.theme= RedTheme
+  val ukeSource = new TimeDataServer(TimeSource) with TimeDataServiceCachingDecorator with TimeDataServiceLoggingDecorator
+  val ukeListe = new Ukeliste(2014, 1, 15, ukeSource)
   val wb4 = ukeListe.createUkeliste
   ukeListe.writeToFile("Ukeoversikt-scala", wb4)
 }

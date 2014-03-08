@@ -9,21 +9,26 @@ import java.util.logging.Logger;
 /** Dekoratør for den eksterne tjenesten som legger på litt fancy logging. */
 public class TimeDataServiceLoggingDecorator extends TimeDataServiceDecorator {
 
-    private static final Logger LOG = Logger.getLogger("TimeDataServiceLoggingDecorator");
+    private Logger logger = Logger.getLogger("TimeDataServiceLoggingDecorator");
 
     public TimeDataServiceLoggingDecorator(final TimeDataService timeDataService) {
         super(timeDataService);
     }
 
+    /** Setter for test. */
+    void setLogger(final Logger logger) {
+        this.logger = logger;
+    }
+
     @Override
     public List<TimesheetEntry> forEmployee(final String userID, final int from) {
-        LOG.info(String.format("Parameters: userID=%s, from=%d", userID, from));
+        logger.info(String.format("Parameters: userID=%s, from=%d", userID, from));
 
         final long start = System.currentTimeMillis();
         final List<TimesheetEntry> timesheetEntries = timeDataService.forEmployee(userID, from);
         final long timeSpent = System.currentTimeMillis() - start;
 
-        LOG.info(String.format("Found %d entries, in %dms", timesheetEntries.size(), timeSpent));
+        logger.info(String.format("Found %d entries, in %dms", timesheetEntries.size(), timeSpent));
         return timesheetEntries;
     }
 
@@ -31,13 +36,13 @@ public class TimeDataServiceLoggingDecorator extends TimeDataServiceDecorator {
     // repeterende kode
     @Override
     public List<TimesheetEntry> forYear(final int year, final int from) {
-        LOG.info(String.format("Parameters: year=%d, from=%d", year, from));
+        logger.info(String.format("Parameters: year=%d, from=%d", year, from));
 
         final long start = System.currentTimeMillis();
         final List<TimesheetEntry> timesheetEntries = timeDataService.forYear(year, from);
         final long timeSpent = System.currentTimeMillis() - start;
 
-        LOG.info(String.format("Found %d entries, in %dms", timesheetEntries.size(), timeSpent));
+        logger.info(String.format("Found %d entries, in %dms", timesheetEntries.size(), timeSpent));
         return timesheetEntries;
     }
 }

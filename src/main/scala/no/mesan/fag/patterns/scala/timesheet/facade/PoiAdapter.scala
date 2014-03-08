@@ -57,8 +57,8 @@ class PoiAdapter(title: String, map: Map[StyleName, Styles]) {
   }
 
   /** Legg til dataene. */
-  def addData(values: SpreadSheet) =
-    for (rowNum <- values.data.rowKeys(sorted=true)) createRow(values.data, rowNum, values.rowHeight(rowNum))
+  def addData(values: SpreadSheet)
+    {for (rowNum <- values.data.rowKeys(sorted=true)) createRow(values.data, rowNum, values.rowHeight(rowNum))}
 
   private def createRow(data: ValueMatrix[Int, Int, SheetCell], rowNum: Int, height: Option[Int]) {
     val row = sheet.createRow(rowNum)

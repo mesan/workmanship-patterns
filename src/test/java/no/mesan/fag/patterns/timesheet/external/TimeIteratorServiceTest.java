@@ -9,9 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test av iteratorimplementasjonen
- */
+/** Test av iteratorimplementasjonen. */
 public class TimeIteratorServiceTest {
 
     @Test

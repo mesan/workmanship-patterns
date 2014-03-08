@@ -2,9 +2,11 @@ package no.mesan.fag.patterns.timesheet;
 
 import no.mesan.fag.patterns.timesheet.external.SmallTimeSource;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+
 import org.junit.Before;
 import org.junit.Test;
 
