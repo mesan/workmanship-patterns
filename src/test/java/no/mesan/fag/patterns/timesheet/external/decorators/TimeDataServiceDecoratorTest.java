@@ -1,9 +1,5 @@
 package no.mesan.fag.patterns.timesheet.external.decorators;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
@@ -12,9 +8,11 @@ import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tester for kombinering av dekoratører.
- */
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+
+/** Tester for kombinering av dekoratører. */
 public class TimeDataServiceDecoratorTest {
 
     private TimeDataServer timeDataServer;

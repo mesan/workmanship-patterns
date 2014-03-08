@@ -1,10 +1,11 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import org.scalatest.FlatSpec
 import no.mesan.fag.patterns.scala.timesheet.external.{SmallTimeSource, TimeDataServer}
 import org.apache.poi.ss.usermodel.{Cell, Sheet}
+
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.FlatSpec
+import org.junit.runner.RunWith
 
 @RunWith(classOf[JUnitRunner])
 class MaanedlisteSpec extends FlatSpec {
