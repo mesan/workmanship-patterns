@@ -1,6 +1,6 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
+import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
 import no.mesan.fag.patterns.scala.timesheet.data.TimesheetEntry
 
 import org.apache.poi.ss.usermodel.Workbook
@@ -15,7 +15,7 @@ class Maanedliste(year: Int, month: Int, source: TimeDataService) extends Sheets
     generateReport(source, Maanedliste.SheetName, "Bruker -- Aktivitet") {
       entry => entry.activity<Maanedliste.InternStart && entry.when.monthOfYear.get == month
     }
-  override def retrieve(service: TimeIteratorService): Iterable[TimesheetEntry] =  service.forYear(year)
+  override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forYear(year)
   override def colRow(entry: TimesheetEntry): (String, String) = (entry.activity.toString, entry.userID)
   override def headingTexts: List[String] = List(Maanedliste.SheetTitle, f"$year%04d/$month%02d")
 }
