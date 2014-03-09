@@ -1,6 +1,6 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
+import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 
 import org.apache.poi.ss.usermodel.Workbook
@@ -19,7 +19,7 @@ class Ukeliste(year: Int, month: Int, day: Int, source: TimeDataService) extends
       !(entry.when.isBefore(fromDate) || entry.when.isAfter(toDate))
     }
 
-  override def retrieve(service: TimeIteratorService): Iterable[TimesheetEntry] =  service.forYear(year)
+  override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forYear(year)
 
   override def dataExtraHeadings(matrix: DoubleMatrix) = for (day <-Days) matrix.ensureCol(day)
 
