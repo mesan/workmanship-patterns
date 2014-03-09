@@ -1,6 +1,6 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
+import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
 import no.mesan.fag.patterns.scala.timesheet.data.{TimesheetEntry, DoubleMatrix}
 import no.mesan.fag.patterns.scala.timesheet.format._
 
@@ -16,7 +16,7 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
     val headingTitle: String = Timeliste.SheetTitle
 
     // Hent timedata for bruker
-    val fullList=  new TimeIteratorService(source).forEmployee(user).toList
+    val fullList=  source.forEmployee(user).toList
 
     // Filtrer for aktuelt tidsrom
     var list = Vector[TimesheetEntry]()

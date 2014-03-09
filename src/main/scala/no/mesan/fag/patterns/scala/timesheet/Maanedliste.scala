@@ -1,6 +1,6 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.external.{TimeIteratorService, TimeDataService}
+import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.format._
 
@@ -17,7 +17,7 @@ class Maanedliste(year: Int, month: Int, source: TimeDataService) extends Sheets
     val headingTitle= Maanedliste.SheetTitle
 
     // Hent timedata for perioden
-    val fullList=  new TimeIteratorService(source).forYear(year).toList
+    val fullList= source.forYear(year).toList
 
     // Filtrer bort interne timer og andre måneder
     var list = Vector[TimesheetEntry]()
