@@ -1,6 +1,6 @@
 package no.mesan.fag.patterns.scala.timesheet.external.decorators
 
-import no.mesan.fag.patterns.scala.timesheet.external.{TimeDataService, TimeIteratorService, TimeDataServer}
+import no.mesan.fag.patterns.scala.timesheet.external.{TimeDataService, TimeDataServer}
 import no.mesan.fag.patterns.scala.timesheet.data.TimesheetEntry
 
 import org.junit.runner.RunWith
@@ -28,9 +28,8 @@ class TimeDataServiceDecoratorSpec extends FlatSpec with MockitoSugar {
   "The decorators" should "be possible to combine" in {
     val loggingAndCachingDecoratedService=
       new TimeDataServer(entries1) with TimeDataServiceLoggingDecorator with TimeDataServiceCachingDecorator
-    val timeIteratorService = new TimeIteratorService(loggingAndCachingDecoratedService)
-    for (timesheetEntry <- timeIteratorService.forYear(2013)) assert(timesheetEntry!==null)
-    for (timesheetEntry <- timeIteratorService.forYear(2013)) assert(timesheetEntry!==null)
+    for (timesheetEntry <- loggingAndCachingDecoratedService.forYear(2013)) assert(timesheetEntry!==null)
+    for (timesheetEntry <- loggingAndCachingDecoratedService.forYear(2013)) assert(timesheetEntry!==null)
   }
 
   trait SetupForCaching {
