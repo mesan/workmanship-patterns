@@ -56,8 +56,8 @@ abstract class Sheets {
   }
 
   protected def dataRetrieve(service: TimeDataService, filterFun: TimesheetEntry=>Boolean): List[TimesheetEntry]=
-    retrieve(new TimeIteratorService(service)).toList filter filterFun
-  def retrieve(service: TimeIteratorService): Iterable[TimesheetEntry]
+    retrieve(service).toList filter filterFun
+  def retrieve(service: TimeDataService): Iterable[TimesheetEntry]
 
   protected def dataGroup(entries: List[TimesheetEntry]): DoubleMatrix = {
     val matrix= new DoubleMatrix
