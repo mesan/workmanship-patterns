@@ -1,12 +1,10 @@
 package no.mesan.fag.patterns.timesheet.strategy;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-/**
- * Tester for {@link TimeRepresentationHalfHours}
- */
+import static org.junit.Assert.assertEquals;
+
+/** Tester for {@link TimeRepresentationHalfHours}. */
 public class TimeRepresentationHalfHoursTest {
 
     private final TimeRepresentationStrategy strategy = new TimeRepresentationHalfHours();
@@ -19,6 +17,7 @@ public class TimeRepresentationHalfHoursTest {
 
     @Test
     public void convertShouldTruncateExcessMinutes() {
+        assertEquals(2.0, strategy.convert(149), 0.0);
         assertEquals(2.5, strategy.convert(155), 0.0);
     }
 }

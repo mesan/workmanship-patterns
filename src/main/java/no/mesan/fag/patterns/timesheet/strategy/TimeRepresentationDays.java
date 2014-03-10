@@ -5,6 +5,6 @@ public class TimeRepresentationDays implements TimeRepresentationStrategy {
 
     @Override
     public double convert(final int minutes) {
-        return ((double) minutes / (60 * 24));
+        return minutes / (60 * 7.5D);
     }
 }

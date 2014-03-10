@@ -19,10 +19,7 @@ import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationDays;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
-import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHours;
-import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationMinutes;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
-
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
@@ -34,21 +31,19 @@ import java.util.Map;
 /** Superklasse for timelister. */
 public abstract class Sheets {
 
+    /** Hvordan vi viser timer på listene. */
     private TimeRepresentationStrategy timeRepresentationStrategy= new TimeRepresentationHalfHours();
 
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
-        timeliste.setTimeRepresentationStrategy(new TimeRepresentationMinutes());
         final Workbook wb1 = timeliste.createTimeliste();
         timeliste.writeToFile("Timeliste", wb1);
         final Maanedliste mndListe = new Maanedliste(2014, 2, source);
-        mndListe.setTimeRepresentationStrategy(new TimeRepresentationHalfHours());
         final Workbook wb2 = mndListe.createMaanedliste();
         mndListe.writeToFile("Månedsoppgjør", wb2);
         final Aarsliste aarsListe = new Aarsliste(2014, source);
-        aarsListe.setTimeRepresentationStrategy(new TimeRepresentationHours());
         final Workbook wb3 = aarsListe.createAarsoversikt();
         aarsListe.writeToFile("Årsoversikt", wb3);
         final Ukeliste ukeListe =
@@ -59,6 +54,10 @@ public abstract class Sheets {
         ukeListe.writeToFile("Ukeoversikt", wb4);
     }
 
+    /**
+     * Sett ny strategi for representasjon av timer.
+     * @param timeRepresentationStrategy Strategi
+     */
     public void setTimeRepresentationStrategy(final TimeRepresentationStrategy timeRepresentationStrategy) {
         this.timeRepresentationStrategy = timeRepresentationStrategy;
     }
