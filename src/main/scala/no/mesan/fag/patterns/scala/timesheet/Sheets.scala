@@ -2,6 +2,8 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServiceLoggingDecorator,
                                                                   TimeDataServiceCachingDecorator}
+import no.mesan.fag.patterns.scala.timesheet.strategy.{TimeRepresentationHalfHours, TimeRepresentationDays,
+                                                       TimeRepresentationStrategy}
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.facade._
@@ -11,6 +13,9 @@ import org.apache.poi.ss.usermodel._
 
 /** Superklasse for timelister. */
 abstract class Sheets {
+
+  /** Hvordan vi viser timer på listene. */
+  private var timeRepresentationStrategy: Option[TimeRepresentationStrategy] = None
 
   /**
    * Dette er hovedrutinen for å lage rapporter.
@@ -56,10 +61,11 @@ abstract class Sheets {
 
   protected def dataGroup(entries: List[TimesheetEntry]): DoubleMatrix = {
     val matrix= new DoubleMatrix
+    val converter= timeRepresentationStrategy.getOrElse(new TimeRepresentationHalfHours)
     dataExtraHeadings(matrix)
     for (entry <- entries) {
       val (colRef, rowRef) = colRow(entry)
-      matrix.add(colRef, rowRef, minutesToHours(entry))
+      matrix.add(colRef, rowRef, converter.convert(entry.minutes))
     }
     matrix
   }
@@ -126,13 +132,12 @@ abstract class Sheets {
   private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
 
   /**
-   * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
-   * TODO: Det er her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
-   * Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
-   * @param entry Original
-   * @return Timer
+   * Sett ny strategi for representasjon av timer.
+   * @param timeRepresentationStrategy Strategi
    */
-  protected def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
+  def setTimeRepresentationStrategy(timeRepresentationStrategy: Option[TimeRepresentationStrategy]) {
+    this.timeRepresentationStrategy = timeRepresentationStrategy
+  }
 }
 
 object Sheets extends App {
@@ -149,6 +154,7 @@ object Sheets extends App {
   ColorSpec.theme= RedTheme
   val ukeSource = new TimeDataServer(TimeSource) with TimeDataServiceCachingDecorator with TimeDataServiceLoggingDecorator
   val ukeListe = new Ukeliste(2014, 1, 15, ukeSource)
+  ukeListe.setTimeRepresentationStrategy(Some(new TimeRepresentationDays))
   val wb4 = ukeListe.createUkeliste
   ukeListe.writeToFile("Ukeoversikt-scala", wb4)
 }

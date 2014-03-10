@@ -5,6 +5,6 @@ public class TimeRepresentationHours implements TimeRepresentationStrategy {
 
     @Override
     public double convert(final int minutes) {
-        return ((double) minutes / 60);
+        return Math.round(minutes / 60D);
     }
 }
