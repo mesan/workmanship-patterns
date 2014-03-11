@@ -1,5 +1,13 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import no.mesan.fag.patterns.timesheet.command.AsyncTask;
+import no.mesan.fag.patterns.timesheet.command.AsyncTaskExecutor;
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
@@ -25,12 +33,6 @@ import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 /** Superklasse for timelister. */
 public abstract class Sheets {
 
@@ -41,22 +43,39 @@ public abstract class Sheets {
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
         timeliste.setTimeRepresentationStrategy(new TimeRepresentationMinutes());
+        
         final Workbook wb1 = timeliste.createTimeliste();
-        timeliste.writeToFile("Timeliste", wb1);
         final Maanedliste mndListe = new Maanedliste(2014, 2, source);
         mndListe.setTimeRepresentationStrategy(new TimeRepresentationHalfHours());
+        
         final Workbook wb2 = mndListe.createMaanedliste();
-        mndListe.writeToFile("Månedsoppgjør", wb2);
         final Aarsliste aarsListe = new Aarsliste(2014, source);
         aarsListe.setTimeRepresentationStrategy(new TimeRepresentationHours());
+        
         final Workbook wb3 = aarsListe.createAarsoversikt();
-        aarsListe.writeToFile("Årsoversikt", wb3);
         final Ukeliste ukeListe =
                 new Ukeliste(2014, 1, 15,
                              new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)));
         ukeListe.setTimeRepresentationStrategy(new TimeRepresentationDays());
+        
         final Workbook wb4 = ukeListe.createUkeliste();
-        ukeListe.writeToFile("Ukeoversikt", wb4);
+        
+        AsyncTask task = new AsyncTask() {
+        	@Override
+        	public void executeTask() {
+        		try {
+					timeliste.writeToFile("Timeliste", wb1);
+					mndListe.writeToFile("Månedsoppgjør", wb2);
+					aarsListe.writeToFile("Årsoversikt", wb3);
+					ukeListe.writeToFile("Ukeoversikt", wb4);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
+        };
+        
+        AsyncTaskExecutor taskExecutor = new AsyncTaskExecutor();
+        taskExecutor.executeTask(task);
     }
 
     public void setTimeRepresentationStrategy(final TimeRepresentationStrategy timeRepresentationStrategy) {
