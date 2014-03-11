@@ -4,6 +4,7 @@ import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
+
 import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -13,7 +14,7 @@ import java.util.List;
 
 /** Timeliste for alle brukere for en enkelt uke. */
 public class Ukeliste extends Sheets {
-    public static final String SHEET_TITLE = "Ukeliste";
+    private static final String SHEET_TITLE = "Ukeliste";
     private static final String[] DAYS = { "Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"};
 
     private final TimeDataService source;

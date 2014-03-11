@@ -51,6 +51,7 @@ public class StyleSpec implements Cloneable {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static class StyleBuilder {
         private final StyleSpec spec;
 

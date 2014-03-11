@@ -38,6 +38,7 @@ public enum ColorSpec {
         IndexedColors.BLACK.getIndex()
     };
 
+    @SuppressWarnings("NonFinalFieldInEnum")
     private static int[] themeColors= BLUE_THEME;
     private final int color;
 

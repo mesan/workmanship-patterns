@@ -70,4 +70,12 @@ public class SpreadSheet {
     public ValueMatrix<Integer, Integer, SheetCell> getData() {
         return data;
     }
+
+    /**
+     * Hent arknavnet.
+     * @return Arknavn
+     */
+    public String getName() {
+        return name;
+    }
 }

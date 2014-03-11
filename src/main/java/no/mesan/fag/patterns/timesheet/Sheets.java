@@ -20,6 +20,7 @@ import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationDays;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
+
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
@@ -89,8 +90,8 @@ public abstract class Sheets {
      * @param sortedCols Om kolonneoverskriftene skal være sortert
      * @return Resultat
      */
-    protected final Workbook generateReport(final TimeDataService dataService, final String title,
-                                            final String headTitle, final boolean sortedCols)  {
+    final Workbook generateReport(final TimeDataService dataService, final String title,
+                                  final String headTitle, final boolean sortedCols)  {
         final List<TimesheetEntry> list = dataRetrieve(dataService); // Hent timedata og filtrer
         final DoubleMatrix matrix = dataGroup(list); // Grupper data
 
@@ -109,7 +110,7 @@ public abstract class Sheets {
      * @param dataService Datakilde
      * @return Liste av entries som skal være med
      */
-    protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
+    List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
         final List<TimesheetEntry> list = new ArrayList<>();
         final TimeIteratorService service = new TimeIteratorService(dataService);
         final Iterable<TimesheetEntry> entries = entryIterator(service);
@@ -131,7 +132,7 @@ public abstract class Sheets {
      * @param entry Et entry
      * @return true hvis denne skal være med i resultat
      */
-    protected boolean acceptData(final TimesheetEntry entry) {
+    boolean acceptData(final TimesheetEntry entry) {
         return true;
     }
 
@@ -140,7 +141,7 @@ public abstract class Sheets {
      * @param list Alle entries
      * @return Matrise med summerte data
      */
-    protected DoubleMatrix dataGroup(final List<TimesheetEntry> list) {
+    DoubleMatrix dataGroup(final List<TimesheetEntry> list) {
         final DoubleMatrix matrix = new DoubleMatrix();
         dataExtraHeadings(matrix);
         for (final TimesheetEntry entry : list) {
@@ -170,7 +171,8 @@ public abstract class Sheets {
      * Legg på evt faste headinger.
      * @param matrix Matrisen (oppdateres ved behov)
      */
-    protected void dataExtraHeadings(final DoubleMatrix matrix) {
+    @SuppressWarnings({"UnnecessaryReturnStatement", "EmptyMethod"})
+    void dataExtraHeadings(final DoubleMatrix matrix) {
         return;
     }
 
@@ -178,7 +180,7 @@ public abstract class Sheets {
      * Lag overskriftslinjen øverst i arket.
      * @param sheet Arket
      */
-    protected void createHeading(final SpreadSheet sheet) {
+    void createHeading(final SpreadSheet sheet) {
         final int rownum= 0;
         int colnum= 0;
         sheet.setRowHeight(rownum, 45);
@@ -200,8 +202,8 @@ public abstract class Sheets {
      * @param headTitle Teksten i øverste venstre hjørne
      * @param sortedCols Om kolonnene skal sorteres
      */
-    protected void createTableHead(final SpreadSheet sheet, final DoubleMatrix matrix,
-                                   final String headTitle, final boolean sortedCols) {
+    void createTableHead(final SpreadSheet sheet, final DoubleMatrix matrix,
+                         final String headTitle, final boolean sortedCols) {
         final int rownum= 2;
         int colnum= 0;
         sheet.setRowHeight(rownum, 40);
@@ -221,7 +223,7 @@ public abstract class Sheets {
      * @param matrix Dataene
      * @param sortedCols Om kolonnene skal sorteres
      */
-    protected void createDataGrid(final SpreadSheet sheet, final DoubleMatrix matrix, final boolean sortedCols) {
+    void createDataGrid(final SpreadSheet sheet, final DoubleMatrix matrix, final boolean sortedCols) {
         int rownum = 1;
         sheet.getData().ensureRow(rownum++);  // Hopp over rad
         for (final String rKey : matrix.rowKeys(true)) {
@@ -244,7 +246,7 @@ public abstract class Sheets {
      * @param sheet Arket
      * @param matrix Dataene
      */
-    protected void createSums(final SpreadSheet sheet, final DoubleMatrix matrix) {
+    void createSums(final SpreadSheet sheet, final DoubleMatrix matrix) {
         final int rownum= sheet.lastRowNum();
         sheet.setCell(0, rownum, new StringCell("SUM", StyleName.SUM1));
         for (int i = 1; i <= 1+matrix.cSize(); i++) {
@@ -258,7 +260,7 @@ public abstract class Sheets {
      * @param values Innholdet i boka
      * @param styles Stilene som skal inn
      */
-    protected Workbook finish(final String title, final SpreadSheet values, final Map<StyleName, StyleSpec> styles) {
+    Workbook finish(final String title, final SpreadSheet values, final Map<StyleName, StyleSpec> styles) {
         final PoiAdapter adapter = new PoiAdapter(title, styles);
         adapter.addData(values);
         return adapter.create();
@@ -270,7 +272,7 @@ public abstract class Sheets {
      * @param workbook Referanse til boken
      * @throws IOException Verden er ikke perfekt
      */
-    protected void writeToFile(final String bookName, final Workbook workbook) throws IOException {
+    void writeToFile(final String bookName, final Workbook workbook) throws IOException {
         PoiAdapter.writeToFile(bookName, workbook);
     }
 
@@ -279,7 +281,7 @@ public abstract class Sheets {
      * @param entry Original
      * @return Timer
      */
-    protected double minutesToCorrectRepresentation(final TimesheetEntry entry) {
+    double minutesToCorrectRepresentation(final TimesheetEntry entry) {
         return timeRepresentationStrategy.convert(entry.getMinutes());
     }
 }

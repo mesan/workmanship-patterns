@@ -5,7 +5,6 @@ import no.mesan.fag.patterns.scala.timesheet.format.StyleName
 /** Rotklasse for "ting som skal i celler". */
 abstract sealed class SheetCell(val style: Option[StyleName])
 
-
 /** En tom celle. */
 case class EmptyCell(_style: StyleName) extends SheetCell(Some(_style))
 

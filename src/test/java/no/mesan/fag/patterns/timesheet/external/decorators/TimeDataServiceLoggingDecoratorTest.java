@@ -29,6 +29,7 @@ public class TimeDataServiceLoggingDecoratorTest {
         // men for å mocke ut noe hvor bi-effekter som tid brukt er vel så relevant som resultatet
         // så er dette et hendig triks. Ellers ville vel den følgende one-lineren vært greiere å bruke:
         // when(timeDataServiceMock.forEmployee(anyString(), anyInt())).thenReturn(timesheetEntries);
+        @SuppressWarnings("rawtypes")
         final Answer webserviceAnswer = new Answer() {
             @Override
             public Object answer(final InvocationOnMock invocation) throws Throwable {

@@ -25,10 +25,10 @@ import no.mesan.fag.patterns.timesheet.external.TimeDataService;
  * Osv. For ekstra fancy config kan du til og med styre hvilke bønner som injectes via properties etc.,
  * men dette er langt utenfor scope :)
  */
-public abstract class TimeDataServiceDecorator implements TimeDataService {
-    protected final TimeDataService timeDataService;
+abstract class TimeDataServiceDecorator implements TimeDataService {
+    final TimeDataService timeDataService;
 
-    public TimeDataServiceDecorator(final TimeDataService timeDataService) {
+    TimeDataServiceDecorator(final TimeDataService timeDataService) {
         this.timeDataService = timeDataService;
     }
 }

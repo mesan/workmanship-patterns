@@ -2,7 +2,6 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.data.{TimesheetEntry, DoubleMatrix}
 import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
-import no.mesan.fag.patterns.scala.timesheet.format._
 
 import org.apache.poi.ss.usermodel.Workbook
 

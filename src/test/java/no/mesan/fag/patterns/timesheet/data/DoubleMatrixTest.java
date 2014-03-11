@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 /** Test DoubleMatrix. */
 public class DoubleMatrixTest extends ValueMatrixTest {
 
-    @Override protected DoubleMatrix create() { return new DoubleMatrix();}
+    @Override DoubleMatrix create() { return new DoubleMatrix();}
 
     @Test
     public void addToEmptyCellIsEqualToPut() {

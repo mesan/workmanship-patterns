@@ -3,11 +3,11 @@ package no.mesan.fag.patterns.timesheet.facade;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 
 /** Rotklasse for "ting som skal i celler". */
-public abstract class SheetCell {
+abstract class SheetCell {
     /** Stilen som skal brukes. */
     private final StyleName style;
 
-    protected SheetCell(final StyleName style) {
+    SheetCell(final StyleName style) {
         this.style = style;
     }
 
@@ -21,7 +21,7 @@ public abstract class SheetCell {
      * @param row Rad
      * @return Celleref
      */
-    protected static String cellRef(final int col, final int row) {
+    private static String cellRef(final int col, final int row) {
         final int col0= col-1;
         final int ii= col0/26;
         final int i= col0%26;
@@ -40,7 +40,7 @@ public abstract class SheetCell {
      * @param toRow Til rad
      * @return Referanse til range
      */
-    protected static String rangeRef(final int fromCol, final int fromRow, final int toCol, final int toRow) {
+    static String rangeRef(final int fromCol, final int fromRow, final int toCol, final int toRow) {
         return cellRef(fromCol, fromRow) + ":" + cellRef(toCol, toRow);
     }
 
@@ -51,7 +51,7 @@ public abstract class SheetCell {
     protected abstract void visit(CellVisitor visitor);
 
     /** Lever stilen. */
-    protected StyleName getStyle() {
+    StyleName getStyle() {
         return style;
     }
 }

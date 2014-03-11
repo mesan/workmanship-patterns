@@ -11,6 +11,13 @@ public class DoubleMatrix extends ValueMatrix<String, String, Double> {
         super();
     }
 
+    /**
+     * Insert cell, or add to value if already present.
+     * @param col Column
+     * @param row Row
+     * @param val Value to add/insert
+     * @return this
+     */
     public DoubleMatrix add(final String col, final String row, final Double val) {
         final Double old = get(col, row);
         put(col, row, (old == null) ? val : val + old);
