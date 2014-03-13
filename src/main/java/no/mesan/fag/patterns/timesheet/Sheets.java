@@ -22,6 +22,7 @@ import no.mesan.fag.patterns.timesheet.facade.FormulaCell;
 import no.mesan.fag.patterns.timesheet.facade.PoiAdapter;
 import no.mesan.fag.patterns.timesheet.facade.SpreadSheet;
 import no.mesan.fag.patterns.timesheet.facade.StringCell;
+import no.mesan.fag.patterns.timesheet.format.ColorSpec.Theme;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
@@ -37,39 +38,56 @@ public abstract class Sheets {
     /** Hvordan vi viser timer på listene. */
     private TimeRepresentationStrategy timeRepresentationStrategy= new TimeRepresentationHalfHours();
 
+    /** Ønsket fargestil. */
+    private Theme theme= Theme.BLUE;
+
+    private static class TimelisteTask implements AsyncTask {
+
+        private final String name;
+        private final Sheets sheet;
+
+        private TimelisteTask(final String name, final Sheets sheet) {
+            this.sheet = sheet;
+            this.name = name;
+        }
+
+        @Override
+        public String whoAmI() {
+            return name;
+        }
+
+        @Override
+        public void executeTask() {
+            try {
+                final Workbook wb = sheet.createBook();
+                sheet.writeToFile(name, wb);
+            }
+            catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void main(final String[] args) throws Exception {
-//      ColorSpec.setTheme(ColorSpec.Theme.RED);
         final TimeDataServer source = new TimeDataServer(new TimeSource());
         final Timeliste timeliste = new Timeliste("larsr", 2014, 2, source);
-        final Workbook wb1 = timeliste.createTimeliste();
         final Maanedliste mndListe = new Maanedliste(2014, 2, source);
-        final Workbook wb2 = mndListe.createMaanedliste();
         final Aarsliste aarsListe = new Aarsliste(2014, source);
-        final Workbook wb3 = aarsListe.createAarsoversikt();
         final Ukeliste ukeListe =
                 new Ukeliste(2014, 1, 15,
                              new TimeDataServiceLoggingDecorator(new TimeDataServiceCachingDecorator(source)));
         ukeListe.setTimeRepresentationStrategy(new TimeRepresentationDays());
+        ukeListe.setTheme(Theme.RED);
 
-        final Workbook wb4 = ukeListe.createUkeliste();
-
-        AsyncTask task = new AsyncTask() {
-        	@Override
-        	public void executeTask() {
-        		try {
-					timeliste.writeToFile("Timeliste", wb1);
-					mndListe.writeToFile("Månedsoppgjør", wb2);
-					aarsListe.writeToFile("Årsoversikt", wb3);
-					ukeListe.writeToFile("Ukeoversikt", wb4);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-        	}
-        };
-
-        AsyncTaskExecutor taskExecutor = new AsyncTaskExecutor();
-        taskExecutor.executeTask(task);
+        final AsyncTaskExecutor taskExecutor = new AsyncTaskExecutor();
+        taskExecutor.executeTasks(new TimelisteTask("Timeliste", timeliste),
+                                  new TimelisteTask("Månedsoppgjør", mndListe),
+                                  new TimelisteTask("Årsoversikt", aarsListe),
+                                  new TimelisteTask("Ukeoversikt", ukeListe));
     }
+
+    /** Opprett arbeidsbok. */
+    protected abstract Workbook createBook();
 
     /**
      * Sett ny strategi for representasjon av timer.
@@ -77,6 +95,11 @@ public abstract class Sheets {
      */
     public void setTimeRepresentationStrategy(final TimeRepresentationStrategy timeRepresentationStrategy) {
         this.timeRepresentationStrategy = timeRepresentationStrategy;
+    }
+
+    /** Sett ønsket fargesetting .*/
+    public void setTheme(final Theme theme) {
+        this.theme = theme;
     }
 
     /**
@@ -112,6 +135,7 @@ public abstract class Sheets {
         final DoubleMatrix matrix = dataGroup(list); // Grupper data
 
         final SpreadSheet sheet = new SpreadSheet(title);
+        sheet.setTheme(theme);
         final Map<StyleName, StyleSpec> styles = StyleFactory.styleSetup(); // Lag nødvendige stiler
 
         createHeading(sheet); // Hovedoverskrift
@@ -277,9 +301,7 @@ public abstract class Sheets {
      * @param styles Stilene som skal inn
      */
     Workbook finish(final String title, final SpreadSheet values, final Map<StyleName, StyleSpec> styles) {
-        final PoiAdapter adapter = new PoiAdapter(title, styles);
-        adapter.addData(values);
-        return adapter.create();
+        return new PoiAdapter(title, values, styles).create();
     }
 
     /**

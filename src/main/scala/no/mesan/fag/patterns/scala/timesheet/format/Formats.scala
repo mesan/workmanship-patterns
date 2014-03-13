@@ -55,11 +55,9 @@ case object GreenTheme extends Theme(Map(
 
 //////// Colors
 sealed abstract class ColorSpec(colorConst:ThemeIndex) {
-  def color: Short = ColorSpec.theme.colors.getOrElse(colorConst, IndexedColors.BLACK).getIndex
+  def color(theme: Theme): Short = theme.colors.getOrElse(colorConst, IndexedColors.BLACK).getIndex
 }
-case object ColorSpec {
-  var theme: Theme= BlueTheme
-}
+
 case object ColorFg extends ColorSpec(Fg)
 case object ColorBg extends ColorSpec(Bg)
 case object ColorHighlight extends ColorSpec(High)

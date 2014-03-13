@@ -4,6 +4,7 @@ import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServic
                                                                   TimeDataServiceCachingDecorator}
 import no.mesan.fag.patterns.scala.timesheet.strategy.{TimeRepresentationHalfHours, TimeRepresentationDays,
                                                        TimeRepresentationStrategy}
+import no.mesan.fag.patterns.scala.timesheet.command.{AsyncTaskExecutor, AsyncTask}
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.facade._
@@ -16,6 +17,12 @@ abstract class Sheets {
 
   /** Hvordan vi viser timer på listene. */
   private var timeRepresentationStrategy: Option[TimeRepresentationStrategy] = None
+
+  /** Fargesetting. */
+  private var theme: Option[Theme]= None
+
+  /** Konverter til arbeidsbok. */
+  def createBook: Workbook
 
   /**
    * Dette er hovedrutinen for å lage rapporter.
@@ -46,7 +53,7 @@ abstract class Sheets {
                                      sortedCols: Boolean = true) (filter: TimesheetEntry=>Boolean) : Workbook = {
     val list = dataRetrieve(dataService, filter)
     val matrix = dataGroup(list)
-    val sheet = new SpreadSheet(title)
+    val sheet = new SpreadSheet(title, theme.getOrElse(BlueTheme))
     val styles = StyleFactory.styleSetup
     createHeading(sheet)
     createTableHead(sheet, matrix, headTitle, sortedCols)
@@ -124,7 +131,7 @@ abstract class Sheets {
   }
 
   protected def finish(title:String, sheet: SpreadSheet, styles: Map[StyleName, Styles]): Workbook = {
-    val adapter = new PoiAdapter(title, styles)
+    val adapter = new PoiAdapter(title, theme.getOrElse(BlueTheme), styles)
     adapter.addData(sheet)
     adapter.create
   }
@@ -135,26 +142,33 @@ abstract class Sheets {
    * Sett ny strategi for representasjon av timer.
    * @param timeRepresentationStrategy Strategi
    */
-  def setTimeRepresentationStrategy(timeRepresentationStrategy: Option[TimeRepresentationStrategy]) {
-    this.timeRepresentationStrategy = timeRepresentationStrategy
+  def setTimeRepresentationStrategy(timeRepresentationStrategy: TimeRepresentationStrategy) {
+    this.timeRepresentationStrategy = Some(timeRepresentationStrategy)
   }
+
+  /** Ny fargesetting. */
+  def setTheme(theme: Theme) { this.theme= Some(theme) }
+}
+
+private class TimelisteTask(val name: String, val sheet: Sheets) extends AsyncTask {
+  def whoAmI: String =  name
+  def executeTask = sheet.writeToFile(name, sheet.createBook)
 }
 
 object Sheets extends App {
   val source = new TimeDataServer(TimeSource)
   val timeliste = new Timeliste("larsr", 2014, 2, source)
-  val wb1 = timeliste.createTimeliste
-  timeliste.writeToFile("Timeliste-scala", wb1)
   val mndListe= new Maanedliste(2014, 2, source)
-  val wb2 = mndListe.createMaanedliste
-  mndListe.writeToFile("Månedsoppgjør-scala", wb2)
   val aarsListe= new Aarsliste(2014, source)
-  val wb3 = aarsListe.createAarsoversikt
-  aarsListe.writeToFile("Årsoversikt-scala", wb3)
-  ColorSpec.theme= RedTheme
+
   val ukeSource = new TimeDataServer(TimeSource) with TimeDataServiceCachingDecorator with TimeDataServiceLoggingDecorator
   val ukeListe = new Ukeliste(2014, 1, 15, ukeSource)
-  ukeListe.setTimeRepresentationStrategy(Some(new TimeRepresentationDays))
-  val wb4 = ukeListe.createUkeliste
-  ukeListe.writeToFile("Ukeoversikt-scala", wb4)
+  ukeListe.setTimeRepresentationStrategy(new TimeRepresentationDays)
+  ukeListe.setTheme(RedTheme)
+
+  val taskExecutor = new AsyncTaskExecutor
+  taskExecutor.executeTasks(new TimelisteTask("Timeliste-scala", timeliste),
+                            new TimelisteTask("Månedsoppgjør-scala", mndListe),
+                            new TimelisteTask("Årsoversikt-scala", aarsListe),
+                            new TimelisteTask("Ukeoversikt-scala", ukeListe))
 }

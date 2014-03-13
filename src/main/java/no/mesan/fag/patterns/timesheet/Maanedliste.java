@@ -28,6 +28,11 @@ public class Maanedliste extends Sheets {
         this.source = source;
     }
 
+    @Override
+    public Workbook createBook() {
+        return createMaanedliste();
+    }
+
     public Workbook createMaanedliste()  {
         return generateReport(source, SHEET_NAME, "Bruker -- Aktivitet", true);
     }

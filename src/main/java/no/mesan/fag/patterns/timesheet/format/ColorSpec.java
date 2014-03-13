@@ -38,23 +38,26 @@ public enum ColorSpec {
         IndexedColors.BLACK.getIndex()
     };
 
-    @SuppressWarnings("NonFinalFieldInEnum")
-    private static int[] themeColors= BLUE_THEME;
     private final int color;
 
     private ColorSpec(final int color) {
         this.color= color;
     }
 
-    public int color() {
-        return themeColors[color];
-    }
-
-    public static void setTheme(final Theme theme) {
+    public int color(final Theme theme) {
+        final int[] colors;
         switch (theme) {
-            case RED:   themeColors= RED_THEME;   break;
-            case GREEN: themeColors= GREEN_THEME; break;
-            case BLUE:  themeColors= BLUE_THEME;  break;
+            case RED:
+                colors= RED_THEME;
+                break;
+            case GREEN:
+                colors= GREEN_THEME;
+                break;
+            case BLUE:
+            default:
+                colors= BLUE_THEME;
+                break;
         }
+        return colors[color];
     }
 }

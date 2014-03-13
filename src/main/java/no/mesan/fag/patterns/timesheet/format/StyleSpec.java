@@ -1,5 +1,6 @@
 package no.mesan.fag.patterns.timesheet.format;
 
+import no.mesan.fag.patterns.timesheet.format.ColorSpec.Theme;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -46,7 +47,7 @@ public class StyleSpec implements Cloneable {
     public static StyleBuilder newStyleFrom(final StyleSpec spec) {
         try {
             return new StyleBuilder(spec.clone());
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             throw new RuntimeException("Shouldn't happen", e);
         }
     }
@@ -215,13 +216,14 @@ public class StyleSpec implements Cloneable {
      * Oversett spesifkasjon til Excel-stil.
      *
      * @param wb Arbeidsbokreferanse
+     * @param theme Fargetema
      * @return Stilen
      */
-    public CellStyle createStyle(final Workbook wb) {
+    public CellStyle createStyle(final Workbook wb, final Theme theme) {
         final CellStyle style = wb.createCellStyle();
-        makeFont(wb, style);
+        makeFont(wb, style, theme);
         if (bgColor!=null) {
-            style.setFillForegroundColor((short) bgColor.color());
+            style.setFillForegroundColor((short) bgColor.color(theme));
             style.setFillPattern(CellStyle.SOLID_FOREGROUND);
         }
         style.setAlignment((short) horizontal.align());
@@ -231,29 +233,29 @@ public class StyleSpec implements Cloneable {
             switch (border.edge()) {
                 case TOP:
                     style.setBorderTop((short)line.border());
-                    style.setTopBorderColor((short) line.color().color());
+                    style.setTopBorderColor((short) line.color().color(theme));
                     break;
                 case BOTTOM:
                     style.setBorderBottom((short) line.border());
-                    style.setBottomBorderColor((short) line.color().color());
+                    style.setBottomBorderColor((short) line.color().color(theme));
                     break;
                 case LEFT:
                     style.setBorderLeft((short) line.border());
-                    style.setLeftBorderColor((short) line.color().color());
+                    style.setLeftBorderColor((short) line.color().color(theme));
                     break;
                 case RIGHT:
                     style.setBorderRight((short) line.border());
-                    style.setRightBorderColor((short) line.color().color());
+                    style.setRightBorderColor((short) line.color().color(theme));
                     break;
             }
         }
         return style;
     }
 
-    private void makeFont(final Workbook wb, final CellStyle style) {
+    private void makeFont(final Workbook wb, final CellStyle style, final Theme theme) {
         final Font font = wb.createFont();
         font.setFontHeightInPoints((short) fontHeigthInPoints);
-        if (fgColor!=null) font.setColor((short) fgColor.color());
+        if (fgColor!=null) font.setColor((short) fgColor.color(theme));
         if (isBold) font.setBoldweight(Font.BOLDWEIGHT_BOLD);
         if (isItalic) font.setItalic(true);
         style.setFont(font);

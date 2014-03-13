@@ -2,9 +2,10 @@ package no.mesan.fag.patterns.scala.timesheet.facade
 
 import scala.collection.mutable.{Map => MutableMap}
 import no.mesan.fag.patterns.scala.timesheet.data.ValueMatrix
+import no.mesan.fag.patterns.scala.timesheet.format.Theme
 
 /** Holder data om et regneark uten å blande inn POI før til slutt. */
-class SpreadSheet(val name:String) {
+class SpreadSheet(val name: String, val theme: Theme) {
   /** Innholdet i arket. */
   val data = new ValueMatrix[Int, Int, SheetCell]()
 

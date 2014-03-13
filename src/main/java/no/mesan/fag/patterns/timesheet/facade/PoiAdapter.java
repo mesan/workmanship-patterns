@@ -1,6 +1,7 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
+import no.mesan.fag.patterns.timesheet.format.ColorSpec.Theme;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 
@@ -18,26 +19,27 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /** Adapter vår fasade til POI Workbook. */
-public class PoiAdapter {
+public final class PoiAdapter {
     private final Workbook workbook = new XSSFWorkbook();
     private final Sheet sheet;
     private final Map<StyleName, CellStyle> styles = new HashMap<>();
 
-    public PoiAdapter(final String title, final Map<StyleName, StyleSpec> map) {
+    public PoiAdapter(final String title, final SpreadSheet values, final Map<StyleName, StyleSpec> map) {
         sheet= workbook.createSheet(title);
-        createWbStyles(map);
+        createWbStyles(map, values.getTheme());
         printSetup();
+        addData(values);
     }
 
     /**
      * Konverter StyleSpecs til CellStyles.
      * @param map Map av navn til StyleSpec
+     * @param theme Fargesetting
      */
-    private void createWbStyles(final Map<StyleName, StyleSpec> map){
+    private void createWbStyles(final Map<StyleName, StyleSpec> map, final Theme theme){
         for (final Map.Entry<StyleName, StyleSpec> entry : map.entrySet()) {
-            styles.put(entry.getKey(), entry.getValue().createStyle(workbook));
+            styles.put(entry.getKey(), entry.getValue().createStyle(workbook, theme));
         }
     }
 

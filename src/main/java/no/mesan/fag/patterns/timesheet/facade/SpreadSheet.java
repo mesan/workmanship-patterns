@@ -1,6 +1,7 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
+import no.mesan.fag.patterns.timesheet.format.ColorSpec.Theme;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,9 @@ public class SpreadSheet {
 
     /** Innholdet i arket. */
     private final ValueMatrix<Integer, Integer, SheetCell> data=new ValueMatrix<>();
+
+    /** Fargesetting. */
+    private Theme theme= Theme.BLUE;
 
     /**
      * Default constructor.
@@ -77,5 +81,15 @@ public class SpreadSheet {
      */
     public String getName() {
         return name;
+    }
+
+    /** Sett fargetema. */
+    public void setTheme(final Theme theme) {
+        this.theme = theme;
+    }
+
+    /** Hent fargetema. */
+    public Theme getTheme() {
+        return theme;
     }
 }

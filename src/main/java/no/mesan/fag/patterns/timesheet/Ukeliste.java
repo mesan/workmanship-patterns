@@ -31,6 +31,11 @@ public class Ukeliste extends Sheets {
         this.source = source;
     }
 
+    @Override
+    public Workbook createBook() {
+        return createUkeliste();
+    }
+
     public Workbook createUkeliste()  {
         return generateReport(source, SHEET_TITLE, "Aktivitet/bruker -- dag", false);
     }

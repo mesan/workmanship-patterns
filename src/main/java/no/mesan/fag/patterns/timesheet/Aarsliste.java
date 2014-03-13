@@ -22,6 +22,11 @@ public class Aarsliste extends Sheets {
         this.source = source;
     }
 
+    @Override
+    public Workbook createBook() {
+        return createAarsoversikt();
+    }
+
     public Workbook createAarsoversikt() {
         return generateReport(source, SHEET_TITLE, "Aktivitet -- Måned", true);
     }

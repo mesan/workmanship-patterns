@@ -13,6 +13,7 @@ class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
   override def headingTexts: List[String] = List(Aarsliste.SheetTitle, f"$year%04d")
   override def colRow(entry: TimesheetEntry): (String, String) =
     (f"${entry.when.getMonthOfYear}%02d", entry.activity.toString)
+  override def createBook = createAarsoversikt
 }
 
 object Aarsliste {

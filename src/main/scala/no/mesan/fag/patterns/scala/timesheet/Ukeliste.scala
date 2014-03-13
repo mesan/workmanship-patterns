@@ -19,6 +19,9 @@ class Ukeliste(year: Int, month: Int, day: Int, source: TimeDataService) extends
       !(entry.when.isBefore(fromDate) || entry.when.isAfter(toDate))
     }
 
+
+  override def createBook = createUkeliste
+
   override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forYear(year)
 
   override def dataExtraHeadings(matrix: DoubleMatrix) = for (day <-Days) matrix.ensureCol(day)

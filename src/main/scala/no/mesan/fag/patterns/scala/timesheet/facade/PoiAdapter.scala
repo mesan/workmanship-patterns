@@ -1,6 +1,6 @@
 package no.mesan.fag.patterns.scala.timesheet.facade
 
-import no.mesan.fag.patterns.scala.timesheet.format.{Styles, StyleName}
+import no.mesan.fag.patterns.scala.timesheet.format.{Theme, Styles, StyleName}
 import no.mesan.fag.patterns.scala.timesheet.data.ValueMatrix
 
 import org.apache.poi.ss.usermodel._
@@ -11,11 +11,11 @@ import java.io.FileOutputStream
 import scala.collection.JavaConversions._
 
 /** Adapter vår fasade til POI Workbook. */
-class PoiAdapter(title: String, map: Map[StyleName, Styles]) {
+class PoiAdapter(title: String, theme: Theme, map: Map[StyleName, Styles]) {
   private val workbook = new XSSFWorkbook
   private val sheet = workbook.createSheet(title)
   private val styles: Map[StyleName, CellStyle] =
-    for (entry <- map) yield entry._1 -> entry._2.createStyle(workbook)
+    for (entry <- map) yield entry._1 -> entry._2.createStyle(workbook, theme)
 
   printSetup
 

@@ -27,6 +27,11 @@ public class Timeliste extends Sheets {
         this.source = source;
     }
 
+    @Override
+    public Workbook createBook() {
+        return createTimeliste();
+    }
+
     public Workbook createTimeliste()  {
         return generateReport(source, SHEET_TITLE, "Aktivitet", true);
     }
