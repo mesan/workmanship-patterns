@@ -14,4 +14,3 @@ object TimeSource extends Iterable[TimesheetEntry] {
   val Entries = TimesheetEntry(getContents("src/main/resources/timer.txt"))
   override def iterator: Iterator[TimesheetEntry] =  Entries.iterator
 }
-

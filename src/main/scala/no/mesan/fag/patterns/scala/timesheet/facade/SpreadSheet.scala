@@ -39,4 +39,4 @@ class SpreadSheet(val name:String) {
 
     /** Hent siste radnummer. */
     def lastRowNum: Int =  data.rSize
-  }
+}

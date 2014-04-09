@@ -2,8 +2,7 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServiceLoggingDecorator,
                                                                   TimeDataServiceCachingDecorator}
-import no.mesan.fag.patterns.scala.timesheet.strategy.{TimeRepresentationHalfHours, TimeRepresentationDays,
-                                                       TimeRepresentationStrategy}
+import no.mesan.fag.patterns.scala.timesheet.strategy._
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.facade._
@@ -12,10 +11,7 @@ import no.mesan.fag.patterns.scala.timesheet.format._
 import org.apache.poi.ss.usermodel._
 
 /** Superklasse for timelister. */
-abstract class Sheets {
-
-  /** Hvordan vi viser timer på listene. */
-  private var timeRepresentationStrategy: Option[TimeRepresentationStrategy] = None
+abstract class Sheets extends TimeRepresentationStrategy with TimeRepresentationHalfHours {
 
   /**
    * Dette er hovedrutinen for å lage rapporter.
@@ -61,11 +57,10 @@ abstract class Sheets {
 
   protected def dataGroup(entries: List[TimesheetEntry]): DoubleMatrix = {
     val matrix= new DoubleMatrix
-    val converter= timeRepresentationStrategy.getOrElse(new TimeRepresentationHalfHours)
     dataExtraHeadings(matrix)
     for (entry <- entries) {
       val (colRef, rowRef) = colRow(entry)
-      matrix.add(colRef, rowRef, converter.convert(entry.minutes))
+      matrix.add(colRef, rowRef, convertTime(entry.minutes))
     }
     matrix
   }
@@ -130,14 +125,6 @@ abstract class Sheets {
   }
 
   private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
-
-  /**
-   * Sett ny strategi for representasjon av timer.
-   * @param timeRepresentationStrategy Strategi
-   */
-  def setTimeRepresentationStrategy(timeRepresentationStrategy: Option[TimeRepresentationStrategy]) {
-    this.timeRepresentationStrategy = timeRepresentationStrategy
-  }
 }
 
 object Sheets extends App {
@@ -153,8 +140,7 @@ object Sheets extends App {
   aarsListe.writeToFile("Årsoversikt-scala", wb3)
   ColorSpec.theme= RedTheme
   val ukeSource = new TimeDataServer(TimeSource) with TimeDataServiceCachingDecorator with TimeDataServiceLoggingDecorator
-  val ukeListe = new Ukeliste(2014, 1, 15, ukeSource)
-  ukeListe.setTimeRepresentationStrategy(Some(new TimeRepresentationDays))
+  val ukeListe = new Ukeliste(2014, 1, 15, ukeSource) with TimeRepresentationDays
   val wb4 = ukeListe.createUkeliste
   ukeListe.writeToFile("Ukeoversikt-scala", wb4)
 }
