@@ -16,9 +16,8 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
 
   override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forEmployee(user)
 
-  override def dataExtraHeadings(matrix: DoubleMatrix) {
+  override def dataExtraHeadings(matrix: DoubleMatrix): Unit =
     for (i<- 1 until new LocalDate(year, month, 1).dayOfMonth.getMaximumValue) matrix.ensureCol(dayRef(i))
-  }
 
   override def colRow(entry: TimesheetEntry): (String, String) =
     (dayRef(entry.when.getDayOfMonth), entry.activity.toString)
