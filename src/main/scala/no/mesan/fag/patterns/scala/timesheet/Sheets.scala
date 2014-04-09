@@ -20,7 +20,7 @@ import no.mesan.fag.patterns.scala.timesheet.facade.EmptyCell
 abstract class Sheets extends TimeRepresentationStrategy with TimeRepresentationHalfHours {
 
   /** Fargesetting. */
-  private var theme: Option[Theme]= None
+  private var theme: Option[Theme]= None  // Kunne også vært løst med traits
 
   /** Konverter til arbeidsbok. */
   def createBook: Workbook
@@ -144,7 +144,7 @@ abstract class Sheets extends TimeRepresentationStrategy with TimeRepresentation
 
 private class TimelisteTask(val name: String, val sheet: Sheets) extends AsyncTask {
   def whoAmI: String =  name
-  def executeTask = sheet.writeToFile(name, sheet.createBook)
+  def executeTask() = sheet.writeToFile(name, sheet.createBook)
 }
 
 object Sheets extends App {
