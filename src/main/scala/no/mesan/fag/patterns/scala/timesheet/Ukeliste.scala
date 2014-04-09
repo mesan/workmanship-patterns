@@ -21,7 +21,7 @@ class Ukeliste(year: Int, month: Int, day: Int, source: TimeDataService) extends
 
   override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forYear(year)
 
-  override def dataExtraHeadings(matrix: DoubleMatrix) = for (day <-Days) matrix.ensureCol(day)
+  override def dataExtraHeadings(matrix: DoubleMatrix): Unit = for (day <-Days) matrix.ensureCol(day)
 
   override def colRow(entry: TimesheetEntry): (String, String)=
     (Days(entry.when.getDayOfWeek-1), s"${entry.activity} / ${entry.userID}")
