@@ -29,11 +29,11 @@ class TimeServiceIterator(source: TimeDataService) extends TimeServiceAdapter {
     var lastIsFetched = false
 
     override def hasNext: Boolean = {
-      refillIfNeeded
+      refillIfNeeded()
       !buffer.isEmpty
     }
 
-    private def refillIfNeeded {
+    private def refillIfNeeded() {
       if (!buffer.isEmpty || lastIsFetched) return
       val newBatch: List[TimesheetEntry] = fillFunction(fetched)
       fetched += newBatch.size
@@ -42,7 +42,7 @@ class TimeServiceIterator(source: TimeDataService) extends TimeServiceAdapter {
     }
 
     override def next(): TimesheetEntry = {
-      refillIfNeeded
+      refillIfNeeded()
       if (buffer.isEmpty) throw new NoSuchElementException
       val entry= buffer.head
       buffer= buffer.tail
