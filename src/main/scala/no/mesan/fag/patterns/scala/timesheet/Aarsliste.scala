@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook
 class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
   def createAarsoversikt: Workbook = generateReport(source, Aarsliste.SheetTitle, "Aktivitet -- Måned") { entry=>true }
   override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forYear(year)
-  override def dataExtraHeadings(matrix: DoubleMatrix) = for (i<- 1 until 12) matrix.ensureCol(f"$i%02d")
+  override def dataExtraHeadings(matrix: DoubleMatrix): Unit = for (i<- 1 until 12) matrix.ensureCol(f"$i%02d")
   override def headingTexts: List[String] = List(Aarsliste.SheetTitle, f"$year%04d")
   override def colRow(entry: TimesheetEntry): (String, String) =
     (f"${entry.when.getMonthOfYear}%02d", entry.activity.toString)
