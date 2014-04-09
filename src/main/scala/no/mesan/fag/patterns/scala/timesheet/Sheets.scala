@@ -2,21 +2,22 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServiceLoggingDecorator,
                                                                   TimeDataServiceCachingDecorator}
-import no.mesan.fag.patterns.scala.timesheet.strategy.{TimeRepresentationHalfHours, TimeRepresentationDays,
-                                                       TimeRepresentationStrategy}
 import no.mesan.fag.patterns.scala.timesheet.command.{AsyncTaskExecutor, AsyncTask}
+import no.mesan.fag.patterns.scala.timesheet.strategy._
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.facade._
 import no.mesan.fag.patterns.scala.timesheet.format._
 
 import org.apache.poi.ss.usermodel._
+import no.mesan.fag.patterns.scala.timesheet.facade.DoubleCell
+import scala.Some
+import no.mesan.fag.patterns.scala.timesheet.format.Styles
+import no.mesan.fag.patterns.scala.timesheet.facade.StringCell
+import no.mesan.fag.patterns.scala.timesheet.facade.EmptyCell
 
 /** Superklasse for timelister. */
-abstract class Sheets {
-
-  /** Hvordan vi viser timer på listene. */
-  private var timeRepresentationStrategy: Option[TimeRepresentationStrategy] = None
+abstract class Sheets extends TimeRepresentationStrategy with TimeRepresentationHalfHours {
 
   /** Fargesetting. */
   private var theme: Option[Theme]= None
@@ -68,11 +69,10 @@ abstract class Sheets {
 
   protected def dataGroup(entries: List[TimesheetEntry]): DoubleMatrix = {
     val matrix= new DoubleMatrix
-    val converter= timeRepresentationStrategy.getOrElse(new TimeRepresentationHalfHours)
     dataExtraHeadings(matrix)
     for (entry <- entries) {
       val (colRef, rowRef) = colRow(entry)
-      matrix.add(colRef, rowRef, converter.convert(entry.minutes))
+      matrix.add(colRef, rowRef, convertTime(entry.minutes))
     }
     matrix
   }
@@ -138,14 +138,6 @@ abstract class Sheets {
 
   private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
 
-  /**
-   * Sett ny strategi for representasjon av timer.
-   * @param timeRepresentationStrategy Strategi
-   */
-  def setTimeRepresentationStrategy(timeRepresentationStrategy: TimeRepresentationStrategy) {
-    this.timeRepresentationStrategy = Some(timeRepresentationStrategy)
-  }
-
   /** Ny fargesetting. */
   def setTheme(theme: Theme) { this.theme= Some(theme) }
 }
@@ -162,8 +154,7 @@ object Sheets extends App {
   val aarsListe= new Aarsliste(2014, source)
 
   val ukeSource = new TimeDataServer(TimeSource) with TimeDataServiceCachingDecorator with TimeDataServiceLoggingDecorator
-  val ukeListe = new Ukeliste(2014, 1, 15, ukeSource)
-  ukeListe.setTimeRepresentationStrategy(new TimeRepresentationDays)
+  val ukeListe = new Ukeliste(2014, 1, 15, ukeSource) with TimeRepresentationDays
   ukeListe.setTheme(RedTheme)
 
   val taskExecutor = new AsyncTaskExecutor

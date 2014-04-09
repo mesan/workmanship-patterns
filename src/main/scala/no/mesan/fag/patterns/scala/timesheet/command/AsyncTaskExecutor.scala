@@ -24,5 +24,4 @@ class AsyncTaskExecutor {
       Log.info("Finished background task " + task.whoAmI)
     }
   }
-
 }
