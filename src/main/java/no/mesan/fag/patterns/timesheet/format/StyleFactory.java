@@ -1,16 +1,16 @@
 package no.mesan.fag.patterns.timesheet.format;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Workbook;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /** Oppretter stiler for et worksheet. */
 public final class StyleFactory {
 
     /** Tilgjengelige stiler. */
-    public static enum StyleName {
+    public enum StyleName {
         H1, TBL_HEAD, TBL_HEAD_LEFT, COL1, COLN, SUMS, SUM1, DATA
     }
 

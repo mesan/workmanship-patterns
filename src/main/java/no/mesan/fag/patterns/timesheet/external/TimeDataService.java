@@ -1,14 +1,14 @@
 package no.mesan.fag.patterns.timesheet.external;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-
 import java.util.List;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
 /** Grensesnittet til den eksterne tjenesten. */
 public interface TimeDataService {
 
     /** Antall som hentes av gangen. */
-    public static int BATCH_SIZE= 25;
+    int BATCH_SIZE= 25;
 
     /**
      * Henter alle timene registrert for en gitt bruker.

@@ -13,7 +13,7 @@ public enum ColorSpec {
 
     private final int color;
 
-    private ColorSpec(final IndexedColors color) {
+    ColorSpec(final IndexedColors color) {
         this.color= color.getIndex();
     }
 
