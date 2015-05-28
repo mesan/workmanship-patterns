@@ -1,8 +1,8 @@
 package no.mesan.fag.patterns.timesheet.data;
 
-import org.junit.Test;
-
 import java.util.List;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,10 +19,10 @@ public class TimesheetEntryTest {
                 "larsr", "2014-01-08", "2134", "450"
         );
         assertEquals(5, entries.size());
-        for (final TimesheetEntry entry : entries)  {
+        entries.stream().forEach(entry-> {
             assertEquals("larsr", entry.getUserID());
             assertEquals(2014, entry.getWhen().year().get());
-        }
+        });
         assertEquals(2134, entries.get(2).getActivity());
     }
 }

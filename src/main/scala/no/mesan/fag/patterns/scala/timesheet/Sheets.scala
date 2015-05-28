@@ -27,7 +27,7 @@ abstract class Sheets {
                                  (f: Cell=>Unit): Int = {
     val cell = row.createCell(colnum)
     f(cell)
-    styles.get(style) map cell.setCellStyle
+    styles.get(style) foreach cell.setCellStyle
     colnum+1
   }
 

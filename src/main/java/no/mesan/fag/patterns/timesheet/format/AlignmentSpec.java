@@ -4,14 +4,14 @@ import org.apache.poi.ss.usermodel.CellStyle;
 
 /** Mulige alignments. */
 public interface AlignmentSpec {
-    public enum Horizontal {
+    enum Horizontal {
         GEN(CellStyle.ALIGN_GENERAL),
         LEFT(CellStyle.ALIGN_LEFT),
         RIGHT(CellStyle.ALIGN_RIGHT),
         CENTER(CellStyle.ALIGN_CENTER);
 
         private final int align;
-        private Horizontal(final int align) {
+        Horizontal(final int align) {
             this.align = align;
         }
 
@@ -20,13 +20,13 @@ public interface AlignmentSpec {
         }
     }
 
-    public enum Vertical {
+    enum Vertical {
         BOTTOM(CellStyle.VERTICAL_BOTTOM),
         CENTER(CellStyle.VERTICAL_CENTER),
         TOP(CellStyle.VERTICAL_TOP);
 
         private final int align;
-        private Vertical(final int align) {
+        Vertical(final int align) {
             this.align = align;
         }
 
