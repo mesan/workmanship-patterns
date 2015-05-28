@@ -41,7 +41,7 @@ public enum ColorSpec {
     private static int[] themeColors= BLUE_THEME;
     private final int color;
 
-    private ColorSpec(final int color) {
+    ColorSpec(final int color) {
         this.color= color;
     }
 

@@ -1,5 +1,11 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
@@ -13,11 +19,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Hvem har fakturert på hvilke prosjekter i en gitt måned.
@@ -42,11 +43,11 @@ public class Maanedliste extends Sheets {
     public Workbook createMaanedliste()  {
 
         // Hent timedata for perioden og filtrer bort interne timer og andre måneder
-        final List<TimesheetEntry> list = new ArrayList<>();
-        final Iterable<TimesheetEntry> entries = new TimeIteratorService(source).forYear(this.year);
-        for(final TimesheetEntry entry: entries) {
-            if (entry.getActivity()< INTERN_START && entry.getWhen().monthOfYear().get() == this.month) list.add(entry);
-        }
+        final List<TimesheetEntry> list =
+            StreamSupport.stream(new TimeIteratorService(source).forYear(this.year).spliterator(), false)
+                .filter(entry -> entry.getActivity() < INTERN_START &&
+                                         entry.getWhen().monthOfYear().get() == this.month)
+                .collect(Collectors.toList());
 
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();

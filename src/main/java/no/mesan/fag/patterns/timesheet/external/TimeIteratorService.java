@@ -1,11 +1,11 @@
 package no.mesan.fag.patterns.timesheet.external;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
 /** Adapter TimeDataService til en TimeServiceAdapter. */
 public class TimeIteratorService implements TimeServiceAdapter {
@@ -57,26 +57,18 @@ public class TimeIteratorService implements TimeServiceAdapter {
 
     @Override
     public Iterable<TimesheetEntry> forEmployee(final String userID) {
-        return new Iterable<TimesheetEntry>() {
-            @Override public Iterator<TimesheetEntry> iterator() {
-                return new EntryIterator() {
-                    @Override protected List<TimesheetEntry> getNextFrom(final int from) {
-                        return original.forEmployee(userID, from);
-                    }
-                };
+        return () -> new EntryIterator() {
+            @Override protected List<TimesheetEntry> getNextFrom(final int from) {
+                return original.forEmployee(userID, from);
             }
         };
     }
 
     @Override
     public Iterable<TimesheetEntry> forYear(final int year) {
-        return new Iterable<TimesheetEntry>() {
-            @Override public Iterator<TimesheetEntry> iterator() {
-                return new EntryIterator() {
-                    @Override protected List<TimesheetEntry> getNextFrom(final int from) {
-                        return original.forYear(year, from);
-                    }
-                };
+        return () -> new EntryIterator() {
+            @Override protected List<TimesheetEntry> getNextFrom(final int from) {
+                return original.forYear(year, from);
             }
         };
     }
