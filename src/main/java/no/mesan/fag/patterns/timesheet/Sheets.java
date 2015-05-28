@@ -1,5 +1,12 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
@@ -18,12 +25,6 @@ import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 import org.apache.poi.ss.usermodel.Workbook;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /** Superklasse for timelister. */
 public abstract class Sheets {
@@ -95,13 +96,9 @@ public abstract class Sheets {
      * @return Liste av entries som skal være med
      */
     protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
-        final List<TimesheetEntry> list = new ArrayList<>();
         final TimeIteratorService service = new TimeIteratorService(dataService);
-        final Iterable<TimesheetEntry> entries = entryIterator(service);
-        for(final TimesheetEntry entry: entries) {
-            if (acceptData(entry)) list.add(entry);
-        }
-        return list;
+        return StreamSupport.stream(entryIterator(service).spliterator(), true)
+                       .filter(entry-> acceptData(entry)).collect(Collectors.toList());
     }
 
     /**
@@ -128,12 +125,8 @@ public abstract class Sheets {
     protected DoubleMatrix dataGroup(final List<TimesheetEntry> list) {
         final DoubleMatrix matrix = new DoubleMatrix();
         dataExtraHeadings(matrix);
-        for (final TimesheetEntry entry : list) {
-            final String colRef = getColRef(entry);
-            final String what = getRowRef(entry);
-            final double hours = minutesToHours(entry);
-            matrix.add(colRef, what, hours);
-        }
+        list.stream().forEach(entry ->
+            matrix.add(getColRef(entry), getRowRef(entry), minutesToHours(entry)));
         return matrix;
     }
 

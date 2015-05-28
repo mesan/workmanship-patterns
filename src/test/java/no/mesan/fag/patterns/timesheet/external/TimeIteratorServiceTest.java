@@ -1,11 +1,12 @@
 package no.mesan.fag.patterns.timesheet.external;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-import org.junit.Test;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -80,19 +81,13 @@ public class TimeIteratorServiceTest {
 
     private static List<TimesheetEntry> getForEmployee(final String userID, final List<TimesheetEntry> dataList) {
         final TimeIteratorService service = new TimeIteratorService(new TimeDataServer(dataList));
-        final List<TimesheetEntry> res= new ArrayList<>();
-        for (final TimesheetEntry t : service.forEmployee(userID)) {
-            res.add(t);
-        }
-        return res;
+        return StreamSupport.stream(service.forEmployee(userID).spliterator(), false)
+                       .collect(Collectors.toList());
     }
 
     private static List<TimesheetEntry> getForYear(final int year, final List<TimesheetEntry> dataList) {
         final TimeIteratorService service = new TimeIteratorService(new TimeDataServer(dataList));
-        final List<TimesheetEntry> res= new ArrayList<>();
-        for (final TimesheetEntry t : service.forYear(year)) {
-            res.add(t);
-        }
-        return res;
+        return StreamSupport.stream(service.forYear(year).spliterator(), false)
+                       .collect(Collectors.toList());
     }
 }

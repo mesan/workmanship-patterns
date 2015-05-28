@@ -1,15 +1,13 @@
 package no.mesan.fag.patterns.timesheet.external.decorators;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-import no.mesan.fag.patterns.timesheet.external.TimeDataService;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import java.util.List;
 import java.util.logging.Logger;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
+import no.mesan.fag.patterns.timesheet.external.TimeDataService;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.stubbing.Answer;
 
 import static org.mockito.Mockito.*;
 
@@ -29,12 +27,9 @@ public class TimeDataServiceLoggingDecoratorTest {
         // men for å mocke ut noe hvor bi-effekter som tid brukt er vel så relevant som resultatet
         // så er dette et hendig triks. Ellers ville vel den følgende one-lineren vært greiere å bruke:
         // when(timeDataServiceMock.forEmployee(anyString(), anyInt())).thenReturn(timesheetEntries);
-        final Answer webserviceAnswer = new Answer() {
-            @Override
-            public Object answer(final InvocationOnMock invocation) throws Throwable {
-                Thread.sleep(42); // simulere at webservicen tar litt tid
-                return timesheetEntries;
-            }
+        final Answer<List<TimesheetEntry>> webserviceAnswer = invocation -> {
+            Thread.sleep(42); // simulere at webservicen tar litt tid
+            return timesheetEntries;
         };
         doAnswer(webserviceAnswer).when(timeDataServiceMock).forEmployee(anyString(), anyInt());
         doAnswer(webserviceAnswer).when(timeDataServiceMock).forYear(anyInt(), anyInt());
