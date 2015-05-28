@@ -1,11 +1,10 @@
 package no.mesan.fag.patterns.timesheet.external;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-
-import org.joda.time.LocalDate;
-
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
 /** * Dette er liksom selve den eksterne serveren. Tilgi meg, hadde ikke råd til en stormaskin til hver. */
 public class TimeDataServer implements TimeDataService {
@@ -17,30 +16,22 @@ public class TimeDataServer implements TimeDataService {
         this.source = src;
     }
 
+
     @Override
     public List<TimesheetEntry> forEmployee(final String userID, final int from) {
-        final List<TimesheetEntry> list = new LinkedList<>();
-        int skip= from;
-        for (final TimesheetEntry entry : source) {
-            if (entry.getUserID().equals(userID)) {
-                if (skip-- <=0) list.add(entry);
-            }
-        }
-        if (list.size()>BATCH_SIZE) return list.subList(0, BATCH_SIZE);
-        return list;
+        final List<TimesheetEntry> list =  StreamSupport.stream(source.spliterator(), false)
+                .filter(entry -> entry.getUserID().equals(userID))
+                .skip(from)
+                .collect(Collectors.toList());
+        return (list.size()>BATCH_SIZE)? list.subList(0, BATCH_SIZE) : list;
     }
 
     @Override
     public List<TimesheetEntry> forYear(final int year, final int from) {
-        final List<TimesheetEntry> list = new LinkedList<>();
-        int skip= from;
-        for (final TimesheetEntry entry : source) {
-            final LocalDate when = entry.getWhen();
-            if (when.year().get() == year) {
-                if (skip-- <=0) list.add(entry);
-            }
-        }
-        if (list.size()>BATCH_SIZE) return list.subList(0, BATCH_SIZE);
-        return list;
+        final List<TimesheetEntry> list =  StreamSupport.stream(source.spliterator(), false)
+                .filter(entry -> entry.getWhen().year().get() == year)
+                .skip(from)
+                .collect(Collectors.toList());
+        return (list.size()>BATCH_SIZE)? list.subList(0, BATCH_SIZE) : list;
     }
 }

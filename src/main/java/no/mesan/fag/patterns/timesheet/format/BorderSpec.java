@@ -30,7 +30,7 @@ public class BorderSpec {
         private final ColorSpec color;
         private final int border;
 
-        private BorderLine(final ColorSpec color, final int border) {
+        BorderLine(final ColorSpec color, final int border) {
             this.color = color;
             this.border = border;
         }

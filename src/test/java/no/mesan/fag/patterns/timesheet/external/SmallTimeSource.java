@@ -1,9 +1,10 @@
 package no.mesan.fag.patterns.timesheet.external;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
 /**
  * Kilde til timedata.
@@ -22,4 +23,7 @@ public class SmallTimeSource implements Iterable<TimesheetEntry> {
     public Iterator<TimesheetEntry> iterator() {
         return ENTRIES.iterator();
     }
+
+    /** Kan også brukes som Stream. */
+    public Stream<TimesheetEntry> stream() { return ENTRIES.stream(); }
 }

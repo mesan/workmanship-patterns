@@ -106,7 +106,7 @@ abstract class Sheets {
       colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
       // Data
       for (c <- matrix.colKeys(sortedCols))
-        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) map cell.setCellValue }
+        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) foreach cell.setCellValue }
     }
   }
 
@@ -138,7 +138,7 @@ abstract class Sheets {
                                  (f: Cell=>Unit): Int = {
     val cell = row.createCell(colnum)
     f(cell)
-    styles.get(style) map cell.setCellStyle
+    styles.get(style) foreach cell.setCellStyle
     colnum+1
   }
 
