@@ -4,7 +4,7 @@ package no.mesan.fag.patterns.timesheet.command;
 public interface AsyncTask {
 
     /** Presenter deg for verden. */
-    public String whoAmI();
+    String whoAmI();
 
     /**
      * Run, rabbit, run.  Dig that hole, forget the sun.

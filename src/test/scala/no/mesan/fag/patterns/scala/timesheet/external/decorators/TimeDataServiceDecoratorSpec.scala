@@ -67,7 +67,7 @@ class TimeDataServiceDecoratorSpec extends FlatSpec with MockitoSugar {
   "A TimeDataServiceLoggingDecorator" should "log for employee" in {
     new SetupForLogging {
       service.forEmployee("osk", 0)
-      verify(mockLog, times(1)).info(any())
+      verify(mockLog, times(1)).info(any(classOf[String]))
     }
   }
 
