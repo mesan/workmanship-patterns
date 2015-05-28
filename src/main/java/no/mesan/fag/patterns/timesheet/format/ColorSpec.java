@@ -40,7 +40,7 @@ public enum ColorSpec {
 
     private final int color;
 
-    private ColorSpec(final int color) {
+    ColorSpec(final int color) {
         this.color= color;
     }
 

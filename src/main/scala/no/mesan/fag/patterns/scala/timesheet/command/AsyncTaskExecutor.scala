@@ -10,7 +10,7 @@ class AsyncTaskExecutor {
 
   /**
    * Kjør et antall oppgaver.
-   * @param tasks
+   * @param tasks Oppgaveliste
    */
   def executeTasks(tasks: AsyncTask*) = for (task <- tasks)
     new Thread(new AsyncTaskThreadRunner(task)).start

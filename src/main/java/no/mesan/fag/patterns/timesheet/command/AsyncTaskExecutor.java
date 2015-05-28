@@ -11,7 +11,7 @@ public final class AsyncTaskExecutor {
 
     /**
      * Kjør et antall oppgaver.
-     * @param tasks
+     * @param tasks Oppgaveliste
      */
     public void executeTasks(final AsyncTask ... tasks) {
         for (AsyncTask task : tasks) {

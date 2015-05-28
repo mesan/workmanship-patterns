@@ -1,10 +1,11 @@
 package no.mesan.fag.patterns.timesheet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import no.mesan.fag.patterns.timesheet.command.AsyncTask;
 import no.mesan.fag.patterns.timesheet.command.AsyncTaskExecutor;
@@ -29,7 +30,6 @@ import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationDays;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
 import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
-
 import org.apache.poi.ss.usermodel.Workbook;
 
 /** Superklasse for timelister. */
@@ -150,14 +150,10 @@ public abstract class Sheets {
      * @param dataService Datakilde
      * @return Liste av entries som skal være med
      */
-    List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
-        final List<TimesheetEntry> list = new ArrayList<>();
+    protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
         final TimeIteratorService service = new TimeIteratorService(dataService);
-        final Iterable<TimesheetEntry> entries = entryIterator(service);
-        for(final TimesheetEntry entry: entries) {
-            if (acceptData(entry)) list.add(entry);
-        }
-        return list;
+        return StreamSupport.stream(entryIterator(service).spliterator(), true)
+                       .filter(entry-> acceptData(entry)).collect(Collectors.toList());
     }
 
     /**
@@ -181,15 +177,11 @@ public abstract class Sheets {
      * @param list Alle entries
      * @return Matrise med summerte data
      */
-    DoubleMatrix dataGroup(final List<TimesheetEntry> list) {
+    protected DoubleMatrix dataGroup(final List<TimesheetEntry> list) {
         final DoubleMatrix matrix = new DoubleMatrix();
         dataExtraHeadings(matrix);
-        for (final TimesheetEntry entry : list) {
-            final String colRef = getColRef(entry);
-            final String what = getRowRef(entry);
-            final double timeLogged = minutesToCorrectRepresentation(entry);
-            matrix.add(colRef, what, timeLogged);
-        }
+        list.stream().forEach(entry ->
+            matrix.add(getColRef(entry), getRowRef(entry), minutesToCorrectRepresentation(entry)));
         return matrix;
     }
 

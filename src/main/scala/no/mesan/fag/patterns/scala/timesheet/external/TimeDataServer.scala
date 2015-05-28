@@ -7,8 +7,8 @@ import no.mesan.fag.patterns.scala.timesheet.data.TimesheetEntry
 class TimeDataServer(src: Iterable[TimesheetEntry]) extends TimeDataService {
 
   override def forEmployee(userID: String, from: Int): List[TimesheetEntry] =
-    src filter(_.userID == userID) drop from take BatchSize toList
+    (src filter (_.userID == userID)).slice(from, from + BatchSize) toList
 
   override def forYear(year: Int, from: Int): List[TimesheetEntry] =
-    src filter(_.when.getYear==year) drop from take BatchSize toList
+    (src filter (_.when.getYear == year)).slice(from, from + BatchSize) toList
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 public final class StyleFactory {
 
     /** Tilgjengelige stiler. */
-    public static enum StyleName {
+    public enum StyleName {
         H1, TBL_HEAD, TBL_HEAD_LEFT, COL1, COLN, SUMS, SUM1, DATA
     }
 
