@@ -62,7 +62,7 @@ class PoiAdapter(title: String, map: Map[StyleName, Styles]) {
 
   private def createRow(data: ValueMatrix[Int, Int, SheetCell], rowNum: Int, height: Option[Int]) {
     val row = sheet.createRow(rowNum)
-    height map(row.setHeightInPoints(_))
+    height foreach(row.setHeightInPoints(_))
     for (colNum <- data.colKeys(sorted=true)) createCell(data.get(colNum, rowNum), colNum, row)
   }
 
