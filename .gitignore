@@ -1,6 +1,7 @@
 # Maven og Eclipse-ting
 target/
 .project
+.history
 .classpath
 .settings/
 lib/
