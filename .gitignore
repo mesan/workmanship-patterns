@@ -1,6 +1,7 @@
 # Maven og Eclipse-ting
 target/
 .project
+.history
 .classpath
 .settings/
 lib/
@@ -10,7 +11,7 @@ lib/
 *.ipr
 *.iws
 /.idea
-
-/*.xlsx
 /atlassian-ide-plugin.xml
-/Timeliste.xlsx
+
+# Egne ting
+/*.xlsx
