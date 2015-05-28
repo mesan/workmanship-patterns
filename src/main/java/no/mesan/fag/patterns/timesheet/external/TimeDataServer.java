@@ -19,8 +19,8 @@ public class TimeDataServer implements TimeDataService {
     @Override
     public List<TimesheetEntry> forEmployee(final String userID, final int from) {
         final List<TimesheetEntry> list =  StreamSupport.stream(source.spliterator(), false)
-                .skip(from)
                 .filter(entry -> entry.getUserID().equals(userID))
+                .skip(from)
                 .collect(Collectors.toList());
         return (list.size()>BATCH_SIZE)? list.subList(0, BATCH_SIZE) : list;
     }
@@ -28,8 +28,8 @@ public class TimeDataServer implements TimeDataService {
     @Override
     public List<TimesheetEntry> forYear(final int year, final int from) {
         final List<TimesheetEntry> list =  StreamSupport.stream(source.spliterator(), false)
-                .skip(from)
                 .filter(entry -> entry.getWhen().year().get() == year)
+                .skip(from)
                 .collect(Collectors.toList());
         return (list.size()>BATCH_SIZE)? list.subList(0, BATCH_SIZE) : list;
     }
