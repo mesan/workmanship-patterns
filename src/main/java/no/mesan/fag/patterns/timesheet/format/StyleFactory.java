@@ -2,6 +2,7 @@ package no.mesan.fag.patterns.timesheet.format;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -43,11 +44,10 @@ public final class StyleFactory {
         return styles;
     }
 
-    private static Map<StyleName, CellStyle> createWbStyles(final Workbook wb, final Map<StyleName, StyleSpec> map){
-        final Map<StyleName, CellStyle> styles = new HashMap<>();
-        for (final Map.Entry<StyleName, StyleSpec> entry : map.entrySet()) {
-            styles.put(entry.getKey(), entry.getValue().createStyle(wb));
-        }
-        return styles;
+    private static Map<StyleName, CellStyle> createWbStyles(final Workbook wb, final Map<StyleName, StyleSpec> map) {
+        return map.entrySet().parallelStream().collect(Collectors.toMap(
+                (entry) -> entry.getKey(),
+                (entry) -> entry.getValue().createStyle(wb)
+        ));
     }
 }
