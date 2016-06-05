@@ -41,6 +41,8 @@ public class Maanedliste extends Sheets {
     }
 
     public Workbook createMaanedliste()  {
+        /// HINT Hele metoden kan erstattes med et kall til den nye metoden i superklassen
+        ///      - du kan ta med deg kode fra denne eller de andre timelistene opp i superklassen
 
         // Hent timedata for perioden og filtrer bort interne timer og andre måneder
         final List<TimesheetEntry> list =
@@ -149,4 +151,10 @@ public class Maanedliste extends Sheets {
 
         return workbook;
     }
+    /// HINT metoder hvis du følger mønsteret:
+    /// @Override protected Iterable<TimesheetEntry> entryIterator(final TimeIteratorService service)
+    /// @Override protected boolean acceptData(final TimesheetEntry entry)
+    /// @Override protected List<String> headingTexts()
+    /// @Override protected String getRowRef(final TimesheetEntry entry)
+    /// @Override protected String getColRef(final TimesheetEntry entry)
 }

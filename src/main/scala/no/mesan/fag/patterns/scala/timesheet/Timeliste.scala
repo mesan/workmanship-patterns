@@ -13,6 +13,9 @@ import org.joda.time.LocalDate
 class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) extends Sheets {
 
   def createTimeliste: Workbook = {
+    /// HINT Hele metoden kan erstattes med et kall til den nye metoden i superklassen
+    ///      - du kan ta med deg kode fra denne eller de andre timelistene opp i superklassen
+    /// HINT Filtrering kan gjøres med metodeparameter
     val headingTitle: String = Timeliste.SheetTitle
 
     // Hent timedata for bruker
@@ -75,7 +78,7 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
       colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
       // Data
       for (c <- matrix.colKeys(sorted=true))
-        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) map cell.setCellValue }
+        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) foreach cell.setCellValue }
     }
     // Sumlinje
     val row = createRow(sheet,rownum)
@@ -99,6 +102,12 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
     }
     workbook
   }
+
+  /// HINT Nye metoder for å fylle ut templaten
+  /// override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  ???
+  /// override def dataExtraHeadings(matrix: DoubleMatrix): Unit = ???
+  /// override def headingTexts(): List[String] = ???
+  /// override def colRow(entry: TimesheetEntry): (String, String) = ???
 
   private def dayRef(i: Int): String = f"$i%02d.$month%02d"
 }

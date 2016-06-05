@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.{Row, Cell, PrintSetup, Workbook}
 class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
 
   def createAarsoversikt: Workbook = {
+    /// HINT Hele metoden kan erstattes med et kall til den nye metoden i superklassen
+    ///      - du kan ta med deg kode fra denne eller de andre timelistene opp i superklassen
     val fullList= source.forYear(year).toList
 
     // Ingen filtrering
@@ -64,7 +66,7 @@ class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
       colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
       // Data
       for (c <- matrix.colKeys(sorted=true))
-        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) map cell.setCellValue }
+        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) foreach cell.setCellValue }
     }
     // Sumlinje
     val row = createRow(sheet,rownum)
@@ -89,6 +91,11 @@ class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
     workbook
   }
 
+  /// HINT Nye metoder for å fylle ut templaten
+  /// override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  ???
+  /// override def dataExtraHeadings(matrix: DoubleMatrix): Unit = ???
+  /// override def headingTexts(): List[String] = ???
+  /// override def colRow(entry: TimesheetEntry): (String, String) = ???
 }
 
 object Aarsliste {

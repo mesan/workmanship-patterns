@@ -27,19 +27,19 @@ case class Styles (bold: Boolean =false, italic: Boolean =false, points: Int =10
   def createStyle(wb: Workbook): CellStyle = {
     val style: CellStyle = wb.createCellStyle
     makeFont(wb, style)
-    bgColor map { color =>
+    bgColor foreach { color =>
       style.setFillForegroundColor(color.color)
       style.setFillPattern(CellStyle.SOLID_FOREGROUND)
     }
     style.setAlignment(horizontal.alignment.asInstanceOf[Short])
     style.setVerticalAlignment(vertical.alignment.asInstanceOf[Short])
-    borderTop map {b =>    style.setBorderTop(b.thickness.asInstanceOf[Short])
+    borderTop foreach { b => style.setBorderTop(b.thickness.asInstanceOf[Short])
                            style.setTopBorderColor(b.color.color)}
-    borderBottom map {b => style.setBorderBottom(b.thickness.asInstanceOf[Short])
+    borderBottom foreach { b => style.setBorderBottom(b.thickness.asInstanceOf[Short])
                            style.setBottomBorderColor(b.color.color)}
-    borderLeft map {b =>   style.setBorderLeft(b.thickness.asInstanceOf[Short])
+    borderLeft foreach { b => style.setBorderLeft(b.thickness.asInstanceOf[Short])
                            style.setLeftBorderColor(b.color.color)}
-    borderRight map {b =>  style.setBorderRight(b.thickness.asInstanceOf[Short])
+    borderRight foreach { b => style.setBorderRight(b.thickness.asInstanceOf[Short])
                            style.setLeftBorderColor(b.color.color)}
     style
   }
@@ -47,7 +47,7 @@ case class Styles (bold: Boolean =false, italic: Boolean =false, points: Int =10
   private def makeFont(wb: Workbook, style: CellStyle) {
       val font= wb.createFont
       font.setFontHeightInPoints(points.asInstanceOf[Short])
-      fgColor map { color=> font.setColor(color.color) }
+      fgColor foreach { color=> font.setColor(color.color) }
       if (bold) font.setBoldweight(Font.BOLDWEIGHT_BOLD)
       if (italic) font.setItalic(true)
       style.setFont(font)

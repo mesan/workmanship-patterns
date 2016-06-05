@@ -1,5 +1,10 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
@@ -14,11 +19,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.LocalDate;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /** Timeliste for en enkelt bruker for en måned. */
 public class Timeliste extends Sheets {
@@ -38,6 +38,8 @@ public class Timeliste extends Sheets {
     }
 
     public Workbook createTimeliste()  {
+        /// HINT Hele metoden kan erstattes med et kall til den nye metoden i superklassen
+        ///      - du kan ta med deg kode fra denne eller de andre timelistene opp i superklassen
 
         // Hent timedata for bruker og filtrer for aktuelt tidsrom
         final List<TimesheetEntry> list = new ArrayList<>();
@@ -158,4 +160,12 @@ public class Timeliste extends Sheets {
     private String dayRef(final int i) {
         return String.format("%02d.%02d", i, this.month);
     }
+
+    /// HINT metoder hvis du følger mønsteret:
+    /// @Override protected Iterable<TimesheetEntry> entryIterator(final TimeIteratorService service)
+    /// @Override protected boolean acceptData(final TimesheetEntry entry)
+    /// @Override protected void dataExtraHeadings(final DoubleMatrix matrix)
+    /// @Override protected List<String> headingTexts()
+    /// @Override protected String getRowRef(final TimesheetEntry entry)
+    /// @Override protected String getColRef(final TimesheetEntry entry)
 }
