@@ -19,6 +19,11 @@ object StyleFactory {
   /** Lag et stilbibliotek. */
   def styleSetup(wb: Workbook): Map[StyleName, CellStyle] =  createWbStyles(wb, styleSetup)
 
+  /// HINT Hvis Styles er endret som hintet, kan du
+  //       1. fjerne new
+  //       2. bruke navngitte argumenter i stedet for full argumentliste
+  //       3. fjerne alle argumenter som har defaultverdi
+  //       4. bruk den innebygde copy-metoden i case-klassene til å bygge en stil på en annen
   private val styleSetup: Map[StyleName, Styles] = Map(
     H1 -> new Styles(true, false, 15, Some(ColorHighlight), None, None, None, None, None,
       HorizontalCenter, VerticalMiddle),

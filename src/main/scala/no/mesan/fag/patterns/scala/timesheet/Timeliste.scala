@@ -83,7 +83,7 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
       colnum= makeCell(row, colnum, ColN, styles) { cell:Cell => cell.setCellFormula("SUM(" + ref + ")")}
       // Data
       for (c <- matrix.colKeys(sorted=true))
-        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) map cell.setCellValue }
+        colnum= makeCell(row, colnum, Data, styles) { cell:Cell => matrix.get(c, rKey) foreach cell.setCellValue }
     }
     // Sumlinje
     val row = createRow(sheet,rownum)

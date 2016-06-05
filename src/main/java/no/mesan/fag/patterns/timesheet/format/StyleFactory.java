@@ -22,6 +22,22 @@ public final class StyleFactory {
 
     private static Map<StyleName, StyleSpec> styleSetup(){
         final Map<StyleName, StyleSpec> styles = new HashMap<>();
+        /// HINT  Alle de følgende constructorkallene vil vi kvitte oss med.
+        ///       Hadde det ikke vært fint å kunne skrive noe i retning
+        ///          final StyleSpec h1 = StyleSpec.newStyle()
+        ///                                        .bold()
+        ///                                        .size(15)
+        ///                                        .fgColor(ColorSpec.STD_H_COLOR)
+        ///                                        .centerAlign()
+        ///                                        .verticalCenter()
+        ///                                        .build();
+        ///       og tilsvarende for de andre?
+        ///          tblHeadLeft: bold italic size(12) fgColor(STD_H_COLOR) allBorders rightBorder(mediumBorder) verticalCenter rightAlign
+        ///          data: allBorders
+        ///          col1: bold leftAlign allBorders rightBorder(mediumBorder)
+        ///          colN: italic rightAlign allBorders rightBorder(mediumBorder)
+        ///          sums: italic size(12) shaded allBorders(mediumBorder)
+        ///          sum1: bold size(12) shaded allBorders(mediumBorder)
         final StyleSpec h1 = new StyleSpec(true, false, 15, ColorSpec.STD_H_COLOR, null, null, null, null, null,
                                            AlignmentSpec.Horizontal.CENTER, AlignmentSpec.Vertical.CENTER);
         final StyleSpec tblHead = new StyleSpec(true, false, 12, ColorSpec.STD_H_COLOR, ColorSpec.STD_BG_COLOR,
@@ -52,6 +68,7 @@ public final class StyleFactory {
                                               BorderSpec.BorderLine.MEDIUM_STD, BorderSpec.BorderLine.MEDIUM_STD,
                                               BorderSpec.BorderLine.MEDIUM_STD, BorderSpec.BorderLine.MEDIUM_STD,
                                               AlignmentSpec.Horizontal.GEN, AlignmentSpec.Vertical.BOTTOM);
+
         styles.put(StyleName.H1, h1);
         styles.put(StyleName.TBL_HEAD, tblHead);
         styles.put(StyleName.TBL_HEAD_LEFT, tblHeadLeft);
@@ -69,5 +86,4 @@ public final class StyleFactory {
                 (entry) -> entry.getValue().createStyle(wb)
         ));
     }
-
 }
