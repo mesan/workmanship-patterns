@@ -41,6 +41,8 @@ public class Maanedliste extends Sheets {
     public Workbook createMaanedliste()  {
 
         // Hent timedata for perioden
+        /// HINT Hele denne while-strukturen kan erstattes med StreamSupport.stream(new TimeIteratorService(source) ...
+        ///       som kan gå rett videre til filter/collect under
         final List<TimesheetEntry> fullList = new LinkedList<>();
         int got = 0;
         while (true) {

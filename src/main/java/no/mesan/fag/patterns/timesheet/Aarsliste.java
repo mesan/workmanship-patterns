@@ -1,5 +1,10 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
@@ -12,11 +17,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /** Timer per prosjekt per måned over et år. */
 public class Aarsliste extends Sheets {
@@ -32,7 +32,8 @@ public class Aarsliste extends Sheets {
     }
 
     public Workbook createAarsoversikt() {
-
+        /// HINT herfra og ned til "Grupper data" kan vi i stedet bruke TimeIteratorService
+        ///      (som du må ferdigstille) - type foreach entry : add to list
         // Hent timedata for perioden
         final List<TimesheetEntry> fullList = new LinkedList<>();
         int got = 0;
@@ -46,6 +47,7 @@ public class Aarsliste extends Sheets {
         // Ingen filtrering
         final List<TimesheetEntry> list = new ArrayList<>();
         list.addAll(fullList);
+
         // Grupper data
         final DoubleMatrix matrix = new DoubleMatrix();
         for (int i = 1; i < 12; i++) matrix.ensureCol(String.format("%02d", i));

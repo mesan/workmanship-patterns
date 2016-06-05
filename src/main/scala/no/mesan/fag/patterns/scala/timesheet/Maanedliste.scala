@@ -1,10 +1,11 @@
 package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
-import org.apache.poi.ss.usermodel.{Row, Cell, PrintSetup, Workbook}
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import no.mesan.fag.patterns.scala.timesheet.format._
+
+import org.apache.poi.ss.usermodel.{Row, Cell, PrintSetup, Workbook}
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 /**
  * Hvem har fakturert på hvilke prosjekter i en gitt måned.
@@ -16,6 +17,8 @@ class Maanedliste(year: Int, month: Int, source: TimeDataService) extends Sheets
     val headingTitle= Maanedliste.SheetTitle
 
     // Hent timedata for perioden
+    /// HINT ved å bruke den nye TimeServiceIterator det er hintet om, kan du erstatte hele denne
+    ///      uthentingen med en svært enkel toList
     var fullList=  List[TimesheetEntry]()
     var got: Int = 0
     def getAbunch:Boolean = {

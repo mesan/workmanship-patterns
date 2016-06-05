@@ -16,6 +16,8 @@ class Timeliste(user: String, year: Int, month: Int, source: TimeDataService) ex
     val headingTitle: String = Timeliste.SheetTitle
 
     // Hent timedata for bruker
+    /// HINT ved å bruke den nye TimeServiceIterator det er hintet om, kan du erstatte hele denne
+    ///      uthentingen med en svært enkel toList
     var fullList=  List[TimesheetEntry]()
     var got: Int = 0
     def getAbunch:Boolean = {

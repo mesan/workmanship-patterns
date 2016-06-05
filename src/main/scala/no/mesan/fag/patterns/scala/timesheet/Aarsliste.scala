@@ -12,6 +12,8 @@ class Aarsliste(year: Int, source: TimeDataService) extends Sheets {
 
   def createAarsoversikt: Workbook = {
     // Hent timedata for året
+    /// HINT ved å bruke den nye TimeServiceIterator det er hintet om, kan du erstatte hele denne
+    ///      uthentingen med en svært enkel toList
     var fullList=  List[TimesheetEntry]()
     var got: Int = 0
     def getAbunch:Boolean = {

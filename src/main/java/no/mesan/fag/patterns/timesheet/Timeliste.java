@@ -1,5 +1,10 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
@@ -13,11 +18,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.LocalDate;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /** Timeliste for en enkelt bruker for en måned. */
 public class Timeliste extends Sheets {
@@ -40,6 +40,8 @@ public class Timeliste extends Sheets {
         final String headingTitle = SHEET_TITLE;
 
         // Hent timedata for bruker
+        /// HINT while-løkka med påfølgende filtrering kan erstattes med en tilsvarende
+        ///      filtrering på alle elementer i en TimeIteratorService (s.d.)
         final List<TimesheetEntry> fullList = new LinkedList<>();
         int got= 0;
         while(true) {
