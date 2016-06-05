@@ -47,10 +47,17 @@ public abstract class SheetCell {
     }
 
     /**
+     * Håndterer visitors (f.eks. for å fylle inn verdi.
+     * @param visitor Fremmedkaren
+     */
+    /// HINT legg inn denne her (og implementer i subklasser) protected abstract void visit(CellVisitor visitor);
+
+    /**
      * Sett inn verdien i cellen.
      * @param cell Cellen
      * @return Cellen
      */
+    /// HINT Denne kan utgå her og i subklassene hvis visitoren gjør jobben
     protected abstract Cell fillCell(final Cell cell);
 
     /** Lever stilen. */

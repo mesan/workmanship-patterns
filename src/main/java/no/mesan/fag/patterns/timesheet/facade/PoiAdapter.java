@@ -1,9 +1,13 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -12,11 +16,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /** Adapter vår fasade til POI Workbook. */
@@ -94,6 +93,46 @@ public class PoiAdapter {
         final ValueMatrix<Integer,Integer,SheetCell> data = values.getData();
         for (final int rowNum : data.rowKeys(true)) {
             createRow(data, rowNum, values.getRowHeight(rowNum));
+        }
+    }
+
+    /** Visitor for å skrive ut celler. */
+    private class PoiVisitor implements CellVisitor {
+        private final Row row;
+        private int colNum;
+
+        PoiVisitor(final Row row) {
+            this.row = row;
+        }
+
+        void setColNum(final int colNum) {
+            this.colNum = colNum;
+        }
+
+        private Cell makeCell(final SheetCell cell) {
+            final Cell poiCell = row.createCell(colNum);
+            if (cell.hasStyle()) poiCell.setCellStyle(styles.get(cell.getStyle()));
+            return poiCell;
+        }
+
+        @Override
+        public void acceptString(final StringCell cell) {
+            /// HINT må skrives
+        }
+
+        @Override
+        public void acceptFormula(final FormulaCell cell) {
+            /// HINT må skrives
+        }
+
+        @Override
+        public void acceptEmpty(final EmptyCell cell) {
+            /// HINT må skrives
+        }
+
+        @Override
+        public void acceptDouble(final DoubleCell cell) {
+            /// HINT må skrives
         }
     }
 

@@ -81,7 +81,7 @@ public class TimeIteratorServiceTest {
         }
     }
 
-    private static List<TimesheetEntry> getForEmployee(final String userID, final List<TimesheetEntry>  dataList) {
+    private static List<TimesheetEntry> getForEmployee(final String userID, final List<TimesheetEntry> dataList) {
         final TimeIteratorService service = new TimeIteratorService(new TimeDataServer(dataList));
         return StreamSupport.stream(service.forEmployee(userID).spliterator(), false)
                        .collect(Collectors.toList());

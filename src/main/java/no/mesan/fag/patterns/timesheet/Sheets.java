@@ -94,7 +94,7 @@ public abstract class Sheets {
     protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
         final TimeIteratorService service = new TimeIteratorService(dataService);
         return StreamSupport.stream(entryIterator(service).spliterator(), true)
-                       .filter(entry-> acceptData(entry)).collect(Collectors.toList());
+                       .filter(this::acceptData).collect(Collectors.toList());
     }
 
     /**

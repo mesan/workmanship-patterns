@@ -11,6 +11,7 @@ abstract sealed class SheetCell(val style: Option[StyleName]) {
     * @param cell Cellen
     * @return Cellen
      */
+  /// HINT denne kan utgå her og i subklasser, visitoren kan gjøre jobben
     def fillCell(cell: Cell): Cell
   }
 

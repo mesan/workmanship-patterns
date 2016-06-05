@@ -1,12 +1,12 @@
 package no.mesan.fag.patterns.scala.timesheet.facade
 
-import no.mesan.fag.patterns.scala.timesheet.format.{Styles, StyleName}
+import no.mesan.fag.patterns.scala.timesheet.format.{StyleName, Styles}
 import no.mesan.fag.patterns.scala.timesheet.data.ValueMatrix
-
 import org.apache.poi.ss.usermodel._
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-
 import java.io.FileOutputStream
+
+// HINT import no.mesan.fag.patterns.scala.timesheet.facade.{DoubleCell, EmptyCell, FormulaCell, StringCell}
 
 import scala.collection.JavaConversions._
 
@@ -64,13 +64,42 @@ class PoiAdapter(title: String, map: Map[StyleName, Styles]) {
     val row = sheet.createRow(rowNum)
     height foreach(row.setHeightInPoints(_))
     for (colNum <- data.colKeys(sorted=true)) createCell(data.get(colNum, rowNum), colNum, row)
-  }
+    /// HINT I stedet for forrige kan vi gjøre det slik
+    /// val visitor = new PoiVisitor(row, styles)
+    /// for (colNum <- data.colKeys(sorted=true);
+    ///      cell<-data.get(colNum, rowNum))
+    ///   visitor.visit(cell)
+    }
 
   private def createCell(sheetCell: Option[SheetCell], colNum: Int, row: Row)  {
     for { sCell <- sheetCell
           cell = sCell.fillCell(row.createCell(colNum))
           name <- sCell.style
           style <- styles.get(name) } cell.setCellStyle(style)
+  }
+}
+
+class PoiVisitor(row: Row, styles: Map[StyleName, CellStyle]) {
+  var colnum= 0
+
+  private def makeCell(cell: SheetCell): Cell = {
+    val poiCell = row.createCell(colnum)
+    colnum+=1
+    for (styleName<- cell.style;
+         style<-styles.get(styleName)) poiCell.setCellStyle(style)
+    poiCell
+  }
+
+  def visit(cell: SheetCell) {
+    val poiCell= makeCell(cell)
+    cell match {
+        /// HINT Pattern matching bør gjøre jobben. Da må du gjøre om disse klassene til case klasser
+      /// case DoubleCell(d:Double, _) => ???
+      /// case StringCell(s:String, _) => ???
+      /// case FormulaCell(f: String, _) => ???
+      /// case EmptyCell(_) =>
+      case _ => throw new IllegalArgumentException(cell.toString)
+    }
   }
 }
 

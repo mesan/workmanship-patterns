@@ -5,7 +5,7 @@ import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import org.apache.poi.ss.usermodel.Cell;
 
 /** Celle som inneholder en formel. */
-public class FormulaCell extends SheetCell {
+public final class FormulaCell extends SheetCell {
 
     /** Formelen som skal inn i cellen. */
     private final String formula;

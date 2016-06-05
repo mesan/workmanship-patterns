@@ -1,7 +1,5 @@
 package no.mesan.fag.patterns.timesheet.external;
 
-import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -10,6 +8,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
 /** Kilde til timedata. */
 public class TimeSource implements Iterable<TimesheetEntry> {
@@ -23,7 +23,7 @@ public class TimeSource implements Iterable<TimesheetEntry> {
             }
             return res;
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             e.printStackTrace();
             return res;
         }
