@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** 1 entry i timelisten. */
-public class TimesheetEntry {
+public final class TimesheetEntry {
     private final String userID;
     private final LocalDate when;
     private final int activity;

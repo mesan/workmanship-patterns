@@ -39,4 +39,16 @@ public abstract class SheetCell {
     public static String rangeRef(final int fromCol, final int fromRow, final int toCol, final int toRow) {
         return cellRef(fromCol, fromRow) + ":" + cellRef(toCol, toRow);
     }
+
+    /**
+      * Sett inn verdien i cellen.
+      * @param cell Cellen
+      * @return Cellen
+      */
+    /// HINT  protected abstract Cell fillCell(final Cell cell);
+
+    /** Lever stilen. */
+    protected StyleName getStyle() {
+        return style;
+    }
 }

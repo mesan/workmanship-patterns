@@ -12,4 +12,12 @@ public class FormulaCell extends SheetCell {
         super(style);
         this.formula = formula;
     }
+
+    /** Opprett en SUM-celle. */
+    public static FormulaCell formulaSUM(final int fromCol, final int fromRow, final int toCol, final int toRow,
+                                         final StyleName style) {
+        return new FormulaCell(String.format("SUM(%s)", rangeRef(fromCol, fromRow, toCol, toRow)), style);
+    }
+
+    /// HINT @Override protected Cell fillCell(final Cell cell)
 }

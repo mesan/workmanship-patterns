@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 /** Oppretter stiler for et worksheet. */
 public final class StyleFactory {
 
+    /// HINT Mappingen til CellStyle kan vi gjøre i PoiAdapter i stedet
+
     /** Tilgjengelige stiler. */
     public enum StyleName {
         H1, TBL_HEAD, TBL_HEAD_LEFT, COL1, COLN, SUMS, SUM1, DATA

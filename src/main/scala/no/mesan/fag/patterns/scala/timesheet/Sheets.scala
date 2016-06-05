@@ -2,9 +2,8 @@ package no.mesan.fag.patterns.scala.timesheet
 
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
-import no.mesan.fag.patterns.scala.timesheet.facade.SheetCell
+import no.mesan.fag.patterns.scala.timesheet.facade.{DoubleCell, EmptyCell, SheetCell, SpreadSheet}
 import no.mesan.fag.patterns.scala.timesheet.format._
-
 import java.io.FileOutputStream
 
 import org.apache.poi.ss.usermodel._
@@ -40,6 +39,7 @@ abstract class Sheets {
    */
   protected final def generateReport(dataService: TimeDataService, title: String, headTitle: String,
                                      sortedCols: Boolean = true) (filter: TimesheetEntry=>Boolean) : Workbook = {
+    /// HINT Her er det POI-referanser å rydde i
     val list = dataRetrieve(dataService, filter)
     val matrix = dataGroup(list)
     val sheet = createWorkbook(title)
@@ -70,6 +70,7 @@ abstract class Sheets {
   def colRow(entry: TimesheetEntry): (String, String)
 
   protected def createWorkbook(title: String): Sheet = {
+    /// HINT Flyttes til PoiAdapter
     val sheet= (new XSSFWorkbook).createSheet(title)
     sheet.getPrintSetup.setLandscape(true)
     sheet.setFitToPage(true)
@@ -86,6 +87,7 @@ abstract class Sheets {
 
   protected def createTableHead(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle],
                                 title: String, sortedCols: Boolean) {
+    /// HINT Her må det ryddes...
     val tableHead = createRow(sheet, 2, 40)
     var colnum = 0
     for (header <- Vector(title, "Sum") ++ matrix.colKeys(sortedCols))
@@ -95,6 +97,7 @@ abstract class Sheets {
   }
 
   protected def createDataGrid(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle], sortedCols: Boolean) {
+    /// HINT Må endres - alternativt forslag under
     var rownum= 3
     for (rKey <- matrix.rowKeys(sorted=true)) {
       var colnum= 0
@@ -110,7 +113,24 @@ abstract class Sheets {
     }
   }
 
+  protected def createDataGrid(sheet: SpreadSheet, matrix: DoubleMatrix,  sortedCols: Boolean) {
+    /// HINT Alternativ implementasjon av foregående
+    sheet.data.ensureRow(2) // Hopp over rad
+    var rownum = 2
+    var colnum = 0
+    def createDataCols(rKey: String) {
+      for (c <- matrix.colKeys(sortedCols)) {
+        colnum += 1
+        matrix.get(c, rKey) match {
+          case Some(value) => sheet.setCell(colnum, rownum, new DoubleCell(value, Data))
+          case None => sheet.setCell(colnum, rownum, new EmptyCell(Data))
+        }
+      }
+    }
+  }
+
   protected def createSums(sheet: Sheet, matrix: DoubleMatrix, styles: Map[StyleName, CellStyle]) {
+    /// HINT Skrives om
     var colnum = 0
     val rownum = sheet.getLastRowNum+1
     val row = createRow(sheet,rownum)
@@ -122,6 +142,7 @@ abstract class Sheets {
   }
 
   protected def finish(sheet: Sheet, cols: Int) {
+    /// HINT har en alternativ definisjon i PoiAdapter vi kan kalle
     import scala.collection.JavaConversions._
     // Rekalkuler
     val evaluator= sheet.getWorkbook.getCreationHelper.createFormulaEvaluator

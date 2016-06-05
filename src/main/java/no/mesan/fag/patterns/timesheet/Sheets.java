@@ -14,8 +14,16 @@ import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
 import no.mesan.fag.patterns.timesheet.external.TimeSource;
+import no.mesan.fag.patterns.timesheet.facade.DoubleCell;
+import no.mesan.fag.patterns.timesheet.facade.EmptyCell;
+import no.mesan.fag.patterns.timesheet.facade.FormulaCell;
+import no.mesan.fag.patterns.timesheet.facade.PoiAdapter;
 import no.mesan.fag.patterns.timesheet.facade.SheetCell;
+import no.mesan.fag.patterns.timesheet.facade.SpreadSheet;
+import no.mesan.fag.patterns.timesheet.facade.StringCell;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
+import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
+import no.mesan.fag.patterns.timesheet.format.StyleSpec;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -74,6 +82,7 @@ public abstract class Sheets {
      */
     protected final Workbook generateReport(final TimeDataService dataService, final String title,
                                             final String headTitle, final boolean sortedCols)  {
+        /// HINT Her er det POI-referanser å rydde i
         final List<TimesheetEntry> list = dataRetrieve(dataService); // Hent timedata og filtrer
         final DoubleMatrix matrix = dataGroup(list); // Grupper data
 
@@ -98,7 +107,7 @@ public abstract class Sheets {
     protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
         final TimeIteratorService service = new TimeIteratorService(dataService);
         return StreamSupport.stream(entryIterator(service).spliterator(), true)
-                       .filter(entry -> acceptData(entry)).collect(Collectors.toList());
+                       .filter(this::acceptData).collect(Collectors.toList());
     }
 
     /**
@@ -157,6 +166,7 @@ public abstract class Sheets {
      * @param title Navn på arket
      * @return Arket (denne gir oss tilgang til boken ved behov)
      */
+    /// HINT Flytte til PoiAdapter
     protected Sheet createWorkbook(final String title) {
         final Workbook workbook = new XSSFWorkbook();
         final Sheet sheet = workbook.createSheet(title);
@@ -172,6 +182,7 @@ public abstract class Sheets {
      * @param sheet Arket
      * @param styles Gir tilgang til nødvendige stiler
      */
+    /// HINT Her må det ryddes...
     protected void createHeading(final Sheet sheet, final Map<StyleFactory.StyleName, CellStyle> styles) {
         int colnum= 0;
         final Row row = makeRow(sheet, 0, 45);
@@ -197,6 +208,7 @@ public abstract class Sheets {
      * @param headTitle Teksten i øverste venstre hjørne
      * @param sortedCols Om kolonnene skal sorteres
      */
+    /// HINT Her må det ryddes...
     protected void createTableHead(final Sheet sheet, final DoubleMatrix matrix,
                                    final Map<StyleFactory.StyleName, CellStyle> styles, final String headTitle,
                                    final boolean sortedCols) {
@@ -221,6 +233,7 @@ public abstract class Sheets {
      * @param styles Stilene
      * @param sortedCols Om kolonnene skal sorteres
      */
+    /// HINT Her må det ryddes...  Alternativt forslag under!
     protected void createDataGrid(final Sheet sheet, final DoubleMatrix matrix,
                                   final Map<StyleFactory.StyleName, CellStyle> styles,
                                   final boolean sortedCols) {
@@ -249,6 +262,26 @@ public abstract class Sheets {
         }
     }
 
+    /// HINT Alternativ..
+    protected void createDataGrid(final SpreadSheet sheet, final DoubleMatrix matrix, final boolean sortedCols) {
+        int rownum = 1;
+        sheet.getData().ensureRow(rownum++);  // Hopp over rad
+        for (final String rKey : matrix.rowKeys(true)) {
+            rownum++;
+            int colnum = 0;
+            sheet.setCell(colnum++, rownum, new StringCell(rKey, StyleName.COL1)); // Index
+            sheet.setCell(colnum, rownum,
+                          FormulaCell.formulaSUM(colnum + 2, rownum + 1, 2 + matrix.cSize(),
+                                                 rownum + 1,
+                                                 StyleName.COLN)); // Sum
+            for (final String c : matrix.colKeys(sortedCols)) { // Data
+                final Double v = matrix.get(c, rKey);
+                sheet.setCell(++colnum, rownum, (v == null) ? new EmptyCell(StyleName.DATA)
+                                                            : new DoubleCell(v, StyleName.DATA));
+            }
+        }
+    }
+
     /**
      * Sett inn sumlinjen.
      * @param sheet Arket
@@ -257,6 +290,7 @@ public abstract class Sheets {
      */
     protected void createSums(final Sheet sheet, final DoubleMatrix matrix,
                               final Map<StyleFactory.StyleName, CellStyle> styles) {
+        /// HINT Rydde her også!
         int colnum = 0;
         final int rownum= sheet.getLastRowNum();
         final Row row = makeRow(sheet, rownum+1, -1);
@@ -295,12 +329,27 @@ public abstract class Sheets {
     }
 
     /**
+     * Lag arbeidsbok!
+     * @param title Navn pÃ¥ arket
+     * @param values Innholdet i boka
+     * @param styles Stilene som skal inn
+     */
+    /// HINT Her er et alternativ til foregående
+    protected Workbook finish(final String title, final SpreadSheet values, final Map<StyleName, StyleSpec> styles) {
+        final PoiAdapter adapter = new PoiAdapter(title, styles);
+        adapter.addData(values);
+        return adapter.create();
+    }
+
+
+    /**
      * Skriv resultatet til Excelfil.
      * @param bookName Boknavnet (suffikses med .xlsx)
      * @param workbook Referanse til boken
      * @throws IOException Verden er ikke perfekt
      */
     protected void writeToFile(final String bookName, final Workbook workbook) throws IOException {
+        /// HINT PoiAdapteren kan ta denne jobben!
         final String fileName = bookName + ".xlsx";
         final FileOutputStream out = new FileOutputStream(fileName);
         workbook.write(out);

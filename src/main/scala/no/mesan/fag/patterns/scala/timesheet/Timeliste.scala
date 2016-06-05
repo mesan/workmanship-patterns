@@ -3,7 +3,7 @@ package no.mesan.fag.patterns.scala.timesheet
 import no.mesan.fag.patterns.scala.timesheet.external.TimeDataService
 import no.mesan.fag.patterns.scala.timesheet.data.{TimesheetEntry, DoubleMatrix}
 
-import org.apache.poi.ss.usermodel._
+import org.apache.poi.ss.usermodel.Workbook
 
 import org.joda.time.LocalDate
 

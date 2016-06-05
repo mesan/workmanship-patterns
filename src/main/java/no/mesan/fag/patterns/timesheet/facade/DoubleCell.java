@@ -7,4 +7,5 @@ public class DoubleCell extends ValueCell<Double> {
     public DoubleCell(final Double value, final StyleName style) {
         super(value, style);
     }
+    /// HINT @Override protected Cell fillCell(final Cell cell)
 }

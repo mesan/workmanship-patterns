@@ -21,7 +21,7 @@ class ValueMatrix[C <% Comparable[C], R <% Comparable[R], V] {
   /** The real values. */
   private var values: Map[String, V] = Map()
 
-  /** Create map key. */
+  /** Create styleMap key. */
   private def key(col: C, row: R)=  col + ARRAYSEP + row
 
   /** Create a possibly sorted list from a key set. */

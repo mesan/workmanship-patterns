@@ -37,5 +37,6 @@ object StyleFactory {
   }
 
   private def createWbStyles(wb: Workbook, map: Map[StyleName, Styles]): Map[StyleName, CellStyle] =
+    /// HINT tar dette i adapteren i stedet
     map.map { case (name, spec) => name -> spec.createStyle(wb) }
 }

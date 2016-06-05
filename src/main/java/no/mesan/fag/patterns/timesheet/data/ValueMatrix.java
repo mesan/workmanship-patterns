@@ -34,7 +34,7 @@ public class ValueMatrix<C extends Comparable<? super C>, R extends Comparable<?
         super();
     }
 
-    /** Create map key. */
+    /** Create styleMap key. */
     private String key(final C col, final R row) {
         return col.toString() + ARRAYSEP + row.toString();
     }
