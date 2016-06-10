@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Holder spesifikasjoner for en stil. */
-public class StyleSpec implements Cloneable {
+public final class StyleSpec implements Cloneable {
 
     private boolean isBold= false;
     private boolean isItalic= false;

@@ -41,7 +41,7 @@ public abstract class Sheets {
     /** Ønsket fargestil. */
     private Theme theme= Theme.BLUE;
 
-    private static class TimelisteTask implements AsyncTask {
+    private static final class TimelisteTask implements AsyncTask {
 
         private final String name;
         private final Sheets sheet;
