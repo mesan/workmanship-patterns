@@ -123,10 +123,18 @@ abstract class Sheets {
 
   private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
 
-  private[timesheet] def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
+  /**
+   * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
+   * TODO: Det er her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
+   * Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
+   * @param entry Original
+   * @return Timer
+   */
+  protected def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
 }
 
 object Sheets extends App {
+  /// HINT Det er denne
   val source = new TimeDataServer(TimeSource)
   val timeliste = new Timeliste("larsr", 2014, 2, source)
   val wb1 = timeliste.createTimeliste

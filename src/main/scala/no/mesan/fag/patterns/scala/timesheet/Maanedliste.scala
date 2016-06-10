@@ -17,7 +17,7 @@ class Maanedliste(year: Int, month: Int, source: TimeDataService) extends Sheets
     }
   override def retrieve(service: TimeDataService): Iterable[TimesheetEntry] =  service.forYear(year)
   override def colRow(entry: TimesheetEntry): (String, String) = (entry.activity.toString, entry.userID)
-  override def headingTexts = List(Maanedliste.SheetTitle, f"$year%04d/$month%02d")
+  override def headingTexts: List[String] = List(Maanedliste.SheetTitle, f"$year%04d/$month%02d")
 }
 
 object Maanedliste {

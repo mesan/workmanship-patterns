@@ -6,9 +6,7 @@ import java.util.stream.Stream;
 
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 
-/**
- * Kilde til timedata.
- */
+/** Kilde til timedata. */
 public class SmallTimeSource implements Iterable<TimesheetEntry> {
 
     private static final List<TimesheetEntry> ENTRIES= TimesheetEntry.create(
