@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import no.mesan.fag.patterns.timesheet.command.AsyncTask;
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataServer;
@@ -35,6 +36,21 @@ public abstract class Sheets {
     /** Hvordan vi viser timer på listene. */
     private TimeRepresentationStrategy timeRepresentationStrategy= new TimeRepresentationHalfHours();
 
+    /// HINT Bygg ut denne tasken
+    private static class TimelisteTask implements AsyncTask {
+
+        @Override
+        public String whoAmI() {
+            return null; /// HINT Kjedelig...
+        }
+
+        @Override
+        public void executeTask() {
+            /// HINT Her oppretter du arbeidsboken og skriver den til fil
+            ///   Lurt å innføre en generisk metode i Sheet-klassen for å opprette arbeidsboken
+        }
+    }
+
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
         final TimeDataServer source = new TimeDataServer(new TimeSource());
@@ -53,6 +69,8 @@ public abstract class Sheets {
         ukeListe.setTimeRepresentationStrategy(new TimeRepresentationDays());
         final Workbook wb4 = ukeListe.createUkeliste();
         ukeListe.writeToFile("Ukeoversikt", wb4);
+
+        /// HINT Drop skrivingene over - det kan du putte i tasker
     }
 
     /**
@@ -113,7 +131,7 @@ public abstract class Sheets {
     protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
         final TimeIteratorService service = new TimeIteratorService(dataService);
         return StreamSupport.stream(entryIterator(service).spliterator(), true)
-                       .filter(entry-> acceptData(entry)).collect(Collectors.toList());
+                       .filter(this::acceptData).collect(Collectors.toList());
     }
 
     /**

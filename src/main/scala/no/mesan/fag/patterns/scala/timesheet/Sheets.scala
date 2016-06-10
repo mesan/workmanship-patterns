@@ -1,13 +1,12 @@
 package no.mesan.fag.patterns.scala.timesheet
 
-import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServiceLoggingDecorator,
-                                                                  TimeDataServiceCachingDecorator}
+import no.mesan.fag.patterns.scala.timesheet.command.AsyncTask
+import no.mesan.fag.patterns.scala.timesheet.external.decorators.{TimeDataServiceCachingDecorator, TimeDataServiceLoggingDecorator}
 import no.mesan.fag.patterns.scala.timesheet.strategy._
 import no.mesan.fag.patterns.scala.timesheet.external._
 import no.mesan.fag.patterns.scala.timesheet.data.{DoubleMatrix, TimesheetEntry}
 import no.mesan.fag.patterns.scala.timesheet.facade._
 import no.mesan.fag.patterns.scala.timesheet.format._
-
 import org.apache.poi.ss.usermodel._
 
 /** Superklasse for timelister. */
@@ -127,7 +126,15 @@ abstract class Sheets extends TimeRepresentationStrategy with TimeRepresentation
   private[timesheet] def writeToFile(bookName: String, workbook: Workbook) = PoiAdapter.writeToFile(bookName, workbook)
 }
 
+/// HINT Bygg ut denne tasken
+private class TimelisteTask() extends AsyncTask {
+  def whoAmI: String =  ???
+  def executeTask() = ??? /// HINT Her oppretter du arbeidsboken og skriver den til fil
+  ///   Lurt å innføre en generisk metode i Sheet-klassen for å opprette arbeidsboken
+}
+
 object Sheets extends App {
+  /// HINT Dropp writeToFile her, lag tasker for hver av timelistene og gjør skrivingen der
   val source = new TimeDataServer(TimeSource)
   val timeliste = new Timeliste("larsr", 2014, 2, source)
   val wb1 = timeliste.createTimeliste

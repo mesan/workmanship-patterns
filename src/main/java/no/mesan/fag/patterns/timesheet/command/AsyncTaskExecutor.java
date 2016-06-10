@@ -14,7 +14,7 @@ public final class AsyncTaskExecutor {
      * @param tasks oppgavene som skal kjøres
      */
     public void executeTasks(final AsyncTask ... tasks) {
-        for (AsyncTask task : tasks) {
+        for (final AsyncTask task : tasks) {
             final Thread thread = new Thread(new AsyncTaskThreadRunner(task));
             thread.start();
         }

@@ -33,7 +33,7 @@ public class TimeDataServiceLoggingDecorator extends TimeDataServiceDecorator {
         return executeWithLog(()-> timeDataService.forYear(year, from));
     }
 
-    private List<TimesheetEntry> executeWithLog(Supplier<List<TimesheetEntry>> func) {
+    private List<TimesheetEntry> executeWithLog(final Supplier<List<TimesheetEntry>> func) {
         final long start = System.currentTimeMillis();
         final List<TimesheetEntry> timesheetEntries = func.get();
         final long timeSpent = System.currentTimeMillis() - start;
