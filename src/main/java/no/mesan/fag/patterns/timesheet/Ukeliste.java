@@ -1,17 +1,15 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.Arrays;
+import java.util.List;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
-
 import org.apache.poi.ss.usermodel.Workbook;
-
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
-
-import java.util.Arrays;
-import java.util.List;
 
 /** Timeliste for alle brukere for en enkelt uke. */
 public class Ukeliste extends Sheets {
@@ -25,7 +23,6 @@ public class Ukeliste extends Sheets {
     private final LocalDate toDate;
 
     public Ukeliste(final int year, final int month, final int day, final TimeDataService source) {
-        super();
         this.year = year;
         final LocalDate date = new LocalDate(year, month, day);
         this.fromDate = date.withDayOfWeek(DateTimeConstants.MONDAY);

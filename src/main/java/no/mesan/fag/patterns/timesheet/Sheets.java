@@ -24,10 +24,16 @@ import no.mesan.fag.patterns.timesheet.facade.StringCell;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory;
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
 import no.mesan.fag.patterns.timesheet.format.StyleSpec;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationHalfHours;
+import no.mesan.fag.patterns.timesheet.strategy.TimeRepresentationStrategy;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /** Superklasse for timelister. */
 public abstract class Sheets {
+
+    /** Hvordan vi viser timer på listene. */
+    private TimeRepresentationStrategy timeRepresentationStrategy= new TimeRepresentationHalfHours();
+    /// HINT Den bør vel kunne endres også...
 
     public static void main(final String[] args) throws Exception {
 //      ColorSpec.setTheme(ColorSpec.Theme.RED);
@@ -98,7 +104,7 @@ public abstract class Sheets {
     protected List<TimesheetEntry> dataRetrieve(final TimeDataService dataService) {
         final TimeIteratorService service = new TimeIteratorService(dataService);
         return StreamSupport.stream(entryIterator(service).spliterator(), true)
-                       .filter(entry-> acceptData(entry)).collect(Collectors.toList());
+                       .filter(this::acceptData).collect(Collectors.toList());
     }
 
     /**
@@ -254,12 +260,12 @@ public abstract class Sheets {
 
     /**
      * Konverter minutter til et antall timer (men vi regner bare med fulle halvtimer).
-     * TODO: Dette er da her vi tenker oss en strategy-basert løsning for å støtte forskjellige visninger av tid brukt.
      *       Kan vurderes om navnet ikke bør justeres litt også i samme slengen...
      * @param entry Original
      * @return Timer
      */
     protected double minutesToHours(final TimesheetEntry entry) {
+        /// HINT Erstatt dette med å sende minuttverdien til et strategiobjekt i timeRepresentationStrategy
         return (entry.getMinutes() / 30) / 2.0;
     }
 }

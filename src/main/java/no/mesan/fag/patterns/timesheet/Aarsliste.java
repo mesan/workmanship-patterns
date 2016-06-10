@@ -1,14 +1,13 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.Arrays;
+import java.util.List;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
-
 import org.apache.poi.ss.usermodel.Workbook;
-
-import java.util.Arrays;
-import java.util.List;
 
 /** Timer per prosjekt per måned over et år. */
 public class Aarsliste extends Sheets {
@@ -18,7 +17,6 @@ public class Aarsliste extends Sheets {
     private final TimeDataService source;
 
     public Aarsliste(final int year, final TimeDataService source) {
-        super();
         this.year = year;
         this.source = source;
     }

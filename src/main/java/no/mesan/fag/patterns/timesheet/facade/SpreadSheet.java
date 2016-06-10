@@ -1,15 +1,14 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
-import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import no.mesan.fag.patterns.timesheet.data.ValueMatrix;
 
 /** Holder data om et regneark uten å blande inn POI. */
 public class SpreadSheet {
 
     /** Navnet på (det eneste) arket. */
-    @SuppressWarnings("all")
     private final String name;
 
     /** Noen rader skal ha tilpasset høyde. */

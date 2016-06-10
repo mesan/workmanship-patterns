@@ -1,13 +1,12 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.Arrays;
+import java.util.List;
+
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
-
 import org.apache.poi.ss.usermodel.Workbook;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Hvem har fakturert på hvilke prosjekter i en gitt måned.
@@ -23,7 +22,6 @@ public class Maanedliste extends Sheets {
     private final TimeDataService source;
 
     public Maanedliste(final int year, final int month, final TimeDataService source) {
-        super();
         this.year = year;
         this.month = month;
         this.source = source;

@@ -132,6 +132,7 @@ abstract class Sheets {
    * @param entry Original
    * @return Timer
    */
+  /// HINT TimeRepresentationStrategy erstatter denne hardkodingen
   protected def minutesToHours(entry: TimesheetEntry): Double =  (entry.minutes / 30) / 2.0
 }
 

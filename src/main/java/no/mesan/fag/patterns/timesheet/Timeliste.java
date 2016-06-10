@@ -1,16 +1,14 @@
 package no.mesan.fag.patterns.timesheet;
 
+import java.util.Arrays;
+import java.util.List;
+
 import no.mesan.fag.patterns.timesheet.data.DoubleMatrix;
 import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
 import no.mesan.fag.patterns.timesheet.external.TimeDataService;
 import no.mesan.fag.patterns.timesheet.external.TimeIteratorService;
-
 import org.apache.poi.ss.usermodel.Workbook;
-
 import org.joda.time.LocalDate;
-
-import java.util.Arrays;
-import java.util.List;
 
 /** Timeliste for en enkelt bruker for en måned. */
 public class Timeliste extends Sheets {
@@ -22,7 +20,6 @@ public class Timeliste extends Sheets {
     private final TimeDataService source;
 
     public Timeliste(final String user, final int year, final int month, final TimeDataService source) {
-        super();
         this.forUser = user;
         this.year = year;
         this.month = month;

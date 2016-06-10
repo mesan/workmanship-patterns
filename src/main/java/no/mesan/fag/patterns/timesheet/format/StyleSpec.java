@@ -1,14 +1,14 @@
 package no.mesan.fag.patterns.timesheet.format;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /** Holder spesifikasjoner for en stil. */
-public class StyleSpec implements Cloneable {
+public final class StyleSpec implements Cloneable {
 
     private boolean isBold= false;
     private boolean isItalic= false;
@@ -46,7 +46,8 @@ public class StyleSpec implements Cloneable {
     public static StyleBuilder newStyleFrom(final StyleSpec spec) {
         try {
             return new StyleBuilder(spec.clone());
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (final CloneNotSupportedException e) {
             throw new RuntimeException("Shouldn't happen", e);
         }
     }
