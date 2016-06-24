@@ -1,5 +1,15 @@
 package no.mesan.fag.patterns.timesheet.external;
 
+/*
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import no.mesan.fag.patterns.timesheet.data.TimesheetEntry;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+*/
 /**
  * Test av iteratorimplementasjonen
  */
@@ -88,5 +98,5 @@ public class TimeIteratorServiceTest {
         }
         return res;
     }
-    */
+*/
 }
