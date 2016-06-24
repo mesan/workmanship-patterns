@@ -1,9 +1,11 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
+import org.apache.poi.ss.usermodel.Cell;
 
 /** En celle med tallinnhold. */
 public class DoubleCell extends ValueCell<Double> {
+    Cell slettMeg; /// HINT ta bort denne, er her bare for å ha import på riktig Cell...
     public DoubleCell(final Double value, final StyleName style) {
         super(value, style);
     }

@@ -60,5 +60,4 @@ public class PoiAdapter {
         }
         return maxCols;
     }
-
 }

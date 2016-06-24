@@ -1,9 +1,11 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
+import org.apache.poi.ss.usermodel.Cell;
 
 /** Rotklasse for "ting som skal i celler". */
 public abstract class SheetCell {
+    Cell slettMeg; /// HINT ta bort denne, er her bare for å ha import på riktig Cell...
     /** Stilen som skal brukes. */
     private final StyleName style;
 

@@ -1,9 +1,12 @@
 package no.mesan.fag.patterns.timesheet.facade;
 
 import no.mesan.fag.patterns.timesheet.format.StyleFactory.StyleName;
+import org.apache.poi.ss.usermodel.Cell;
 
 /** Celle som inneholder en formel. */
 public class FormulaCell extends SheetCell {
+
+    Cell slettMeg; /// HINT ta bort denne, er her bare for å ha import på riktig Cell...
 
     /** Formelen som skal inn i cellen. */
     private final String formula;
