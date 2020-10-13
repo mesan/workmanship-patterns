@@ -19,7 +19,7 @@
         <maven.test.fork>once</maven.test.fork>
         <java.se.version>1.8</java.se.version>
         <java.charset>UTF-8</java.charset>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <build>
